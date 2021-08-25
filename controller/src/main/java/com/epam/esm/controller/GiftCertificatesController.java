@@ -22,8 +22,32 @@ public class GiftCertificatesController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/{id}", produces = "application/json", method = GET)
-    public @ResponseBody List<GiftCertificate> getGiftCertificate(@PathVariable("id") BigInteger id) {
+    @RequestMapping(produces = "application/json", method = GET)
+    public @ResponseBody
+    List<GiftCertificate> getAllGiftCertificates() {
         return service.findAll();
     }
+
+    @RequestMapping(value = "/{id}", produces = "application/json", method = GET)
+    public @ResponseBody
+    GiftCertificate getGiftCertificate(@PathVariable("id") BigInteger id) {
+        return service.findById(id).get();
+    }
+
+    @RequestMapping(produces = "application/json", method = POST)
+    public void createGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
+        service.save(giftCertificate);
+    }
+
+    @RequestMapping(produces = "application/json", method = PATCH)
+    public void updateGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
+        service.update(giftCertificate);
+    }
+
+    @RequestMapping(value = "/{id}", produces = "application/json", method = DELETE)
+    public @ResponseBody
+    void deleteGiftCertificate(@PathVariable("id") BigInteger id) {
+        service.deleteById(id);
+    }
+
 }

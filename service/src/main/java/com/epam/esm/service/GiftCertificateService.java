@@ -2,17 +2,20 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.entity.GiftCertificate;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class GiftCertificateService {
+public interface GiftCertificateService {
 
+    List<GiftCertificate> findAll();
 
+    Optional<GiftCertificate> findById(BigInteger id);
 
-    public List<GiftCertificate> findAll(){
-        return new ArrayList<GiftCertificate>();
-    }
+    void update(GiftCertificate giftCertificate);
+
+    void deleteById(BigInteger id);
+
+    void save(GiftCertificate giftCertificate);
 }

@@ -10,9 +10,9 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan(basePackages={"com.epam.esm"},
-        excludeFilters={
-                @Filter(type=FilterType.ANNOTATION, value=EnableWebMvc.class)
+@ComponentScan(basePackages = {"com.epam.esm"},
+        excludeFilters = {
+                @Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class)
         })
 public class RootConfig {
 }

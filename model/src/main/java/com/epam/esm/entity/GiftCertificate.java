@@ -2,18 +2,20 @@ package com.epam.esm.entity;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 public class GiftCertificate extends Entity {
 
     private String name;
     private String description;
     private BigDecimal price;
-    private Timestamp createDate;
-    private Timestamp lastUpdateDate;
+    private OffsetDateTime createDate;
+    private OffsetDateTime lastUpdateDate;
     private int duration;
+    private Set<Tag> tags;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, Timestamp createDate, Timestamp lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, OffsetDateTime createDate, OffsetDateTime lastUpdateDate, int duration) {
         super(id);
         this.name = name;
         this.description = description;
@@ -23,7 +25,7 @@ public class GiftCertificate extends Entity {
         this.duration = duration;
     }
 
-    public GiftCertificate(String name, String description, BigDecimal price, Timestamp createDate, Timestamp lastUpdateDate, int duration) {
+    public GiftCertificate(String name, String description, BigDecimal price, OffsetDateTime createDate, OffsetDateTime lastUpdateDate, int duration) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -59,19 +61,19 @@ public class GiftCertificate extends Entity {
         this.price = price;
     }
 
-    public Timestamp getCreateDate() {
+    public OffsetDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Timestamp createDate) {
+    public void setCreateDate(OffsetDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Timestamp getLastUpdateDate() {
+    public OffsetDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+    public void setLastUpdateDate(OffsetDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
@@ -81,5 +83,13 @@ public class GiftCertificate extends Entity {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }
