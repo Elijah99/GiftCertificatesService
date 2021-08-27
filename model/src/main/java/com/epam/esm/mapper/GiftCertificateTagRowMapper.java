@@ -3,11 +3,13 @@ package com.epam.esm.mapper;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class GiftCertificateTagRowMapper implements RowMapper<GiftCertificateTag> {
 
     @Override

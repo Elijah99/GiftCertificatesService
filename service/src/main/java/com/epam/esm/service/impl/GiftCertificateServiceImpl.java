@@ -7,9 +7,13 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.utils.SearchParameter;
+import com.epam.esm.service.utils.SortParameter;
+import com.epam.esm.service.utils.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -18,15 +22,11 @@ import java.util.Optional;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    GiftCertificateDao giftCertificateDao;
-    TagDao tagDao;
-    GiftCertificateTagDao giftCertificateTagDao;
+    private GiftCertificateDao giftCertificateDao;
+    private TagDao tagDao;
+    private GiftCertificateTagDao giftCertificateTagDao;
 
-    @Autowired
-    public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao, TagDao tagDao, GiftCertificateTagDao giftCertificateTagDao) {
-        this.giftCertificateDao = giftCertificateDao;
-        this.tagDao = tagDao;
-        this.giftCertificateTagDao = giftCertificateTagDao;
+    public GiftCertificateServiceImpl() {
     }
 
     @Override
@@ -40,8 +40,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void update(GiftCertificate giftCertificate) {
-
+    public void update(GiftCertificate giftCertificate, BigInteger id) {
+        giftCertificate.setId(id);
+        giftCertificateDao.update(giftCertificate);
     }
 
     @Override
@@ -49,14 +50,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void save(GiftCertificate giftCertificate) {
         if (CollectionUtils.isNotEmpty(giftCertificate.getTags())) {
             saveNewTags(giftCertificate);
         }
         GiftCertificate savedGiftCertificate = giftCertificateDao.save(giftCertificate);
-        if (CollectionUtils.isNotEmpty(giftCertificate.getTags())) {
-            bindCertificateWithTags(giftCertificate);
+        if (CollectionUtils.isNotEmpty(savedGiftCertificate.getTags())) {
+            bindCertificateWithTags(savedGiftCertificate);
         }
     }
 
@@ -79,4 +81,36 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         });
     }
 
+    @Override
+    public List<GiftCertificate> searchByValue(SearchParameter searchParameter, String value){
+        switch (searchParameter){
+            case id: case name: case description: {
+                return giftCertificateDao.searchByColumn(searchParameter.value,value);
+            }
+            case tag:{
+                return giftCertificateDao.searchByTagName(value);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<GiftCertificate> sortByParameter(SortParameter sortParameter, SortType sortType) {
+        return giftCertificateDao.findAllWithOrder(sortParameter.value,sortType.value);
+    }
+
+    @Autowired
+    public void setGiftCertificateDao(GiftCertificateDao giftCertificateDao) {
+        this.giftCertificateDao = giftCertificateDao;
+    }
+
+    @Autowired
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
+    }
+
+    @Autowired
+    public void setGiftCertificateTagDao(GiftCertificateTagDao giftCertificateTagDao) {
+        this.giftCertificateTagDao = giftCertificateTagDao;
+    }
 }

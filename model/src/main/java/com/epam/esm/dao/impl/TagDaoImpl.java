@@ -19,7 +19,7 @@ public class TagDaoImpl implements TagDao {
 
     private static final String SELECT_ALL = "SELECT * FROM tag";
     private static final String SELECT_BY_ID = "SELECT * FROM tag WHERE id = ?";
-    private static final String SELECT_BY_NAME = "SELECT * FROM tag WHERE name = ?";
+    private static final String SELECT_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
     private static final String INSERT = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";
 
@@ -28,9 +28,9 @@ public class TagDaoImpl implements TagDao {
     private TagRowMapper rowMapper;
 
     @Autowired
-    public TagDaoImpl(BasicDataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.rowMapper = new TagRowMapper();
+    public TagDaoImpl(JdbcTemplate jdbcTemplate, TagRowMapper rowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -40,14 +40,12 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Optional<Tag> findById(BigInteger id) {
-        Tag result = jdbcTemplate.queryForObject(SELECT_BY_ID, new Object[]{id}, rowMapper);
-        return Optional.of(result);
+        return jdbcTemplate.query(SELECT_BY_ID, rowMapper, id).stream().findAny();
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        Tag result = jdbcTemplate.queryForObject(SELECT_BY_NAME, new Object[]{name}, rowMapper);
-        return Optional.of(result);
+        return jdbcTemplate.query(SELECT_BY_NAME, rowMapper, name).stream().findAny();
     }
 
     @Override

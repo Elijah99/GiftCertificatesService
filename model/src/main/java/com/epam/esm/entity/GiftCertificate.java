@@ -1,21 +1,26 @@
 package com.epam.esm.entity;
 
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.OffsetDateTime;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class GiftCertificate extends Entity {
 
     private String name;
     private String description;
     private BigDecimal price;
-    private OffsetDateTime createDate;
-    private OffsetDateTime lastUpdateDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime createDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime lastUpdateDate;
     private int duration;
-    private Set<Tag> tags;
+    private List<Tag> tags;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, OffsetDateTime createDate, OffsetDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         super(id);
         this.name = name;
         this.description = description;
@@ -25,7 +30,7 @@ public class GiftCertificate extends Entity {
         this.duration = duration;
     }
 
-    public GiftCertificate(String name, String description, BigDecimal price, OffsetDateTime createDate, OffsetDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -61,19 +66,19 @@ public class GiftCertificate extends Entity {
         this.price = price;
     }
 
-    public OffsetDateTime getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(OffsetDateTime createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public OffsetDateTime getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(OffsetDateTime lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
@@ -85,11 +90,11 @@ public class GiftCertificate extends Entity {
         this.duration = duration;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 }

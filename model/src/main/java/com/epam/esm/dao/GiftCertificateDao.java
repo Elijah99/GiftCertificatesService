@@ -16,4 +16,10 @@ public interface GiftCertificateDao {
     void deleteById(BigInteger id);
 
     GiftCertificate save(GiftCertificate giftCertificate);
+
+    List<GiftCertificate> searchByColumn(String searchParameter, String value);
+
+    List<GiftCertificate> searchByTagName(String value);
+
+    List<GiftCertificate> findAllWithOrder(String sortParameter, String sortType);
 }

@@ -26,9 +26,9 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     private GiftCertificateTagRowMapper rowMapper;
 
     @Autowired
-    public GiftCertificateTagDaoImpl(BasicDataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.rowMapper = new GiftCertificateTagRowMapper();
+    public GiftCertificateTagDaoImpl(JdbcTemplate jdbcTemplate, GiftCertificateTagRowMapper rowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = rowMapper;
     }
 
     @Override

@@ -2,14 +2,15 @@ package com.epam.esm.mapper;
 
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
-
+@Component
 public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
     @Override
     public GiftCertificate mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -17,8 +18,8 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
         String name = resultSet.getString("name");
         String description = resultSet.getString("description");
         BigDecimal price = resultSet.getBigDecimal("price");
-        OffsetDateTime createDate = resultSet.getObject("create_date", OffsetDateTime.class);
-        OffsetDateTime lastUpdateDate = resultSet.getObject("last_update_date", OffsetDateTime.class);
+        LocalDateTime createDate = resultSet.getTimestamp("create_date").toLocalDateTime();
+        LocalDateTime lastUpdateDate = resultSet.getTimestamp("last_update_date").toLocalDateTime();
         int duration = resultSet.getInt("duration");
 
         return new GiftCertificate(id, name, description, price, createDate, lastUpdateDate, duration);

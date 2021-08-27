@@ -1,53 +1,62 @@
 package com.epam.esm.controller;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.utils.SearchParameter;
+import com.epam.esm.service.utils.SortParameter;
+import com.epam.esm.service.utils.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/giftCertificates")
 public class GiftCertificatesController {
 
     private GiftCertificateService service;
 
     @Autowired
-    public GiftCertificatesController(GiftCertificateService service) {
-        this.service = service;
+    public GiftCertificatesController() {
     }
 
-    @RequestMapping(produces = "application/json", method = GET)
-    public @ResponseBody
-    List<GiftCertificate> getAllGiftCertificates() {
+    @GetMapping
+    public List<GiftCertificate> getAllGiftCertificates(@RequestParam(required = false) SearchParameter searchBy,
+                                                        @RequestParam(required = false) String value,
+                                                        @RequestParam(required = false) SortParameter sortBy,
+                                                        @RequestParam(required = false) SortType sortType) {
+        if (searchBy != null && value != null) {
+            return service.searchByValue(searchBy, value);
+        }
+        if (sortBy != null && sortType != null) {
+            return service.sortByParameter(sortBy, sortType);
+        }
         return service.findAll();
     }
 
-    @RequestMapping(value = "/{id}", produces = "application/json", method = GET)
-    public @ResponseBody
-    GiftCertificate getGiftCertificate(@PathVariable("id") BigInteger id) {
+    @GetMapping(value = "/{id}")
+    public GiftCertificate getGiftCertificate(@PathVariable("id") BigInteger id) {
         return service.findById(id).get();
     }
 
-    @RequestMapping(produces = "application/json", method = POST)
+    @PostMapping
     public void createGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
         service.save(giftCertificate);
     }
 
-    @RequestMapping(produces = "application/json", method = PATCH)
-    public void updateGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
-        service.update(giftCertificate);
+    @PutMapping(value = "/{id}")
+    public void updateGiftCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable BigInteger id) {
+        service.update(giftCertificate, id);
     }
 
-    @RequestMapping(value = "/{id}", produces = "application/json", method = DELETE)
-    public @ResponseBody
-    void deleteGiftCertificate(@PathVariable("id") BigInteger id) {
+    @DeleteMapping(value = "/{id}")
+    public void deleteGiftCertificate(@PathVariable("id") BigInteger id) {
         service.deleteById(id);
     }
 
+    @Autowired
+    public void setService(GiftCertificateService service) {
+        this.service = service;
+    }
 }
