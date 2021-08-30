@@ -1,4 +1,4 @@
-package com.epam.esm.service.enums;
+package com.epam.esm.enums;
 
 public enum SortType {
     asc("asc"),

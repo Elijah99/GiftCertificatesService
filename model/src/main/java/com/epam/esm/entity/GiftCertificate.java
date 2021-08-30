@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class GiftCertificate extends Entity {
 
@@ -20,7 +21,7 @@ public class GiftCertificate extends Entity {
     private int duration;
     private List<Tag> tags;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
         super(id);
         this.name = name;
         this.description = description;
@@ -28,6 +29,7 @@ public class GiftCertificate extends Entity {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.duration = duration;
+        this.tags = tags;
     }
 
     public GiftCertificate(String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
@@ -96,5 +98,24 @@ public class GiftCertificate extends Entity {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificate that = (GiftCertificate) o;
+        return duration == that.duration &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(createDate, that.createDate) &&
+                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
+                Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, price, createDate, lastUpdateDate, duration, tags);
     }
 }

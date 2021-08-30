@@ -1,4 +1,4 @@
-package com.epam.esm.service.impl;
+package com.epam.esm.service.impl.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
@@ -6,10 +6,12 @@ import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.utils.SearchParameter;
-import com.epam.esm.service.utils.SortParameter;
-import com.epam.esm.service.utils.SortType;
+import com.epam.esm.service.impl.GiftCertificateService;
+import com.epam.esm.enums.SearchParameter;
+import com.epam.esm.enums.SortParameter;
+import com.epam.esm.enums.SortType;
+import com.epam.esm.exception.GiftCertificateNotFoundException;
+import com.epam.esm.exception.InvalidSearchParametersException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,8 +37,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Optional<GiftCertificate> findById(BigInteger id) {
-        return giftCertificateDao.findById(id);
+    public GiftCertificate findById(BigInteger id) {
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
+        if (giftCertificateOptional.isPresent()) {
+            return giftCertificateOptional.get();
+        } else {
+            throw new GiftCertificateNotFoundException();
+        }
     }
 
     @Override
@@ -53,7 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     @Override
     public void save(GiftCertificate giftCertificate) {
-        if (CollectionUtils.isNotEmpty(giftCertificate.getTags())) {
+        if (!giftCertificate.getTags().isEmpty()) {
             saveNewTags(giftCertificate);
         }
         GiftCertificate savedGiftCertificate = giftCertificateDao.save(giftCertificate);
@@ -63,40 +70,46 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public void saveNewTags(GiftCertificate giftCertificate) {
+        List<Tag> allTags = tagDao.findAll();
         giftCertificate.getTags().forEach(tag -> {
-            String tagName = tag.getName();
-            if (tagDao.findByName(tagName).isPresent()) {
+            if (!allTags.contains(tag)) {
                 tagDao.save(tag);
             }
         });
     }
 
     public void bindCertificateWithTags(GiftCertificate giftCertificate) {
+        List<Tag> allTags = tagDao.findAll();
         giftCertificate.getTags().forEach(tag -> {
-            Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
-            if (tagOptional.isPresent()) {
-                GiftCertificateTag giftCertificateTag = new GiftCertificateTag(giftCertificate.getId(), tag.getId());
+            if (allTags.contains(tag)) {
+                int indexOfTag = allTags.indexOf(tag);
+                BigInteger tagId = allTags.get(indexOfTag).getId();
+                GiftCertificateTag giftCertificateTag = new GiftCertificateTag(giftCertificate.getId(), tagId);
                 giftCertificateTagDao.save(giftCertificateTag);
             }
         });
     }
 
     @Override
-    public List<GiftCertificate> searchByValue(SearchParameter searchParameter, String value){
-        switch (searchParameter){
-            case id: case name: case description: {
-                return giftCertificateDao.searchByColumn(searchParameter.value,value);
+    public List<GiftCertificate> searchByValue(SearchParameter searchParameter, String value) {
+        switch (searchParameter) {
+            case id:
+            case name:
+            case description: {
+                return giftCertificateDao.searchByColumn(searchParameter.value, value);
             }
-            case tag:{
+            case tag: {
                 return giftCertificateDao.searchByTagName(value);
             }
+            default: {
+                throw  new InvalidSearchParametersException();
+            }
         }
-        return null;
     }
 
     @Override
     public List<GiftCertificate> sortByParameter(SortParameter sortParameter, SortType sortType) {
-        return giftCertificateDao.findAllWithOrder(sortParameter.value,sortType.value);
+        return giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
     }
 
     @Autowired

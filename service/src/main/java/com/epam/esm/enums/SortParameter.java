@@ -1,15 +1,13 @@
-package com.epam.esm.service.enums;
+package com.epam.esm.enums;
 
-public enum SearchParameter {
-
+public enum SortParameter {
     name("name"),
     id("id"),
-    tag("tag"),
     description("description");
 
     public final String value;
 
-    private SearchParameter(String value) {
+    private SortParameter(String value) {
         this.value = value;
     }
 }

@@ -1,8 +1,9 @@
-package com.epam.esm.service.impl;
+package com.epam.esm.service.impl.impl;
 
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.service.TagService;
+import com.epam.esm.service.impl.TagService;
+import com.epam.esm.exception.TagNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Optional<Tag> findById(BigInteger id) {
-        return dao.findById(id);
-    }
-
-    @Override
-    public void update(Tag tag) {
-
+    public Tag findById(BigInteger id) {
+        Optional<Tag> tagOptional = dao.findById(id);
+        if(tagOptional.isPresent()){
+            return tagOptional.get();
+        } else {
+            throw new TagNotFoundException();
+        }
     }
 
     @Override

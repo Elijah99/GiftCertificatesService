@@ -18,10 +18,14 @@ import java.util.Optional;
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
-    private static final String SELECT_ALL = "SELECT * FROM gift_certificate";
-    private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate WHERE id = ?";
-    private static final String SELECT_BY_COLUMN = "SELECT * FROM gift_certificate WHERE ? like ?";
-    private static final String SELECT_ALL_WITH_ORDER = "SELECT * FROM gift_certificate ORDER BY ? ?";
+    private static final String SELECT_ALL = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
+            " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id";
+    private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
+            " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id WHERE gift_certificate.id = ?";
+    private static final String SELECT_BY_COLUMN = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
+            " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id WHERE gift_certificate.%s like ?";
+    private static final String SELECT_ALL_WITH_ORDER = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
+            " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id ORDER BY %s %s";
     private static final String SELECT_BY_TAG_NAME = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
             " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id WHERE tag.name LIKE ?";
     private static final String INSERT = "INSERT INTO gift_certificate (name, description, price, create_date, last_update_date, duration) VALUES (?, ?, ?, ?, ?, ?)";
@@ -84,7 +88,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> searchByColumn(String searchParameter, String value) {
-        return jdbcTemplate.query(SELECT_BY_COLUMN, rowMapper, searchParameter, "%" +  value + "%");
+        return jdbcTemplate.query(String.format(SELECT_BY_COLUMN, searchParameter), rowMapper, "%" + value + "%");
     }
 
     @Override
@@ -94,6 +98,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findAllWithOrder(String sortParameter, String sortType) {
-        return jdbcTemplate.query(SELECT_ALL_WITH_ORDER, rowMapper, sortParameter, sortType);
+        return jdbcTemplate.query(String.format(SELECT_ALL_WITH_ORDER, sortParameter, sortType), rowMapper);
     }
 }
