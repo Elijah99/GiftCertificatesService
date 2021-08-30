@@ -1,16 +1,16 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.mapper.GiftCertificateRowMapper;
 import com.epam.esm.mapper.TagRowMapper;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +49,28 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public BigInteger deleteById(BigInteger id) {
         jdbcTemplate.update(DELETE_BY_ID, id);
+        return id;
     }
 
     @Override
-    public void save(Tag tag) {
-        jdbcTemplate.update(INSERT, tag.getName());
+    public Tag save(Tag tag) {
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update( connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement( INSERT, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1,tag.getName());
+            return ps;
+        }, keyHolder);
+        Long idLong;
+        if (keyHolder.getKeys().size() > 1) {
+            idLong = (Long) keyHolder.getKeys().get("id");
+        } else {
+            idLong = keyHolder.getKey().longValue();
+        }
+        tag.setId(BigInteger.valueOf(idLong));
+        return tag;
     }
 }

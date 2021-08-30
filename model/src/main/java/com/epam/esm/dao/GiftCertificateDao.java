@@ -36,8 +36,9 @@ public interface GiftCertificateDao {
     /**
      * Deletes the GiftCertificate with given id.
      * @param id must not be {@literal null}.
+     * @return
      */
-    void deleteById(BigInteger id);
+    BigInteger deleteById(BigInteger id);
 
     /**
      * Saves a given GiftCertificate.

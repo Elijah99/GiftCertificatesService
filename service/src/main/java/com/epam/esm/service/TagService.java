@@ -1,4 +1,4 @@
-package com.epam.esm.service.impl;
+package com.epam.esm.service;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.TagNotFoundException;
@@ -37,6 +37,7 @@ public interface TagService {
     /**
      * Saves a given Tag.
      * @param tag must not be {@literal null}.
+     * @return
      */
-    void save(Tag tag);
+    Tag save(Tag tag);
 }

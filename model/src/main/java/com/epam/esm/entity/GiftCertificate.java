@@ -32,7 +32,8 @@ public class GiftCertificate extends Entity {
         this.tags = tags;
     }
 
-    public GiftCertificate(String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id,String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+        super(id);
         this.name = name;
         this.description = description;
         this.price = price;

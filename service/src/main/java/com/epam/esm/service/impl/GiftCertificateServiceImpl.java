@@ -1,4 +1,4 @@
-package com.epam.esm.service.impl.impl;
+package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
@@ -6,7 +6,7 @@ import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.service.impl.GiftCertificateService;
+import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
 import com.epam.esm.enums.SortType;

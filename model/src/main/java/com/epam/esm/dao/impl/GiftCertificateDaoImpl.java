@@ -82,8 +82,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public BigInteger deleteById(BigInteger id) {
         jdbcTemplate.update(DELETE_BY_ID, id);
+        return id;
     }
 
     @Override

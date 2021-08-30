@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.service.impl.GiftCertificateService;
+import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
 import com.epam.esm.enums.SortType;

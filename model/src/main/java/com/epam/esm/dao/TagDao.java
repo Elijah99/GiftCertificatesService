@@ -37,12 +37,14 @@ public interface TagDao {
     /**
      * Deletes the tag by its id.
      * @param id must not be {@literal null}.
+     * @return
      */
-    void deleteById(BigInteger id);
+    BigInteger deleteById(BigInteger id);
 
     /**
      * Saves a given Tag.
      * @param tag must not be {@literal null}.
+     * @return
      */
-    void save(Tag tag);
+    Tag save(Tag tag);
 }

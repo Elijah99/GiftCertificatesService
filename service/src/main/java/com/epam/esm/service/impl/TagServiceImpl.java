@@ -1,8 +1,8 @@
-package com.epam.esm.service.impl.impl;
+package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.service.impl.TagService;
+import com.epam.esm.service.TagService;
 import com.epam.esm.exception.TagNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +40,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void save(Tag tag) {
-        dao.save(tag);
+    public Tag save(Tag tag) {
+        return dao.save(tag);
     }
 
     @Autowired
