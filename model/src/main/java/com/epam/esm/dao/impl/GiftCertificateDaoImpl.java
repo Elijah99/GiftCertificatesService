@@ -81,10 +81,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void update(GiftCertificate giftCertificate) {
+    public GiftCertificate update(GiftCertificate giftCertificate) {
         jdbcTemplate.update(UPDATE, giftCertificate.getName(), giftCertificate.getDescription(),
                 giftCertificate.getPrice(), giftCertificate.getDuration(),
                 giftCertificate.getCreateDate(), Timestamp.valueOf(now()), giftCertificate.getId());
+        return findById(giftCertificate.getId()).get();
     }
 
     @Override

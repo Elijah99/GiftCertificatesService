@@ -22,11 +22,11 @@ public class GiftCertificate extends Entity {
     private List<Tag> tags;
 
     public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
-        this(id,name,description,price,createDate,lastUpdateDate,duration);
+        this(id, name, description, price, createDate, lastUpdateDate, duration);
         this.tags = tags;
     }
 
-    public GiftCertificate(BigInteger id,String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         super(id);
         this.name = name;
         this.description = description;

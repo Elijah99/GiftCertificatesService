@@ -1,42 +1,45 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.TagNotFoundException;
 
 import java.math.BigInteger;
 import java.util.List;
 
 /**
- *  Interface for operations on Tag class
+ * Interface for operations on Tag class
  *
- *  @author Ilya Ramanouski
+ * @author Ilya Ramanouski
  */
 public interface TagService {
 
     /**
      * Returns all of Tags.
+     *
      * @return list of all Tags
      */
     List<TagDto> findAll();
 
     /**
      * Retrieves a Tag by its id.
+     *
      * @param id must not be {@literal null}.
      * @return the Tag with the given id.
      * @throws TagNotFoundException if Tag with
-     * given id doesn't exists.
+     *                              given id doesn't exists.
      */
     TagDto findById(BigInteger id);
 
     /**
      * Deletes the Tag with given id.
+     *
      * @param id must not be {@literal null}.
      */
-    void deleteById(BigInteger id);
+    BigInteger deleteById(BigInteger id);
 
     /**
      * Saves a given Tag.
+     *
      * @param tag must not be {@literal null}.
      * @return saved Tag instance
      */

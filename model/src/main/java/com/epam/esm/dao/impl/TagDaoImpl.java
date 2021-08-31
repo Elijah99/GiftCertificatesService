@@ -24,8 +24,8 @@ public class TagDaoImpl implements TagDao {
     private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";
 
 
-    private JdbcTemplate jdbcTemplate;
-    private TagRowMapper rowMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final TagRowMapper rowMapper;
 
     @Autowired
     public TagDaoImpl(JdbcTemplate jdbcTemplate, TagRowMapper rowMapper) {
@@ -58,10 +58,10 @@ public class TagDaoImpl implements TagDao {
     public Tag save(Tag tag) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update( connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement( INSERT, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,tag.getName());
+                    .prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, tag.getName());
             return ps;
         }, keyHolder);
         Long idLong;

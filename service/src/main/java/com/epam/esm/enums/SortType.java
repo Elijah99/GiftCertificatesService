@@ -6,7 +6,7 @@ public enum SortType {
 
     public final String value;
 
-    private SortType(String value) {
+    SortType(String value) {
         this.value = value;
     }
 }

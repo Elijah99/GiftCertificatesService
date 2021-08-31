@@ -21,7 +21,7 @@ public class GiftCertificateDto {
     }
 
     public GiftCertificateDto(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
-        this(name,description,price,createDate,lastUpdateDate,duration);
+        this(name, description, price, createDate, lastUpdateDate, duration);
         this.id = id;
     }
 

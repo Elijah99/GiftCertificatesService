@@ -7,16 +7,16 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.mapper.impl.GiftCertificateMapper;
-import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
 import com.epam.esm.enums.SortType;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.InvalidSearchParametersException;
+import com.epam.esm.mapper.impl.GiftCertificateMapper;
+import com.epam.esm.service.GiftCertificateService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -52,21 +52,32 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void update(GiftCertificateDto giftCertificateDto, BigInteger id) {
-        giftCertificateDto.setId(id);
-        GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
-        giftCertificateDao.update(giftCertificate);
+    public GiftCertificateDto update(GiftCertificateDto giftCertificateDto, BigInteger id) {
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
+        if (giftCertificateOptional.isPresent()) {
+            giftCertificateDto.setId(id);
+            GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
+            GiftCertificate updatedGiftCertificate = giftCertificateDao.update(giftCertificate);
+            return giftCertificateMapper.mapEntityToDto(updatedGiftCertificate);
+        } else {
+            throw new GiftCertificateNotFoundException();
+        }
     }
 
     @Override
-    public void deleteById(BigInteger id) {
-        giftCertificateDao.deleteById(id);
+    public BigInteger deleteById(BigInteger id) {
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
+        if (giftCertificateOptional.isPresent()) {
+            return giftCertificateDao.deleteById(id);
+        } else {
+            throw new GiftCertificateNotFoundException();
+        }
     }
 
     @Transactional
     @Override
-    public void save(GiftCertificateDto giftCertificateDto) {
-        if (!giftCertificateDto.getTags().isEmpty()) {
+    public GiftCertificateDto save(GiftCertificateDto giftCertificateDto) {
+        if (giftCertificateDto.getTags() != null && !giftCertificateDto.getTags().isEmpty()) {
             saveNewTags(giftCertificateDto);
         }
         GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
@@ -74,6 +85,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (CollectionUtils.isNotEmpty(savedGiftCertificate.getTags())) {
             bindCertificateWithTags(savedGiftCertificate);
         }
+        return giftCertificateMapper.mapEntityToDto(savedGiftCertificate);
     }
 
     public void saveNewTags(GiftCertificateDto giftCertificateDto) {
@@ -119,7 +131,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType) {
-        List<GiftCertificate> giftCertificates =  giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
+        List<GiftCertificate> giftCertificates = giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 

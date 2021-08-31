@@ -11,11 +11,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
 
 @Configuration
 @EnableTransactionManagement
@@ -40,17 +35,17 @@ public class DbcpDataSourceConfiguration {
 
     @Bean
     public BasicDataSource postgresqlDataSource() {
-            BasicDataSource dataSource = new BasicDataSource();
+        BasicDataSource dataSource = new BasicDataSource();
 
-            dataSource.setDriverClassName(DRIVER_CLASS_NAME_PROPERTY);
-            dataSource.setUrl(URL_PROPERTY);
-            dataSource.setUsername(USERNAME_PROPERTY);
-            dataSource.setPassword(PASSWORD_PROPERTY);
-            dataSource.setMinIdle(Integer.parseInt(MIN_IDLE_PROPERTY));
-            dataSource.setMaxIdle(Integer.parseInt(MAX_IDLE_PROPERTY));
-            dataSource.setMaxWaitMillis(Long.parseLong(MAX_WAIT_MILLIS_PROPERTY));
+        dataSource.setDriverClassName(DRIVER_CLASS_NAME_PROPERTY);
+        dataSource.setUrl(URL_PROPERTY);
+        dataSource.setUsername(USERNAME_PROPERTY);
+        dataSource.setPassword(PASSWORD_PROPERTY);
+        dataSource.setMinIdle(Integer.parseInt(MIN_IDLE_PROPERTY));
+        dataSource.setMaxIdle(Integer.parseInt(MAX_IDLE_PROPERTY));
+        dataSource.setMaxWaitMillis(Long.parseLong(MAX_WAIT_MILLIS_PROPERTY));
 
-            return dataSource;
+        return dataSource;
     }
 
     @Bean

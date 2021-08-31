@@ -7,7 +7,7 @@ public enum SortParameter {
 
     public final String value;
 
-    private SortParameter(String value) {
+    SortParameter(String value) {
         this.value = value;
     }
 }

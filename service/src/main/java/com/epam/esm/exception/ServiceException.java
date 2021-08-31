@@ -3,7 +3,7 @@ package com.epam.esm.exception;
 import org.springframework.http.HttpStatus;
 
 public abstract class ServiceException extends RuntimeException {
-    private  HttpStatus status;
+    private HttpStatus status;
     private String message;
     private int errorCode;
 

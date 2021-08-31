@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 
 public class CustomExceptionResponse {
 
-    private HttpStatus httpStatus;
-    private String message;
-    private int code;
+    private final HttpStatus httpStatus;
+    private final String message;
+    private final int code;
 
     public CustomExceptionResponse(HttpStatus httpStatus, String message, int code) {
         this.httpStatus = httpStatus;

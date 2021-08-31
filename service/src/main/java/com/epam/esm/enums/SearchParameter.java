@@ -9,7 +9,7 @@ public enum SearchParameter {
 
     public final String value;
 
-    private SearchParameter(String value) {
+    SearchParameter(String value) {
         this.value = value;
     }
 }

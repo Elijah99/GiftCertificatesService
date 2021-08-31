@@ -3,9 +3,10 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.GiftCertificateNotFoundException;
+import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.TagService;
-import com.epam.esm.exception.TagNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto findById(BigInteger id) {
         Optional<Tag> tagOptional = dao.findById(id);
-        if(tagOptional.isPresent()){
+        if (tagOptional.isPresent()) {
             Tag tag = tagOptional.get();
             return tagMapper.mapEntityToDto(tag);
         } else {
@@ -40,8 +41,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
-        dao.deleteById(id);
+    public BigInteger deleteById(BigInteger id) {
+        Optional<Tag> tagOptional = dao.findById(id);
+        if (tagOptional.isPresent()) {
+            return dao.deleteById(id);
+        } else {
+            throw new TagNotFoundException();
+        }
+
     }
 
     @Override
