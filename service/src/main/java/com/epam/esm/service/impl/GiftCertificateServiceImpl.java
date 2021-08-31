@@ -3,9 +3,11 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
+    private GiftCertificateMapper giftCertificateMapper;
     private GiftCertificateDao giftCertificateDao;
     private TagDao tagDao;
     private GiftCertificateTagDao giftCertificateTagDao;
@@ -32,23 +35,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return giftCertificateDao.findAll();
+    public List<GiftCertificateDto> findAll() {
+        List<GiftCertificate> giftCertificates = giftCertificateDao.findAll();
+        return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 
     @Override
-    public GiftCertificate findById(BigInteger id) {
+    public GiftCertificateDto findById(BigInteger id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
-            return giftCertificateOptional.get();
+            GiftCertificate giftCertificate = giftCertificateOptional.get();
+            return giftCertificateMapper.mapEntityToDto(giftCertificate);
         } else {
             throw new GiftCertificateNotFoundException();
         }
     }
 
     @Override
-    public void update(GiftCertificate giftCertificate, BigInteger id) {
-        giftCertificate.setId(id);
+    public void update(GiftCertificateDto giftCertificateDto, BigInteger id) {
+        giftCertificateDto.setId(id);
+        GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
         giftCertificateDao.update(giftCertificate);
     }
 
@@ -59,18 +65,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Transactional
     @Override
-    public void save(GiftCertificate giftCertificate) {
-        if (!giftCertificate.getTags().isEmpty()) {
-            saveNewTags(giftCertificate);
+    public void save(GiftCertificateDto giftCertificateDto) {
+        if (!giftCertificateDto.getTags().isEmpty()) {
+            saveNewTags(giftCertificateDto);
         }
+        GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
         GiftCertificate savedGiftCertificate = giftCertificateDao.save(giftCertificate);
         if (CollectionUtils.isNotEmpty(savedGiftCertificate.getTags())) {
             bindCertificateWithTags(savedGiftCertificate);
         }
     }
 
-    public void saveNewTags(GiftCertificate giftCertificate) {
+    public void saveNewTags(GiftCertificateDto giftCertificateDto) {
         List<Tag> allTags = tagDao.findAll();
+        GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
         giftCertificate.getTags().forEach(tag -> {
             if (!allTags.contains(tag)) {
                 tagDao.save(tag);
@@ -91,25 +99,33 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificate> searchByValue(SearchParameter searchParameter, String value) {
+    public List<GiftCertificateDto> searchByValue(SearchParameter searchParameter, String value) {
         switch (searchParameter) {
             case id:
             case name:
             case description: {
-                return giftCertificateDao.searchByColumn(searchParameter.value, value);
+                List<GiftCertificate> giftCertificates = giftCertificateDao.searchByColumn(searchParameter.value, value);
+                return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             case tag: {
-                return giftCertificateDao.searchByTagName(value);
+                List<GiftCertificate> giftCertificates = giftCertificateDao.searchByTagName(value);
+                return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             default: {
-                throw  new InvalidSearchParametersException();
+                throw new InvalidSearchParametersException();
             }
         }
     }
 
     @Override
-    public List<GiftCertificate> sortByParameter(SortParameter sortParameter, SortType sortType) {
-        return giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
+    public List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType) {
+        List<GiftCertificate> giftCertificates =  giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
+        return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
+    }
+
+    @Autowired
+    public void setGiftCertificateMapper(GiftCertificateMapper giftCertificateMapper) {
+        this.giftCertificateMapper = giftCertificateMapper;
     }
 
     @Autowired

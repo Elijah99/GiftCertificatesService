@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.TagNotFoundException;
 
@@ -17,7 +18,7 @@ public interface TagService {
      * Returns all of Tags.
      * @return list of all Tags
      */
-    List<Tag> findAll();
+    List<TagDto> findAll();
 
     /**
      * Retrieves a Tag by its id.
@@ -26,7 +27,7 @@ public interface TagService {
      * @throws TagNotFoundException if Tag with
      * given id doesn't exists.
      */
-    Tag findById(BigInteger id);
+    TagDto findById(BigInteger id);
 
     /**
      * Deletes the Tag with given id.
@@ -37,7 +38,7 @@ public interface TagService {
     /**
      * Saves a given Tag.
      * @param tag must not be {@literal null}.
-     * @return
+     * @return saved Tag instance
      */
-    Tag save(Tag tag);
+    TagDto save(TagDto tag);
 }

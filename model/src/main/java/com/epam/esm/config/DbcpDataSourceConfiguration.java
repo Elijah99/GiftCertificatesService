@@ -39,7 +39,7 @@ public class DbcpDataSourceConfiguration {
     private String MAX_WAIT_MILLIS_PROPERTY;
 
     @Bean
-    public BasicDataSource postgresqlDataSource() throws ConfigurationException {
+    public BasicDataSource postgresqlDataSource() {
             BasicDataSource dataSource = new BasicDataSource();
 
             dataSource.setDriverClassName(DRIVER_CLASS_NAME_PROPERTY);

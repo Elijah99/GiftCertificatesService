@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
@@ -40,7 +41,7 @@ public class GiftCertificatesController {
      * @return list of GiftCertificate.
      */
     @GetMapping
-    public List<GiftCertificate> getAllGiftCertificates(@RequestParam(required = false) SearchParameter searchBy,
+    public List<GiftCertificateDto> getAllGiftCertificates(@RequestParam(required = false) SearchParameter searchBy,
                                                         @RequestParam(required = false) String value,
                                                         @RequestParam(required = false) SortParameter sortBy,
                                                         @RequestParam(required = false) SortType sortType) {
@@ -62,7 +63,7 @@ public class GiftCertificatesController {
      * @throws GiftCertificateNotFoundException if GiftCertificate with given id is not present
      */
     @GetMapping(value = "/{id}")
-    public GiftCertificate getGiftCertificate(@PathVariable("id") BigInteger id) {
+    public GiftCertificateDto getGiftCertificate(@PathVariable("id") BigInteger id) {
         return service.findById(id);
     }
 
@@ -74,7 +75,7 @@ public class GiftCertificatesController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
+    public void createGiftCertificate(@RequestBody GiftCertificateDto giftCertificate) {
         service.save(giftCertificate);
     }
 
@@ -87,7 +88,7 @@ public class GiftCertificatesController {
      */
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGiftCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable BigInteger id) {
+    public void updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificate, @PathVariable BigInteger id) {
         service.update(giftCertificate, id);
     }
     /**

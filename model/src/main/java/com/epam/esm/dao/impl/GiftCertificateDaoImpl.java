@@ -15,6 +15,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
@@ -29,6 +31,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     private static final String SELECT_BY_TAG_NAME = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
             " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id WHERE tag.name LIKE ?";
     private static final String INSERT = "INSERT INTO gift_certificate (name, description, price, create_date, last_update_date, duration) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE gift_certificate SET name = COALESCE(?, name), description = COALESCE(?, description)," +
+            " price = COALESCE(?, price), duration = COALESCE(?, duration), create_date = COALESCE(?, create_date), last_update_date = ? WHERE id =?";
     private static final String DELETE_BY_ID = "DELETE FROM gift_certificate WHERE id = ?";
 
 
@@ -78,7 +82,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public void update(GiftCertificate giftCertificate) {
-
+        jdbcTemplate.update(UPDATE, giftCertificate.getName(), giftCertificate.getDescription(),
+                giftCertificate.getPrice(), giftCertificate.getDuration(),
+                giftCertificate.getCreateDate(), Timestamp.valueOf(now()), giftCertificate.getId());
     }
 
     @Override

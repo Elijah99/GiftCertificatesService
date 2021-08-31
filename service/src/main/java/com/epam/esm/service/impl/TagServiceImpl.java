@@ -1,7 +1,9 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.impl.TagDaoImpl;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.TagService;
 import com.epam.esm.exception.TagNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +17,23 @@ import java.util.Optional;
 public class TagServiceImpl implements TagService {
 
     private TagDaoImpl dao;
+    private TagMapper tagMapper;
 
     public TagServiceImpl() {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return dao.findAll();
+    public List<TagDto> findAll() {
+        List<Tag> tags = dao.findAll();
+        return tagMapper.mapListEntityToListDto(tags);
     }
 
     @Override
-    public Tag findById(BigInteger id) {
+    public TagDto findById(BigInteger id) {
         Optional<Tag> tagOptional = dao.findById(id);
         if(tagOptional.isPresent()){
-            return tagOptional.get();
+            Tag tag = tagOptional.get();
+            return tagMapper.mapEntityToDto(tag);
         } else {
             throw new TagNotFoundException();
         }
@@ -40,8 +45,15 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag save(Tag tag) {
-        return dao.save(tag);
+    public TagDto save(TagDto tagDto) {
+        Tag tag = tagMapper.mapDtoToEntity(tagDto);
+        Tag savedTag = dao.save(tag);
+        return tagMapper.mapEntityToDto(savedTag);
+    }
+
+    @Autowired
+    public void setTagMapper(TagMapper tagMapper) {
+        this.tagMapper = tagMapper;
     }
 
     @Autowired

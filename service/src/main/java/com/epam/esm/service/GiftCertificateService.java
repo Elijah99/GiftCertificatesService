@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
@@ -21,7 +22,7 @@ public interface GiftCertificateService {
      * Returns all of GiftCertificates.
      * @return list of all GiftCertificates
      */
-    List<GiftCertificate> findAll();
+    List<GiftCertificateDto> findAll();
 
     /**
      * Retrieves an GiftCertificate by its id.
@@ -30,14 +31,14 @@ public interface GiftCertificateService {
      * @throws GiftCertificateNotFoundException if GiftCertificate
      * with given id doesn't exists.
      */
-    GiftCertificate findById(BigInteger id);
+    GiftCertificateDto findById(BigInteger id);
 
     /**
      * Changes instance of GiftCertificate with given id.
      * @param giftCertificate updated instance of GiftCertificate.
      * @param id index of GiftCertificate to update.
      */
-    void update(GiftCertificate giftCertificate, BigInteger id);
+    void update(GiftCertificateDto giftCertificate, BigInteger id);
 
     /**
      * Deletes the GiftCertificate with given id.
@@ -49,7 +50,7 @@ public interface GiftCertificateService {
      * Saves a given GiftCertificate.
      * @param giftCertificate must not be {@literal null}.
      */
-    void save(GiftCertificate giftCertificate);
+    void save(GiftCertificateDto giftCertificate);
 
     /**
      * Returns list of all found by parameters GiftCertificates.
@@ -57,7 +58,7 @@ public interface GiftCertificateService {
      * @param value given value to search.
      * @return list of found GiftCertificates.
      */
-    List<GiftCertificate> searchByValue(SearchParameter searchParameter, String value);
+    List<GiftCertificateDto> searchByValue(SearchParameter searchParameter, String value);
 
     /**
      * Returns sorted by parameter list of GiftCertificates.
@@ -65,5 +66,5 @@ public interface GiftCertificateService {
      * @param sortType asc/desc sort.
      * @return sorted list of GiftCertificates.
      */
-    List<GiftCertificate> sortByParameter(SortParameter sortParameter, SortType sortType);
+    List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType);
 }

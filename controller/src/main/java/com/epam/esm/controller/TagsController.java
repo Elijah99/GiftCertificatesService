@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
@@ -30,7 +31,7 @@ public class TagsController {
      * @return list of Tags.
      */
     @GetMapping
-    public List<Tag> getAllTags() {
+    public List<TagDto> getAllTags() {
         return service.findAll();
     }
 
@@ -43,7 +44,7 @@ public class TagsController {
      * @throws TagNotFoundException if Tag with given id is not present
      */
     @GetMapping(value = "/{id}")
-    public Tag getTag(@PathVariable("id") BigInteger id) {
+    public TagDto getTag(@PathVariable("id") BigInteger id) {
         return service.findById(id);
     }
 
@@ -54,7 +55,7 @@ public class TagsController {
      * @param tag Tag object bases on json object in request body
      */
     @PostMapping
-    public void createTag(@RequestBody Tag tag) {
+    public void createTag(@RequestBody TagDto tag) {
         service.save(tag);
     }
 
