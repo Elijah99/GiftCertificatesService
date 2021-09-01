@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> findAll() {
         List<GiftCertificate> giftCertificates = giftCertificateDao.findAll();
+        giftCertificates = setTags(giftCertificates);
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 
@@ -45,6 +47,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
             GiftCertificate giftCertificate = giftCertificateOptional.get();
+            giftCertificate = setTags(giftCertificate);
             return giftCertificateMapper.mapEntityToDto(giftCertificate);
         } else {
             throw new GiftCertificateNotFoundException();
@@ -110,6 +113,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         });
     }
 
+
     @Override
     public List<GiftCertificateDto> searchByValue(SearchParameter searchParameter, String value) {
         switch (searchParameter) {
@@ -133,6 +137,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType) {
         List<GiftCertificate> giftCertificates = giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
+    }
+
+    private GiftCertificate setTags(GiftCertificate giftCertificate){
+        List<Tag> tags = tagDao.findByGiftCertificateId(giftCertificate.getId());
+        giftCertificate.setTags(tags);
+        return giftCertificate;
+    }
+
+    private List<GiftCertificate> setTags(List<GiftCertificate> giftCertificates){
+        for(GiftCertificate giftCertificate: giftCertificates){
+            List<Tag> tags = tagDao.findByGiftCertificateId(giftCertificate.getId());
+            giftCertificate.setTags(tags);
+        }
+        return giftCertificates;
     }
 
     @Autowired

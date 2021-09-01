@@ -96,7 +96,6 @@ public class GiftCertificateServiceImplTest {
 
         verify(giftCertificateDaoMock).findById(any());
         verifyNoMoreInteractions(giftCertificateDaoMock);
-        verifyNoMoreInteractions(tagDaoMock);
     }
 
     @Test

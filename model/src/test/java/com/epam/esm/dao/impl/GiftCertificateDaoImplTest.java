@@ -4,6 +4,8 @@ import com.epam.esm.config.TestDataSourceConfiguration;
 import com.epam.esm.entity.GiftCertificate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -92,16 +96,32 @@ public class GiftCertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnEmptyOptional() {
+    public void testFindByIdShouldReturnEmptyOptional() {
         Optional<GiftCertificate> actual = dao.findById(GIFT_CERTIFICATE_ID_INVALID);
         assertEquals(Optional.empty(), actual);
     }
 
     @Test
-    public void testUpdate() {
-        GiftCertificate actual = dao.update(FIRST_GIFT_CERTIFICATE_UPDATE_FIELDS);
-        assertEquals(FIRST_GIFT_CERTIFICATE_UPDATED, actual);
+    public void testSearchByColumn() {
+        List<GiftCertificate> actual = dao.searchByColumn(SEARCH_COLUMN_NAME, SEARCH_VALUE);
+        assertEquals(searchByColumnExpected, actual);
     }
+
+    @Test
+    public void testFindAllWithOrder() {
+        List<GiftCertificate> actual = dao.findAllWithOrder(SORT_COLUMN_NAME, SORT_TYPE);
+        assertEquals(sortedByName, actual);
+    }
+
+    @Test
+    public void testUpdate() {
+        try(MockedStatic<LocalDateTime> mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+            when(LocalDateTime.now()).thenReturn(DATE);
+            GiftCertificate actual = dao.update(FIRST_GIFT_CERTIFICATE_UPDATE_FIELDS);
+            assertEquals(FIRST_GIFT_CERTIFICATE_UPDATED, actual);
+        }
+    }
+
 
     @Test
     public void testSave() {
@@ -113,18 +133,6 @@ public class GiftCertificateDaoImplTest {
     public void testDeleteById() {
         BigInteger actual = dao.deleteById(ID_TO_DELETE);
         assertEquals(ID_TO_DELETE, actual);
-    }
-
-    @Test
-    public void testSearchByColumn() {
-        List<GiftCertificate> actual = dao.searchByColumn(SEARCH_COLUMN_NAME, SEARCH_VALUE);
-        assertEquals(searchByColumnExpected, actual);
-    }
-
-    @Test
-    public void testFindAllWithOrder() {
-        List<GiftCertificate> actual = dao.findAllWithOrder(SORT_COLUMN_NAME,SORT_TYPE);
-        assertEquals(sortedByName, actual);
     }
 
 }

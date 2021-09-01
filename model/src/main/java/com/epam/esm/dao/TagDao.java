@@ -29,6 +29,8 @@ public interface TagDao {
      */
     Optional<Tag> findById(BigInteger id);
 
+    List<Tag> findByGiftCertificateId(BigInteger id);
+
     /**
      * Retrieves a tag from database by its name.
      *

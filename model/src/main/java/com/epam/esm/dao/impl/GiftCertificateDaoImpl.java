@@ -24,13 +24,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate WHERE gift_certificate.id = ?";
     private static final String SELECT_BY_COLUMN = "SELECT * FROM gift_certificate WHERE gift_certificate.%s like ?";
     private static final String SELECT_ALL_WITH_ORDER = "SELECT * FROM gift_certificate ORDER BY %s %s";
-    private static final String SELECT_BY_TAG_NAME = "SELECT * FROM gift_certificate INNER JOIN gift_certificate_tag" +
+    private static final String SELECT_BY_TAG_NAME = "SELECT gift_certificate.* FROM gift_certificate INNER JOIN gift_certificate_tag" +
             " ON gift_certificate.id = gift_certificate_tag.id_gift_certificate INNER JOIN tag ON gift_certificate_tag.id_tag = tag.id WHERE tag.name LIKE ?";
     private static final String INSERT = "INSERT INTO gift_certificate (name, description, price, create_date, last_update_date, duration) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE gift_certificate SET name = COALESCE(?, name), description = COALESCE(?, description)," +
-            " price = COALESCE(?, price), duration = COALESCE(?, duration), create_date = COALESCE(?, create_date), last_update_date = ? WHERE id =?";
-    private static final String DELETE_BY_ID = "DELETE FROM gift_certificate WHERE id = ?";
-
+            " price = COALESCE(?, price), duration = COALESCE(NULLIF(?, 0), duration), create_date = COALESCE(?, create_date), last_update_date = ? WHERE id =?";
+    private static final String DELETE_GIFT_CERTIFICATE_BY_ID = "DELETE FROM gift_certificate WHERE id = ?";
+    private static final String DELETE_FROM_LINK_TABLE_BY_ID = "DELETE FROM gift_certificate_tag WHERE id_gift_certificate = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final GiftCertificateRowMapper rowMapper;
@@ -86,7 +86,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public BigInteger deleteById(BigInteger id) {
-        jdbcTemplate.update(DELETE_BY_ID, id);
+        jdbcTemplate.update(DELETE_FROM_LINK_TABLE_BY_ID, id);
+        jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_BY_ID, id);
         return id;
     }
 

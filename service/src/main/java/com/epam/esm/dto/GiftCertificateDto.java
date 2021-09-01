@@ -97,4 +97,18 @@ public class GiftCertificateDto {
     public void setTags(List<TagDto> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public String toString() {
+        return "GiftCertificateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", duration=" + duration +
+                ", tags=" + tags +
+                '}';
+    }
 }

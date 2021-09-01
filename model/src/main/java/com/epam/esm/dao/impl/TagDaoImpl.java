@@ -20,9 +20,11 @@ public class TagDaoImpl implements TagDao {
     private static final String SELECT_ALL = "SELECT * FROM tag";
     private static final String SELECT_BY_ID = "SELECT * FROM tag WHERE id = ?";
     private static final String SELECT_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
+    private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
+            " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate = ?";
     private static final String INSERT = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";
-
+    private static final String DELETE_FROM_LINK_TABLE_BY_ID = "DELETE FROM gift_certificate_tag WHERE id_tag = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final TagRowMapper rowMapper;
@@ -44,12 +46,18 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public List<Tag> findByGiftCertificateId(BigInteger id) {
+        return jdbcTemplate.query(SELECT_BY_GIFT_CERTIFICATE_ID, rowMapper, id);
+    }
+
+    @Override
     public Optional<Tag> findByName(String name) {
         return jdbcTemplate.query(SELECT_BY_NAME, rowMapper, name).stream().findAny();
     }
 
     @Override
     public BigInteger deleteById(BigInteger id) {
+        jdbcTemplate.update(DELETE_FROM_LINK_TABLE_BY_ID, id);
         jdbcTemplate.update(DELETE_BY_ID, id);
         return id;
     }

@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
 @EnableTransactionManagement
-@Profile("dev")
+@ActiveProfiles("dev")
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:db_postgres.properties")
 public class DevDataSourceConfiguration {

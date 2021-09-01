@@ -3,9 +3,9 @@ CREATE TABLE gift_certificate (
     description character varying(255),
     price numeric NOT NULL,
     create_date timestamp with time zone NOT NULL,
-    last_update_date timestamp with time zone,
+    last_update_date timestamp with time zone NOT NULL,
     id bigint NOT NULL IDENTITY,
-    duration integer,
+    duration integer NOT NULL,
     PRIMARY KEY (id)
 );
 
