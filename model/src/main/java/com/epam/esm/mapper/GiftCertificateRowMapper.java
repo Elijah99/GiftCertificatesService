@@ -23,8 +23,7 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
         LocalDateTime createDate = resultSet.getTimestamp("create_date").toLocalDateTime();
         LocalDateTime lastUpdateDate = resultSet.getTimestamp("last_update_date").toLocalDateTime();
         int duration = resultSet.getInt("duration");
-        String tagName = resultSet.getString("name");
 
-        return new GiftCertificate(id, name, description, price, createDate, lastUpdateDate, duration, Arrays.asList(new Tag(tagName)));
+        return new GiftCertificate(id, name, description, price, createDate, lastUpdateDate, duration);
     }
 }

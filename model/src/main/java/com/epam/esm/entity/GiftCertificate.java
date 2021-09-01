@@ -45,9 +45,15 @@ public class GiftCertificate extends Entity {
         this.duration = duration;
     }
 
-    public GiftCertificate() {
+    public GiftCertificate(BigInteger id, String name, String description, LocalDateTime lastUpdateDate) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.lastUpdateDate = lastUpdateDate;
     }
 
+    public GiftCertificate() {
+    }
 
     public String getName() {
         return name;
@@ -122,5 +128,18 @@ public class GiftCertificate extends Entity {
     @Override
     public int hashCode() {
         return Objects.hash(name, description, price, createDate, lastUpdateDate, duration, tags);
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", duration=" + duration +
+                ", tags=" + tags +
+                '}';
     }
 }

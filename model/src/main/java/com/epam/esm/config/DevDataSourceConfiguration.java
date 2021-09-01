@@ -2,10 +2,7 @@ package com.epam.esm.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,9 +11,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
+@Profile("dev")
 @ComponentScan("com.epam.esm")
-@PropertySource("classpath:db.properties")
-public class DbcpDataSourceConfiguration {
+@PropertySource("classpath:db_postgres.properties")
+public class DevDataSourceConfiguration {
 
     @Value("${dataSource.driverClassName}")
     private String DRIVER_CLASS_NAME_PROPERTY;
