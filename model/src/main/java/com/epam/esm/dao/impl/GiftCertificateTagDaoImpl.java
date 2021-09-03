@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
 
+    private static final String SELECT_ALL = "SELECT * FROM gift_certificate_tag";
     private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate_tag WHERE id = ?";
     private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM gift_certificate_tag WHERE id_gift_certificate = ?";
     private static final String SELECT_BY_TAG_ID = "SELECT * FROM gift_certificate_tag WHERE id_tag = ?";
@@ -27,6 +28,11 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     public GiftCertificateTagDaoImpl(JdbcTemplate jdbcTemplate, GiftCertificateTagRowMapper rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = rowMapper;
+    }
+
+    @Override
+    public List<GiftCertificateTag> findAll() {
+        return jdbcTemplate.query(SELECT_ALL, rowMapper);
     }
 
     @Override
@@ -56,4 +62,5 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
                 giftCertificateTag.getIdGiftCertificate(),
                 giftCertificateTag.getIdTag());
     }
+
 }

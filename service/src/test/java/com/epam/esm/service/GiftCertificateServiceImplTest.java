@@ -1,9 +1,13 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.GiftCertificateTagDaoImpl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.GiftCertificateTag;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.enums.SearchParameter;
 import com.epam.esm.enums.SortParameter;
 import com.epam.esm.enums.SortType;
@@ -46,11 +50,16 @@ public class GiftCertificateServiceImplTest {
 
     private static List<GiftCertificate> certificateList;
     private static List<GiftCertificateDto> certificateDtoList;
+    private static List<GiftCertificateTag> giftCertificateTagList;
+    private static List<Tag> tagList;
+    private static List<TagDto> tagDtoList;
 
     @InjectMocks
     GiftCertificateServiceImpl giftCertificateService;
     @Mock
     private GiftCertificateDaoImpl giftCertificateDaoMock;
+    @Mock
+    private GiftCertificateTagDaoImpl giftCertificateTagDaoMock;
     @Mock
     private TagDaoImpl tagDaoMock;
     @Mock
@@ -62,17 +71,30 @@ public class GiftCertificateServiceImplTest {
     }
 
     private static void initCertificatesLists() {
+        giftCertificateTagList = Arrays.asList(
+                new GiftCertificateTag(new BigInteger("1"), new BigInteger("2")),
+                new GiftCertificateTag(new BigInteger("2"), new BigInteger("2")));
+
+        tagList = Arrays.asList(
+                new Tag(new BigInteger("1"), "name1"),
+                new Tag(new BigInteger("2"), "name2"));
+
+        tagDtoList = Arrays.asList(
+                new TagDto(new BigInteger("1"), "name1"),
+                new TagDto(new BigInteger("2"), "name2"));
+
+
         certificateList = Arrays.asList(new GiftCertificate(new BigInteger("1"), "1st name",
                         "1st description", new BigDecimal("10"),
-                        LocalDateTime.now(), LocalDateTime.now(), 7),
+                        LocalDateTime.now(), LocalDateTime.now(), 7, tagList),
                 new GiftCertificate(new BigInteger("2"), "2st name", "2nd description",
-                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9));
+                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9, tagList));
 
         certificateDtoList = Arrays.asList(new GiftCertificateDto(new BigInteger("1"), "1st name",
                         "1st description", new BigDecimal("10"),
-                        LocalDateTime.now(), LocalDateTime.now(), 7),
+                        LocalDateTime.now(), LocalDateTime.now(), 7, tagDtoList),
                 new GiftCertificateDto(new BigInteger("2"), "2st name", "2nd description",
-                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9));
+                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9, tagDtoList));
 
     }
 
@@ -80,11 +102,17 @@ public class GiftCertificateServiceImplTest {
     public void testFindAllShouldReturnGiftCertificateList() {
         when(giftCertificateDaoMock.findAll()).thenReturn(certificateList);
         when(giftCertificateMapperMock.mapListEntityToListDto(certificateList)).thenReturn(certificateDtoList);
+        when(giftCertificateTagDaoMock.findAll()).thenReturn(giftCertificateTagList);
+        when(tagDaoMock.findAll()).thenReturn(tagList);
 
         assertEquals(giftCertificateService.findAll(), certificateDtoList);
 
         verify(giftCertificateDaoMock).findAll();
+        verify(giftCertificateTagDaoMock).findAll();
+        verify(tagDaoMock).findAll();
         verifyNoMoreInteractions(giftCertificateDaoMock);
+        verifyNoMoreInteractions(giftCertificateTagDaoMock);
+        verifyNoMoreInteractions(tagDaoMock);
     }
 
     @Test

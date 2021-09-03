@@ -81,4 +81,5 @@ public class TagDaoImpl implements TagDao {
         tag.setId(BigInteger.valueOf(idLong));
         return tag;
     }
+
 }

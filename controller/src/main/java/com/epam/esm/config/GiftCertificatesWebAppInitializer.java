@@ -1,9 +1,8 @@
 package com.epam.esm.config;
 
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 public class GiftCertificatesWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -17,5 +16,14 @@ public class GiftCertificatesWebAppInitializer extends AbstractAnnotationConfigD
 
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected WebApplicationContext createRootApplicationContext() {
+
+        WebApplicationContext context = super.createRootApplicationContext();
+        ((ConfigurableEnvironment) context.getEnvironment()).setActiveProfiles("dev");
+
+        return context;
     }
 }

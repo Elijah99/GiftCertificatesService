@@ -20,6 +20,12 @@ public class GiftCertificateDto {
     public GiftCertificateDto() {
     }
 
+    public GiftCertificateDto(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<TagDto> tags) {
+        this(name, description, price, createDate, lastUpdateDate, duration);
+        this.id = id;
+        this.tags = tags;
+    }
+
     public GiftCertificateDto(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         this(name, description, price, createDate, lastUpdateDate, duration);
         this.id = id;

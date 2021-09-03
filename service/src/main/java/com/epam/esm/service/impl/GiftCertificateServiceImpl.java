@@ -38,8 +38,30 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> findAll() {
         List<GiftCertificate> giftCertificates = giftCertificateDao.findAll();
-        giftCertificates = setTags(giftCertificates);
-        return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
+        List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findAll();
+        List<Tag> foundTags = tagDao.findAll();
+        List<GiftCertificate> foundGiftCertificates = bindCertificatesWithTags(giftCertificates, giftCertificateTags, foundTags);
+        return giftCertificateMapper.mapListEntityToListDto(foundGiftCertificates);
+    }
+
+    private List<GiftCertificate> bindCertificatesWithTags(List<GiftCertificate> giftCertificates,
+                                                           List<GiftCertificateTag> giftCertificateTags,
+                                                           List<Tag> tags) {
+        giftCertificates.forEach(giftCertificate -> {
+            BigInteger idGiftCertificate = giftCertificate.getId();
+            giftCertificateTags.forEach(giftCertificateTag -> {
+                List<Tag> foundTags = new ArrayList<>();
+                if (idGiftCertificate.equals(giftCertificateTag.getIdGiftCertificate())) {
+                    tags.forEach(tag -> {
+                        if (tag.getId().equals(giftCertificateTag.getIdTag())) {
+                            foundTags.add(tag);
+                        }
+                    });
+                    giftCertificate.setTags(foundTags);
+                }
+            });
+        });
+        return giftCertificates;
     }
 
     @Override
@@ -139,18 +161,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 
-    private GiftCertificate setTags(GiftCertificate giftCertificate){
+    private GiftCertificate setTags(GiftCertificate giftCertificate) {
         List<Tag> tags = tagDao.findByGiftCertificateId(giftCertificate.getId());
         giftCertificate.setTags(tags);
         return giftCertificate;
-    }
-
-    private List<GiftCertificate> setTags(List<GiftCertificate> giftCertificates){
-        for(GiftCertificate giftCertificate: giftCertificates){
-            List<Tag> tags = tagDao.findByGiftCertificateId(giftCertificate.getId());
-            giftCertificate.setTags(tags);
-        }
-        return giftCertificates;
     }
 
     @Autowired

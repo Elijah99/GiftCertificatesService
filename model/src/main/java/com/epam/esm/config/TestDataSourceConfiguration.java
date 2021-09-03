@@ -3,15 +3,10 @@ package com.epam.esm.config;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import java.util.Arrays;
 
 @Configuration
 @ComponentScan("com.epam.esm")
@@ -34,10 +29,7 @@ public class TestDataSourceConfiguration {
     private String MAX_IDLE_PROPERTY;
     @Value("${dataSource.maxWaitMillis}")
     private String MAX_WAIT_MILLIS_PROPERTY;
-    @Value("${dataSource.schemaLocation}")
-    private String SCHEMA_LOCATION;
-    @Value("${dataSource.initScriptLocation}")
-    private String INIT_SCRIPT_LOCATION;
+
 
     @Bean
     public BasicDataSource hsqldbDataSource() {
@@ -50,11 +42,6 @@ public class TestDataSourceConfiguration {
         dataSource.setMinIdle(Integer.parseInt(MIN_IDLE_PROPERTY));
         dataSource.setMaxIdle(Integer.parseInt(MAX_IDLE_PROPERTY));
         dataSource.setMaxWaitMillis(Long.parseLong(MAX_WAIT_MILLIS_PROPERTY));
-
-        Resource schemaResource = new ClassPathResource(SCHEMA_LOCATION);
-        Resource initScriptResource = new ClassPathResource(INIT_SCRIPT_LOCATION);
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(schemaResource, initScriptResource);
-        databasePopulator.execute(dataSource);
 
         return dataSource;
     }
