@@ -19,4 +19,6 @@ public interface TagDao {
     BigInteger deleteById(BigInteger id);
 
     Tag save(Tag tag);
+
+    List<Tag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates);
 }

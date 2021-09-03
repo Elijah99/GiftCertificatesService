@@ -4,6 +4,7 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.entity.Entity;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.GiftCertificateTag;
 import com.epam.esm.entity.Tag;
@@ -23,6 +24,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
@@ -143,10 +145,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             case name:
             case description: {
                 List<GiftCertificate> giftCertificates = giftCertificateDao.searchByColumn(searchParameter.value, value);
+                List<BigInteger> idGiftCertificates = giftCertificates.stream().map(Entity::getId).collect(Collectors.toList());
+                List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
+                List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
+                giftCertificates = bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             case tag: {
                 List<GiftCertificate> giftCertificates = giftCertificateDao.searchByTagName(value);
+                List<BigInteger> idGiftCertificates = giftCertificates.stream().map(Entity::getId).collect(Collectors.toList());
+                List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
+                List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
+                giftCertificates = bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             default: {

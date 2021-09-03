@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
@@ -17,6 +18,7 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     private static final String SELECT_ALL = "SELECT * FROM gift_certificate_tag";
     private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate_tag WHERE id = ?";
     private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM gift_certificate_tag WHERE id_gift_certificate = ?";
+    private static final String SELECT_BY_GIFT_CERTIFICATE_ID_IN = "SELECT * FROM gift_certificate_tag WHERE id_gift_certificate IN(%s)";
     private static final String SELECT_BY_TAG_ID = "SELECT * FROM gift_certificate_tag WHERE id_tag = ?";
     private static final String INSERT = "INSERT INTO  gift_certificate_tag (id_gift_certificate, id_tag) VALUES (?, ?)";
     private static final String DELETE_BY_ID = "DELETE FROM  gift_certificate_tag WHERE id = ?";
@@ -63,4 +65,9 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
                 giftCertificateTag.getIdTag());
     }
 
+    @Override
+    public List<GiftCertificateTag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates) {
+        String idGiftCertificatesParams = String.join(",", idGiftCertificates.stream().map(id -> "?").collect(Collectors.toList()));
+        return jdbcTemplate.query(String.format(SELECT_BY_GIFT_CERTIFICATE_ID_IN, idGiftCertificatesParams), rowMapper, idGiftCertificates.toArray());
+    }
 }

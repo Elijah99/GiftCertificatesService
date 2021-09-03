@@ -19,4 +19,6 @@ public interface GiftCertificateTagDao {
     void save(GiftCertificateTag giftCertificateTag);
 
     List<GiftCertificateTag> findAll();
+
+    List<GiftCertificateTag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates);
 }

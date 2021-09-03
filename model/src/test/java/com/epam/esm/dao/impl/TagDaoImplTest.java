@@ -98,4 +98,8 @@ public class TagDaoImplTest {
         assertEquals(ID_TO_DELETE, actual);
     }
 
+    @Test
+    public void test1(){
+        assertEquals(findAllExpected, dao.findByGiftCertificateIdIn(Arrays.asList(new BigInteger("1"), new BigInteger("2"))));
+    }
 }

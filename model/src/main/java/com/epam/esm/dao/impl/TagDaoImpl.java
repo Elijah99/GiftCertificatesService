@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -22,6 +23,8 @@ public class TagDaoImpl implements TagDao {
     private static final String SELECT_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
     private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
             " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate = ?";
+    private static final String SELECT_BY_GIFT_CERTIFICATE_ID_IN = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
+            " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate IN(%s)";
     private static final String INSERT = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";
     private static final String DELETE_FROM_LINK_TABLE_BY_ID = "DELETE FROM gift_certificate_tag WHERE id_tag = ?";
@@ -82,4 +85,9 @@ public class TagDaoImpl implements TagDao {
         return tag;
     }
 
+    @Override
+    public List<Tag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates) {
+        String idGiftCertificatesParams = String.join(",", idGiftCertificates.stream().map(id -> "?").collect(Collectors.toList()));
+        return jdbcTemplate.query(String.format(SELECT_BY_GIFT_CERTIFICATE_ID_IN, idGiftCertificatesParams), rowMapper, idGiftCertificates.toArray());
+    }
 }
