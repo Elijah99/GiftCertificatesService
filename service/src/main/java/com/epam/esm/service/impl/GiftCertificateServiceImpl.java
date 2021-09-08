@@ -51,8 +51,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                            List<Tag> tags) {
         giftCertificates.forEach(giftCertificate -> {
             BigInteger idGiftCertificate = giftCertificate.getId();
+            List<Tag> foundTags = new ArrayList<>();
             giftCertificateTags.forEach(giftCertificateTag -> {
-                List<Tag> foundTags = new ArrayList<>();
                 if (idGiftCertificate.equals(giftCertificateTag.getIdGiftCertificate())) {
                     tags.forEach(tag -> {
                         if (tag.getId().equals(giftCertificateTag.getIdTag())) {
@@ -148,7 +148,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 List<BigInteger> idGiftCertificates = giftCertificates.stream().map(Entity::getId).collect(Collectors.toList());
                 List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
                 List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                giftCertificates = bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
+                bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             case tag: {
@@ -156,7 +156,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 List<BigInteger> idGiftCertificates = giftCertificates.stream().map(Entity::getId).collect(Collectors.toList());
                 List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
                 List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                giftCertificates = bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
+                bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             default: {
@@ -168,6 +168,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType) {
         List<GiftCertificate> giftCertificates = giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
+        List<BigInteger> idGiftCertificates = giftCertificates.stream().map(Entity::getId).collect(Collectors.toList());
+        List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
+        List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
+        bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 

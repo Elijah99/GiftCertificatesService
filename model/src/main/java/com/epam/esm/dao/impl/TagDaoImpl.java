@@ -23,7 +23,7 @@ public class TagDaoImpl implements TagDao {
     private static final String SELECT_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
     private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
             " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate = ?";
-    private static final String SELECT_BY_GIFT_CERTIFICATE_ID_IN = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
+    private static final String SELECT_BY_GIFT_CERTIFICATE_ID_IN = "SELECT DISTINCT tag.* FROM tag INNER JOIN gift_certificate_tag" +
             " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate IN(%s)";
     private static final String INSERT = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";

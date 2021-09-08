@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -167,7 +168,7 @@ public class GiftCertificateServiceImplTest {
     public void testDeleteShouldThrowNotFoundExceptionWhenGiftCertificateNotFound() {
         when(giftCertificateDaoMock.findById(GIFT_CERTIFICATE_ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(GiftCertificateNotFoundException.class, () -> {
+        assertThrows(GiftCertificateNotFoundException.class, () -> {
             assertEquals(GIFT_CERTIFICATE_ID, giftCertificateService.deleteById(GIFT_CERTIFICATE_ID));
         });
 
@@ -180,7 +181,7 @@ public class GiftCertificateServiceImplTest {
     public void testUpdateShouldThrowNotFoundExceptionWhenGiftCertificateNotFound() {
         when(giftCertificateDaoMock.findById(GIFT_CERTIFICATE_ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(GiftCertificateNotFoundException.class, () -> {
+        assertThrows(GiftCertificateNotFoundException.class, () -> {
             giftCertificateService.update(GIFT_CERTIFICATE_DTO, GIFT_CERTIFICATE_ID);
         });
 
