@@ -7,6 +7,7 @@ import com.epam.esm.enums.SortType;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,8 +2,9 @@ package com.epam.esm.entity;
 
 import java.math.BigInteger;
 
-public class GiftCertificateTag extends Entity {
+public class GiftCertificateTag {
 
+    private BigInteger id;
     private BigInteger idGiftCertificate;
     private BigInteger idTag;
 
@@ -13,9 +14,17 @@ public class GiftCertificateTag extends Entity {
     }
 
     public GiftCertificateTag(BigInteger id, BigInteger idGiftCertificate, BigInteger idTag) {
-        super(id);
+        this.id = id;
         this.idGiftCertificate = idGiftCertificate;
         this.idTag = idTag;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public BigInteger getIdGiftCertificate() {

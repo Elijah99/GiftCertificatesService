@@ -3,22 +3,40 @@ package com.epam.esm.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class GiftCertificate extends Entity {
+@Entity
+@Table(name = "gift_certificate")
+public class GiftCertificate {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private BigInteger id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "create_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createDate;
+    @Column(name = "last_update_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime lastUpdateDate;
+    @Column(name = "duration")
     private int duration;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "gift_certificate_tag",
+            joinColumns = @JoinColumn(name = "id_gift_certificate"),
+            inverseJoinColumns = @JoinColumn(name = "id_tag"))
     private List<Tag> tags;
 
     public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
@@ -27,7 +45,7 @@ public class GiftCertificate extends Entity {
     }
 
     public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
-        super(id);
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -46,13 +64,21 @@ public class GiftCertificate extends Entity {
     }
 
     public GiftCertificate(BigInteger id, String name, String description, LocalDateTime lastUpdateDate) {
-        super(id);
+        this.id = id;
         this.name = name;
         this.description = description;
         this.lastUpdateDate = lastUpdateDate;
     }
 
     public GiftCertificate() {
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public String getName() {

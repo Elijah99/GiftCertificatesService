@@ -4,6 +4,9 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,4 +86,5 @@ public class TagsController {
     public void setService(TagService service) {
         this.service = service;
     }
+
 }
