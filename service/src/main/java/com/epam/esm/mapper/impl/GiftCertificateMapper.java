@@ -50,16 +50,4 @@ public class GiftCertificateMapper implements DtoMapper<GiftCertificate, GiftCer
         }
         return giftCertificate;
     }
-
-    public List<GiftCertificateDto> mapListEntityToListDto(List<GiftCertificate> entities) {
-        return entities.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<GiftCertificate> mapListDtoToListEntity(List<GiftCertificateDto> dtos) {
-        return dtos.stream()
-                .map(this::mapDtoToEntity)
-                .collect(Collectors.toList());
-    }
 }

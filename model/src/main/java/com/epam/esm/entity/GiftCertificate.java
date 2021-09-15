@@ -4,6 +4,7 @@ package com.epam.esm.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -159,7 +160,8 @@ public class GiftCertificate {
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", createDate=" + createDate +

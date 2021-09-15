@@ -25,16 +25,4 @@ public class TagMapper implements DtoMapper<Tag, TagDto> {
         tag.setName(dto.getName());
         return tag;
     }
-
-    public List<TagDto> mapListEntityToListDto(List<Tag> entities) {
-        return entities.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<Tag> mapListDtoToListEntity(List<TagDto> dtos) {
-        return dtos.stream()
-                .map(this::mapDtoToEntity)
-                .collect(Collectors.toList());
-    }
 }

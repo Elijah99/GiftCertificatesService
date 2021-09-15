@@ -63,6 +63,12 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
+    public List<GiftCertificate> searchByColumn(String searchParameter, String value) {
+        //return jdbcTemplate.query(String.format(SELECT_BY_COLUMN, searchParameter), rowMapper, "%" + value + "%");
+        return new ArrayList<GiftCertificate>();
+    }
+
+    @Override
     public BigInteger deleteById(BigInteger id) {
         GiftCertificate certificate = entityManager.find(GiftCertificate.class, id);
         if (certificate != null) {
@@ -70,12 +76,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             return id;
         }
         throw new EntityNotFoundException();
-    }
-
-    @Override
-    public List<GiftCertificate> searchByColumn(String searchParameter, String value) {
-        //return jdbcTemplate.query(String.format(SELECT_BY_COLUMN, searchParameter), rowMapper, "%" + value + "%");
-        return new ArrayList<GiftCertificate>();
     }
 
     @Override

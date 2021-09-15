@@ -1,8 +1,10 @@
 package com.epam.esm.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.math.BigInteger;
 
-public class TagDto {
+public class TagDto extends RepresentationModel<TagDto> {
 
     private BigInteger id;
     private String name;

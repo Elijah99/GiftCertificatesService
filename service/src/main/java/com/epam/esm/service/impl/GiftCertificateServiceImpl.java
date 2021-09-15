@@ -14,7 +14,6 @@ import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.InvalidSearchParametersException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.service.GiftCertificateService;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,13 +76,39 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto, BigInteger id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
-            giftCertificateDto.setId(id);
-            GiftCertificate giftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
-            GiftCertificate updatedGiftCertificate = giftCertificateDao.update(giftCertificate);
-            return giftCertificateMapper.mapEntityToDto(updatedGiftCertificate);
+            GiftCertificate giftCertificate = giftCertificateOptional.get();
+            GiftCertificate updatedGiftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
+            giftCertificate = updateGiftCertificateFields(giftCertificate, updatedGiftCertificate);
+            giftCertificateDao.update(giftCertificate);
+            return giftCertificateMapper.mapEntityToDto(giftCertificate);
         } else {
             throw new GiftCertificateNotFoundException();
         }
+    }
+
+    private GiftCertificate updateGiftCertificateFields(GiftCertificate giftCertificate, GiftCertificate updatedGiftCertificate){
+        if(updatedGiftCertificate.getName() != null){
+            giftCertificate.setName(updatedGiftCertificate.getName());
+        }
+        if(updatedGiftCertificate.getDescription() != null){
+            giftCertificate.setDescription(updatedGiftCertificate.getDescription());
+        }
+        if(updatedGiftCertificate.getCreateDate() != null){
+            giftCertificate.setCreateDate(updatedGiftCertificate.getCreateDate());
+        }
+        if(updatedGiftCertificate.getLastUpdateDate() != null){
+            giftCertificate.setLastUpdateDate(updatedGiftCertificate.getLastUpdateDate());
+        }
+        if(updatedGiftCertificate.getPrice() != null){
+            giftCertificate.setPrice(updatedGiftCertificate.getPrice());
+        }
+        if(updatedGiftCertificate.getDuration() != 0){
+            giftCertificate.setDuration(updatedGiftCertificate.getDuration());
+        }
+        if(updatedGiftCertificate.getTags() != null){
+            giftCertificate.setTags(updatedGiftCertificate.getTags());
+        }
+        return giftCertificate;
     }
 
     @Override
@@ -136,7 +161,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
                 List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
                 List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
+                bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             case tag: {
@@ -144,7 +169,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
                 List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
                 List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
+                bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
                 return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             default: {
@@ -159,7 +184,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
         List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
         List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-        bindCertificatesWithTags(giftCertificates,giftCertificateTags,tags);
+        bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 
