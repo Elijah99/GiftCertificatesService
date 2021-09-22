@@ -31,7 +31,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificateMapper giftCertificateMapper;
     private GiftCertificateDao giftCertificateDao;
     private TagDao tagDao;
-    private GiftCertificateTagDao giftCertificateTagDao;
 
     public GiftCertificateServiceImpl() {
     }
@@ -138,17 +137,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         });
     }
 
-    public void bindCertificateWithTags(GiftCertificate giftCertificate) {
-        List<Tag> allTags = tagDao.findAll();
-        giftCertificate.getTags().forEach(tag -> {
-            if (allTags.contains(tag)) {
-                int indexOfTag = allTags.indexOf(tag);
-                BigInteger tagId = allTags.get(indexOfTag).getId();
-                GiftCertificateTag giftCertificateTag = new GiftCertificateTag(giftCertificate.getId(), tagId);
-                giftCertificateTagDao.save(giftCertificateTag);
-            }
-        });
-    }
 
 
     @Override
@@ -157,20 +145,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             case id:
             case name:
             case description: {
-                List<GiftCertificate> giftCertificates = giftCertificateDao.searchByColumn(searchParameter.value, value);
-                List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
-                List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
-                return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             case tag: {
-                List<GiftCertificate> giftCertificates = giftCertificateDao.searchByTagName(value);
-                List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
-                List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-                bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
-                return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
             }
             default: {
                 throw new InvalidSearchParametersException();
@@ -180,12 +156,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType) {
-        List<GiftCertificate> giftCertificates = giftCertificateDao.findAllWithOrder(sortParameter.value, sortType.value);
-        List<BigInteger> idGiftCertificates = giftCertificates.stream().map(GiftCertificate::getId).collect(Collectors.toList());
-        List<GiftCertificateTag> giftCertificateTags = giftCertificateTagDao.findByGiftCertificateIdIn(idGiftCertificates);
-        List<Tag> tags = tagDao.findByGiftCertificateIdIn(idGiftCertificates);
-        bindCertificatesWithTags(giftCertificates, giftCertificateTags, tags);
-        return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
+        return null;
     }
 
     private GiftCertificate setTags(GiftCertificate giftCertificate) {
@@ -209,8 +180,4 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagDao = tagDao;
     }
 
-    @Autowired
-    public void setGiftCertificateTagDao(GiftCertificateTagDao giftCertificateTagDao) {
-        this.giftCertificateTagDao = giftCertificateTagDao;
-    }
 }

@@ -16,4 +16,6 @@ public interface OrderDao {
     List<Order> findByUserId(BigInteger idUser);
 
     Order save(Order order);
+
+    long countByUserId(BigInteger userId);
 }

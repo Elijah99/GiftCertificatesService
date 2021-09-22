@@ -3,7 +3,9 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.User;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.UserNotFoundException;
+import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.UserMapper;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
     private UserMapper userMapper;
+    private RequestParametersMapper requestParametersMapper;
 
     @Override
     public UserDto findById(BigInteger id) {
@@ -27,8 +30,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        List<User> users = userDao.findAll();
+    public List<UserDto> findAll(RequestParameters requestParameters) {
+        List<User> users = userDao.findAll(requestParametersMapper.mapDtoToEntity(requestParameters));
         return userMapper.mapListEntityToListDto(users);
     }
 
@@ -40,5 +43,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setRequestParametersMapper(RequestParametersMapper requestParametersMapper) {
+        this.requestParametersMapper = requestParametersMapper;
     }
 }

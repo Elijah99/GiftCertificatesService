@@ -53,11 +53,11 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findByUserId(BigInteger idUser){
+    public List<Order> findByUserId(BigInteger idUser) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
         Root<Order> tagRoot = criteriaQuery.from(Order.class);
-        criteriaQuery.where(builder.equal(tagRoot.get("user").get("id"),idUser));
+        criteriaQuery.where(builder.equal(tagRoot.get("user").get("id"), idUser));
         TypedQuery query = entityManager.createQuery(criteriaQuery);
 
         return query.getResultList();
@@ -68,5 +68,18 @@ public class OrderDaoImpl implements OrderDao {
         entityManager.persist(order);
         entityManager.flush();
         return order;
+    }
+
+    @Override
+    public long countByUserId(BigInteger userId) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<Order> tagRoot = criteriaQuery.from(Order.class);
+
+        criteriaQuery.select(builder.count(tagRoot));
+        criteriaQuery.where(builder.equal(tagRoot.get("user").get("id"), userId));
+        TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
+
+        return query.getSingleResult();
     }
 }

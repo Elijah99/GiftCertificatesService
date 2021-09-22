@@ -5,14 +5,15 @@ import com.epam.esm.entity.User;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 
 public class UserDto extends RepresentationModel<UserDto> {
 
     private BigInteger id;
     private String name;
-    private Set<Order> orders;
+    private List<OrderDto> orders;
 
     public BigInteger getId() {
         return id;
@@ -30,11 +31,11 @@ public class UserDto extends RepresentationModel<UserDto> {
         this.name = name;
     }
 
-    public Set<Order> getOrders() {
+    public List<OrderDto> getOrders() {
         return orders;
     }
 
-    public void setOrders(Set<Order> orders) {
+    public void setOrders(List<OrderDto> orders) {
         this.orders = orders;
     }
 

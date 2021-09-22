@@ -1,7 +1,6 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
-import com.epam.esm.dao.impl.GiftCertificateTagDaoImpl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
@@ -14,7 +13,6 @@ import com.epam.esm.enums.SortType;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,8 +58,6 @@ public class GiftCertificateServiceImplTest {
     @Mock
     private GiftCertificateDaoImpl giftCertificateDaoMock;
     @Mock
-    private GiftCertificateTagDaoImpl giftCertificateTagDaoMock;
-    @Mock
     private TagDaoImpl tagDaoMock;
     @Mock
     private GiftCertificateMapper giftCertificateMapperMock;
@@ -103,16 +99,13 @@ public class GiftCertificateServiceImplTest {
     public void testFindAllShouldReturnGiftCertificateList() {
         when(giftCertificateDaoMock.findAll()).thenReturn(certificateList);
         when(giftCertificateMapperMock.mapListEntityToListDto(certificateList)).thenReturn(certificateDtoList);
-        when(giftCertificateTagDaoMock.findAll()).thenReturn(giftCertificateTagList);
         when(tagDaoMock.findAll()).thenReturn(tagList);
 
         assertEquals(giftCertificateService.findAll(), certificateDtoList);
 
         verify(giftCertificateDaoMock).findAll();
-        verify(giftCertificateTagDaoMock).findAll();
         verify(tagDaoMock).findAll();
         verifyNoMoreInteractions(giftCertificateDaoMock);
-        verifyNoMoreInteractions(giftCertificateTagDaoMock);
         verifyNoMoreInteractions(tagDaoMock);
     }
 

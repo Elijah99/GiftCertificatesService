@@ -8,11 +8,13 @@ import com.epam.esm.dto.OrderDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.UserNotFoundException;
 import com.epam.esm.mapper.impl.OrderMapper;
 import com.epam.esm.service.OrderService;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +87,15 @@ public class OrderServiceImpl implements OrderService {
         order.setPurchaseDate(LocalDateTime.now());
 
         return order;
+    }
+
+    @Override
+    public long count(BigInteger userId, RequestParameters requestParameters) {
+        int pageSize = requestParameters.getPageSize();
+        long elementsAmount = orderDao.countByUserId(userId);
+        return elementsAmount % pageSize == 0
+                ? elementsAmount / pageSize
+                : elementsAmount / pageSize + 1;
     }
 
     @Autowired
