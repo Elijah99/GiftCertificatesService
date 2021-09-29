@@ -1,12 +1,27 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.listener.GiftCertificateAuditListener;
+import com.epam.esm.listener.GiftCertificateTagAuditListener;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
 import java.math.BigInteger;
 
+@Entity
+@EntityListeners(GiftCertificateTagAuditListener.class)
+@Table(name = "gift_certificate_tag")
 public class GiftCertificateTag {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private BigInteger id;
+    @Column(name = "id_gift_certificate")
     private BigInteger idGiftCertificate;
+    @Column(name = "id_tag")
     private BigInteger idTag;
+
+    public GiftCertificateTag() {
+    }
 
     public GiftCertificateTag(BigInteger idGiftCertificate, BigInteger idTag) {
         this.idGiftCertificate = idGiftCertificate;

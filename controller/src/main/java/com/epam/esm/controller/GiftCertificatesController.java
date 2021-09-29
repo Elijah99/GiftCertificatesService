@@ -1,18 +1,20 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.enums.SearchParameter;
-import com.epam.esm.enums.SortParameter;
-import com.epam.esm.enums.SortType;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
+import com.epam.esm.hateoas.GiftCertificatesLinkManager;
+import com.epam.esm.hateoas.representation.GiftCertificateRepresentation;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides a centralized request handling
@@ -21,15 +23,11 @@ import java.util.List;
  * @author Ilya Ramanouski
  */
 @RestController
-@RequestMapping("/giftCertificates")
+@RequestMapping(value = "/giftCertificates")
 public class GiftCertificatesController {
 
-    public static final String PUT_RESPONSE_MESSAGE = "GiftCertificate successfully updated: ";
-    public static final String POST_RESPONSE_MESSAGE = "Created: ";
-    public static final String DELETE_RESPONSE_MESSAGE = "Successfully deleted GiftCertificate with id: ";
-
-
     private GiftCertificateService service;
+    private GiftCertificatesLinkManager giftCertificatesLinkManager;
 
     /**
      * Provides GET requests to the all GiftCertificates with parameters
@@ -38,25 +36,25 @@ public class GiftCertificatesController {
      * .../giftCertificates?searchBy=column&value=val  - finds GiftCertificates which contains value 'val' at column 'column'
      * .../giftCertificates?sortBy=column&sortType=desc    - returns all GiftCertificates sorted by column 'column' in descending order
      *
-     * @param searchBy (optional) request parameter for column to search
-     * @param value    (optional) request parameter for value to search
-     * @param sortBy   (optional) request parameter for column to sort
-     * @param sortType (optional) request parameter for sorting order type
+     * @param sortType        (optional) request parameter for sorting order type
+     * @param sortValue       (optional) request parameter for column to sort
+     * @param searchParameter (optional) request parameter for column to search
+     * @param searchValue     (optional) request parameter for value to search
      * @return list of GiftCertificate.
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificateDto> getAllGiftCertificates(@RequestParam(required = false) SearchParameter searchBy,
-                                                           @RequestParam(required = false) String value,
-                                                           @RequestParam(required = false) SortParameter sortBy,
-                                                           @RequestParam(required = false) SortType sortType) {
-        if (searchBy != null && value != null) {
-            return service.searchByValue(searchBy, value);
-        }
-        if (sortBy != null && sortType != null) {
-            return service.sortByParameter(sortBy, sortType);
-        }
-        return service.findAll();
+    public CollectionModel<GiftCertificateRepresentation> getAllGiftCertificates(@RequestParam(required = false, defaultValue = "1") int page,
+                                                                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                                                 @RequestParam(required = false) String sortType,
+                                                                                 @RequestParam(required = false) String sortValue,
+                                                                                 @RequestParam(required = false) String searchParameter,
+                                                                                 @RequestParam(required = false) String searchValue) {
+        RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
+
+        List<GiftCertificateRepresentation> links = service.findAll(requestParameters).stream().map(GiftCertificateRepresentation::new).collect(Collectors.toList());
+
+        return giftCertificatesLinkManager.createLinks(links, requestParameters);
     }
 
     /**
@@ -70,8 +68,9 @@ public class GiftCertificatesController {
      */
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto getGiftCertificate(@PathVariable("id") BigInteger id) {
-        return service.findById(id);
+    public GiftCertificateRepresentation getGiftCertificate(@PathVariable("id") BigInteger id) {
+        GiftCertificateDto giftCertificateDto = service.findById(id);
+        return new GiftCertificateRepresentation(giftCertificateDto);
     }
 
     /**
@@ -80,11 +79,12 @@ public class GiftCertificatesController {
      * .../giftCertificates/  - saves new giftCertificate, requires request body in json format
      *
      * @param giftCertificate GiftCertificate object bases on json object in request body
+     * @return
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String createGiftCertificate(@RequestBody GiftCertificateDto giftCertificate) {
-        return POST_RESPONSE_MESSAGE + service.save(giftCertificate);
+    public void createGiftCertificate(@RequestBody GiftCertificateDto giftCertificate) {
+        service.save(giftCertificate);
     }
 
     /**
@@ -94,11 +94,13 @@ public class GiftCertificatesController {
      *
      * @param giftCertificate GiftCertificate object bases on json object in request body
      * @param id              index of GiftCertificate which need to update
+     * @return
      */
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificate, @PathVariable BigInteger id) {
-        return PUT_RESPONSE_MESSAGE + service.update(giftCertificate, id);
+    public GiftCertificateRepresentation updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificate, @PathVariable BigInteger id) {
+        GiftCertificateDto giftCertificateDto = service.update(giftCertificate, id);
+        return new GiftCertificateRepresentation(giftCertificateDto);
     }
 
     /**
@@ -107,15 +109,21 @@ public class GiftCertificatesController {
      * *      .../giftCertificates/1  - deletes giftCertificate with id '1'
      *
      * @param id index of GiftCertificate which need to update
+     * @return
      */
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteGiftCertificate(@PathVariable("id") BigInteger id) {
-        return DELETE_RESPONSE_MESSAGE + service.deleteById(id);
+    public BigInteger deleteGiftCertificate(@PathVariable("id") BigInteger id) {
+        return service.deleteById(id);
     }
 
     @Autowired
     public void setService(GiftCertificateService service) {
         this.service = service;
+    }
+
+    @Autowired
+    public void setGiftCertificatesLinkManager(GiftCertificatesLinkManager giftCertificatesLinkManager) {
+        this.giftCertificatesLinkManager = giftCertificatesLinkManager;
     }
 }

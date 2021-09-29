@@ -3,12 +3,13 @@ package com.epam.esm.dto;
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class OrderDto extends RepresentationModel<OrderDto> {
+public class OrderDto implements Serializable {
 
     private BigInteger id;
     private BigDecimal cost;
@@ -72,5 +73,16 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     @Override
     public int hashCode() {
         return Objects.hash(id, cost, purchaseDate, giftCertificates, idUser);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "id=" + id +
+                ", cost=" + cost +
+                ", purchaseDate=" + purchaseDate +
+                ", giftCertificates=" + giftCertificates +
+                ", idUser=" + idUser +
+                '}';
     }
 }

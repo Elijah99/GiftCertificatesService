@@ -2,7 +2,9 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.impl.TagServiceImpl;
@@ -34,6 +36,10 @@ public class TagServiceImplTest {
     private static final Optional<Tag> TAG_OPTIONAL = Optional.of(TAG);
     private static final BigInteger TAG_ID = new BigInteger("1");
 
+    private static final QueryParameters QUERY_PARAMETERS = new QueryParameters(1,10,null,null,null,null);
+    private static final RequestParameters REQUEST_PARAMETERS = new RequestParameters(1,10,null,null,null,null);
+
+
     @Mock
     private TagDaoImpl tagDaoMock;
     @Mock
@@ -43,12 +49,12 @@ public class TagServiceImplTest {
 
     @Test
     public void testFindAllShouldReturnListTags() {
-        when(tagDaoMock.findAll()).thenReturn(TAG_LIST);
+        when(tagDaoMock.findAll(QUERY_PARAMETERS)).thenReturn(TAG_LIST);
         when(tagMapperMock.mapListEntityToListDto(TAG_LIST)).thenReturn(TAG_DTO_LIST);
 
-        assertEquals(tagService.findAll(), TAG_DTO_LIST);
+        assertEquals(tagService.findAll(REQUEST_PARAMETERS), TAG_DTO_LIST);
 
-        verify(tagDaoMock).findAll();
+        verify(tagDaoMock).findAll(QUERY_PARAMETERS);
         verifyNoMoreInteractions(tagDaoMock);
     }
 

@@ -3,8 +3,10 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
+import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,14 @@ public class TagServiceImpl implements TagService {
 
     private TagDaoImpl dao;
     private TagMapper tagMapper;
+    private RequestParametersMapper requestParametersMapper;
 
     public TagServiceImpl() {
     }
 
     @Override
-    public List<TagDto> findAll() {
-        List<Tag> tags = dao.findAll();
+    public List<TagDto> findAll(RequestParameters parameters) {
+        List<Tag> tags = dao.findAll(requestParametersMapper.mapDtoToEntity(parameters));
         return tagMapper.mapListEntityToListDto(tags);
     }
 
@@ -68,5 +71,10 @@ public class TagServiceImpl implements TagService {
     @Autowired
     public void setDao(TagDaoImpl dao) {
         this.dao = dao;
+    }
+
+    @Autowired
+    public void setRequestParametersMapper(RequestParametersMapper requestParametersMapper) {
+        this.requestParametersMapper = requestParametersMapper;
     }
 }

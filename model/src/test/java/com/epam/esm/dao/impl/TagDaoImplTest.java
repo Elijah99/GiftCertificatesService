@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.config.TestDataSourceConfiguration;
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
@@ -41,6 +42,9 @@ public class TagDaoImplTest {
             new Tag(new BigInteger("2"), "2 name"),
             new Tag(new BigInteger("3"), "3 name"),
             new Tag(new BigInteger("4"), "4 name"));
+
+    private static final QueryParameters QUERY_PARAMETERS = new QueryParameters(1,10,null,null,null,null);
+
     @Value("${dataSource.schemaLocation}")
     private String SCHEMA_LOCATION;
     @Value("${dataSource.initScriptLocation}")
@@ -70,7 +74,7 @@ public class TagDaoImplTest {
 
     @Test
     public void testFindAll() {
-        List<Tag> actual = dao.findAll();
+        List<Tag> actual = dao.findAll(QUERY_PARAMETERS);
         assertEquals(findAllExpected, actual);
     }
 

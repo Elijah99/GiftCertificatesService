@@ -4,9 +4,11 @@ import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.hateoas.representation.OrderRepresentation;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
-public class OrderLinkManager implements HateoasLinkManager<OrderDto> {
+public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation> {
 
     private static final int FIRST_PAGE = 1;
     private UserController controller = methodOn(UserController.class);
@@ -25,56 +27,75 @@ public class OrderLinkManager implements HateoasLinkManager<OrderDto> {
     private OrderService service;
 
     @Override
-    public CollectionModel<OrderDto> createLinks(List<OrderDto> list, RequestParameters requestParameters) {
-        CollectionModel<OrderDto> model = CollectionModel.of(list);
+    public CollectionModel<OrderRepresentation> createLinks(List<OrderRepresentation> list, RequestParameters requestParameters) {
+        CollectionModel<OrderRepresentation> model = CollectionModel.of(list);
         if(list.isEmpty()){
             return model;
         }
         BigInteger userId = list.get(0).getIdUser();
         int page = requestParameters.getCurrentPage();
-        int pageAmount = Math.toIntExact(service.count(userId, requestParameters));
+        int pageAmount = (int) service.count(userId, requestParameters);
         if (pageAmount != 0) {
-            requestParameters.setCurrentPage(FIRST_PAGE);
-            Link firstPage = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                    getOrdersByUserId(userId, requestParameters.getCurrentPage(), requestParameters.getPageSize(),null,null,null,null)).withRel("first");
-            model.add(firstPage.expand());
-
-            requestParameters.setCurrentPage(pageAmount);
-            Link lastPage = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                    getOrdersByUserId(userId, requestParameters.getCurrentPage(), requestParameters.getPageSize(),null,null,null,null)).withRel("last");
-            model.add(lastPage.expand());
+            Link firstPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
+                    getOrdersByUserId(userId,
+                            FIRST_PAGE,
+                            requestParameters.getPageSize(),
+                            requestParameters.getSortType(),
+                            requestParameters.getSortValue(),
+                            requestParameters.getSearchParameter(),
+                            requestParameters.getSearchValue())).withRel("first");
+            model.add(firstPageLink.expand());
 
             if (requestParameters.getCurrentPage() != 1) {
-                requestParameters.setCurrentPage(requestParameters.getCurrentPage() - 1);
-                Link prevPage = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                        getOrdersByUserId(userId, requestParameters.getCurrentPage(), requestParameters.getPageSize(),null,null,null,null)).withRel("prev");
-                model.add(prevPage.expand());
+                int prevPage = requestParameters.getCurrentPage() - 1;
+                Link prevPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
+                        getOrdersByUserId(userId,
+                                prevPage,
+                                requestParameters.getPageSize(),
+                                requestParameters.getSortType(),
+                                requestParameters.getSortValue(),
+                                requestParameters.getSearchParameter(),
+                                requestParameters.getSearchValue())).withRel("prev");
+                model.add(prevPageLink.expand());
             }
+
+            Link selfRelLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
+                    getOrdersByUserId(userId,
+                            requestParameters.getCurrentPage(),
+                            requestParameters.getPageSize(),
+                            requestParameters.getSortType(),
+                            requestParameters.getSortValue(),
+                            requestParameters.getSearchParameter(),
+                            requestParameters.getSearchValue())).withSelfRel();
+            model.add(selfRelLink.expand());
+
 
             if (page != pageAmount) {
-                requestParameters.setCurrentPage(page + 1);
-                Link nextPage = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                        getOrdersByUserId(userId, requestParameters.getCurrentPage(), requestParameters.getPageSize(),null,null,null,null)).withRel("next");
-                model.add(nextPage.expand());
+                int nextPage = requestParameters.getCurrentPage() + 1;
+                Link nextPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
+                        getOrdersByUserId(userId,
+                                nextPage,
+                                requestParameters.getPageSize(),
+                                requestParameters.getSortType(),
+                                requestParameters.getSortValue(),
+                                requestParameters.getSearchParameter(),
+                                requestParameters.getSearchValue())).withRel("next");
+                model.add(nextPageLink.expand());
             }
-        }
-        model.forEach(this::createLinks);
-        return model;
-    }
 
-    @Override
-    public OrderDto createLinks(OrderDto dto) {
-        BigInteger dtoId = dto.getId();
-        BigInteger userId = dto.getIdUser();
-        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(userId, dtoId)).withSelfRel();
-        Link ordersLink =
-                WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(userId, null, null, null, null, null, null))
-                        .withRel("orders");
-        // !!! AopConfigException
-        Link addLink = WebMvcLinkBuilder.linkTo(controller.createOrder(userId,dto)).withRel("create");
-        dto.add(dtoLink, addLink, ordersLink);
-        dto.getGiftCertificates().forEach(giftCertificatesLinkManager::createLinks);
-        return dto;
+            Link lastPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
+                    getOrdersByUserId(userId,
+                            pageAmount,
+                            requestParameters.getPageSize(),
+                            requestParameters.getSortType(),
+                            requestParameters.getSortValue(),
+                            requestParameters.getSearchParameter(),
+                            requestParameters.getSearchValue())).withRel("last");
+            model.add(lastPageLink.expand());
+
+
+        }
+        return model;
     }
 
     @Autowired

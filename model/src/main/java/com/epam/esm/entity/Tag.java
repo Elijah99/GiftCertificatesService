@@ -1,11 +1,15 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.listener.GiftCertificateAuditListener;
+import com.epam.esm.listener.TagAuditListener;
+
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
+@EntityListeners(TagAuditListener.class)
 @Table(name = "tag")
 public class Tag {
 

@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 
 import java.math.BigInteger;
@@ -18,7 +19,7 @@ public interface TagService {
      *
      * @return list of all Tags
      */
-    List<TagDto> findAll();
+    List<TagDto> findAll(RequestParameters parameters);
 
     /**
      * Retrieves a Tag by its id.

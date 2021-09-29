@@ -3,12 +3,13 @@ package com.epam.esm.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> {
+public class GiftCertificateDto implements Serializable {
 
     private BigInteger id;
     private String name;

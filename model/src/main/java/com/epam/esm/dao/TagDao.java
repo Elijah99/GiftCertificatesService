@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
 
 import java.math.BigInteger;
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface TagDao {
 
-    List<Tag> findAll();
+    List<Tag> findAll(QueryParameters parameters);
 
     Optional<Tag> findById(BigInteger id);
 
@@ -21,4 +22,6 @@ public interface TagDao {
     Tag save(Tag tag);
 
     List<Tag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates);
+
+    long count();
 }

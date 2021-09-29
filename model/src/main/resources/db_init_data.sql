@@ -7,10 +7,10 @@ VALUES (3, 'zzzzzz', 'desc', 22, '2020-12-12 21:34:10.769000', '2020-12-12 21:34
 INSERT INTO gift_certificate (id, name, description, price, create_date, last_update_date, duration)
 VALUES (4, 'aaaa', 'asc', 22, '2020-12-12 21:34:10.769000', '2020-12-12 21:34:10.769000', 20);
 
-INSERT INTO tag(id, name) VALUES (1, '1 name');
-INSERT INTO tag(id, name) VALUES (2, '2 name');
-INSERT INTO tag(id, name) VALUES (3, '3 name');
-INSERT INTO tag(id, name) VALUES (4, '4 name');
+INSERT INTO tagAudit(id, name) VALUES (1, '1 name');
+INSERT INTO tagAudit(id, name) VALUES (2, '2 name');
+INSERT INTO tagAudit(id, name) VALUES (3, '3 name');
+INSERT INTO tagAudit(id, name) VALUES (4, '4 name');
 
 
 INSERT INTO gift_certificate_tag(id_gift_certificate, id_tag) VALUES (1, 1);

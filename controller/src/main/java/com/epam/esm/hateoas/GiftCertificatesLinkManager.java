@@ -6,6 +6,7 @@ import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.hateoas.representation.GiftCertificateRepresentation;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -19,27 +20,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
-public class GiftCertificatesLinkManager implements HateoasLinkManager<GiftCertificateDto> {
+public class GiftCertificatesLinkManager implements HateoasLinkManager<GiftCertificateRepresentation> {
 
-    private GiftCertificatesController controller =
-            methodOn(GiftCertificatesController.class);
+    private GiftCertificatesController controller = methodOn(GiftCertificatesController.class);
     private TagLinkManager tagLinkModifier;
-    private GiftCertificateService service;
 
     @Override
-    public CollectionModel<GiftCertificateDto> createLinks(List<GiftCertificateDto> list, RequestParameters requestParameters) {
-        CollectionModel<GiftCertificateDto> model = CollectionModel.of(list);
-        list.forEach(this::createLinks);
+    public CollectionModel<GiftCertificateRepresentation> createLinks(List<GiftCertificateRepresentation> list, RequestParameters requestParameters) {
+        CollectionModel<GiftCertificateRepresentation> model = CollectionModel.of(list);
+
         return model;
-    }
-
-    @Override
-    public GiftCertificateDto createLinks(GiftCertificateDto giftCertificateDto) {
-        BigInteger dtoId = giftCertificateDto.getId();
-        Link dtoLink = linkTo(controller.getGiftCertificate(dtoId)).withSelfRel();
-        giftCertificateDto.add(dtoLink);
-        giftCertificateDto.getTags().forEach(tagLinkModifier::createLinks);
-        return giftCertificateDto;
     }
 
     @Autowired
@@ -47,8 +37,4 @@ public class GiftCertificatesLinkManager implements HateoasLinkManager<GiftCerti
         this.tagLinkModifier = tagLinkModifier;
     }
 
-    @Autowired
-    public void setService(GiftCertificateService service) {
-        this.service = service;
-    }
 }

@@ -1,5 +1,7 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.listener.GiftCertificateAuditListener;
+import com.epam.esm.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
@@ -10,8 +12,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@EntityListeners(UserAuditListener.class)
 @Table(name = "user", schema = "public")
-
 public class User {
 
     @Id

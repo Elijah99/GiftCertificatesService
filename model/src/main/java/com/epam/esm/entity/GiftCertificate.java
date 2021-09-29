@@ -1,6 +1,7 @@
 package com.epam.esm.entity;
 
 
+import com.epam.esm.listener.GiftCertificateAuditListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@EntityListeners(GiftCertificateAuditListener.class)
 @Table(name = "gift_certificate")
 public class GiftCertificate {
 
@@ -171,3 +173,4 @@ public class GiftCertificate {
                 '}';
     }
 }
+

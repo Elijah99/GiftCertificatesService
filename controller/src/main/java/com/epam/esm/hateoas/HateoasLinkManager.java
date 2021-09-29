@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface HateoasLinkManager<T> {
     CollectionModel<T> createLinks(List<T> list, RequestParameters requestParameters);
-
-    T createLinks(T dto);
 }

@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.config.TestDataSourceConfiguration;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.QueryParameters;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
 import org.junit.Before;
@@ -82,6 +83,9 @@ public class GiftCertificateDaoImplTest {
     private static final String SEARCH_VALUE = "desc";
     private static final String SORT_COLUMN_NAME = "name";
     private static final String SORT_TYPE = "asc";
+
+    private static final QueryParameters QUERY_PARAMETERS = new QueryParameters(1,10,null,null,null,null);
+
     @Value("${dataSource.schemaLocation}")
     private String SCHEMA_LOCATION;
     @Value("${dataSource.initScriptLocation}")
@@ -111,7 +115,7 @@ public class GiftCertificateDaoImplTest {
 
     @Test
     public void testFindAll() {
-        List<GiftCertificate> actual = dao.findAll();
+        List<GiftCertificate> actual = dao.findAll(QUERY_PARAMETERS);
         assertEquals(findAllExpected, actual);
     }
 
@@ -125,18 +129,6 @@ public class GiftCertificateDaoImplTest {
     public void testFindByIdShouldReturnEmptyOptional() {
         Optional<GiftCertificate> actual = dao.findById(GIFT_CERTIFICATE_ID_INVALID);
         assertEquals(Optional.empty(), actual);
-    }
-
-    @Test
-    public void testSearchByColumn() {
-        List<GiftCertificate> actual = dao.searchByColumn(SEARCH_COLUMN_NAME, SEARCH_VALUE);
-        assertEquals(searchByColumnExpected, actual);
-    }
-
-    @Test
-    public void testFindAllWithOrder() {
-        List<GiftCertificate> actual = dao.findAllWithOrder(SORT_COLUMN_NAME, SORT_TYPE);
-        assertEquals(sortedByName, actual);
     }
 
     @Test

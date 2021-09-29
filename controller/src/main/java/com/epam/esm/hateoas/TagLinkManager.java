@@ -5,6 +5,7 @@ import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.hateoas.representation.TagRepresentation;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -16,24 +17,16 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Service
-public class TagLinkManager implements HateoasLinkManager<TagDto> {
+public class TagLinkManager implements HateoasLinkManager<TagRepresentation> {
 
     private TagsController controller = WebMvcLinkBuilder.methodOn(TagsController.class);
     private TagService service;
 
     @Override
-    public CollectionModel<TagDto> createLinks(List<TagDto> list, RequestParameters requestParameters) {
-        CollectionModel<TagDto> model = CollectionModel.of(list);
-        list.forEach(this::createLinks);
-        return model;
-    }
+    public CollectionModel<TagRepresentation> createLinks(List<TagRepresentation> list, RequestParameters requestParameters) {
+        CollectionModel<TagRepresentation> model = CollectionModel.of(list);
 
-    @Override
-    public TagDto createLinks(TagDto tagDto) {
-        BigInteger dtoId = tagDto.getId();
-        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getTag(dtoId)).withSelfRel();
-        tagDto.add(dtoLink);
-        return tagDto;
+        return model;
     }
 
     @Autowired

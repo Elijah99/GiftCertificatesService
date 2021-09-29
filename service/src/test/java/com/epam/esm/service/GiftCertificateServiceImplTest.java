@@ -95,19 +95,6 @@ public class GiftCertificateServiceImplTest {
 
     }
 
-    @Test
-    public void testFindAllShouldReturnGiftCertificateList() {
-        when(giftCertificateDaoMock.findAll()).thenReturn(certificateList);
-        when(giftCertificateMapperMock.mapListEntityToListDto(certificateList)).thenReturn(certificateDtoList);
-        when(tagDaoMock.findAll()).thenReturn(tagList);
-
-        assertEquals(giftCertificateService.findAll(), certificateDtoList);
-
-        verify(giftCertificateDaoMock).findAll();
-        verify(tagDaoMock).findAll();
-        verifyNoMoreInteractions(giftCertificateDaoMock);
-        verifyNoMoreInteractions(tagDaoMock);
-    }
 
     @Test
     public void testFindByIdShouldReturnGiftCertificate() {
@@ -179,32 +166,6 @@ public class GiftCertificateServiceImplTest {
         });
 
         verify(giftCertificateDaoMock).findById(GIFT_CERTIFICATE_ID);
-        verifyNoMoreInteractions(giftCertificateDaoMock);
-        verifyNoInteractions(tagDaoMock);
-    }
-
-    @Test
-    public void testSearchByValue() {
-        when(giftCertificateDaoMock.searchByColumn(SearchParameter.name.value, SEARCH_VALUE)).thenReturn(certificateList);
-        when(giftCertificateMapperMock.mapListEntityToListDto(certificateList)).thenReturn(certificateDtoList);
-
-        assertEquals(certificateDtoList, giftCertificateService.searchByValue(SearchParameter.name, SEARCH_VALUE));
-
-        verify(giftCertificateDaoMock).searchByColumn(SearchParameter.name.value, SEARCH_VALUE);
-        verify(giftCertificateMapperMock).mapListEntityToListDto(certificateList);
-        verifyNoMoreInteractions(giftCertificateDaoMock);
-        verifyNoInteractions(tagDaoMock);
-    }
-
-    @Test
-    public void testSortByParameter() {
-        when(giftCertificateDaoMock.findAllWithOrder(SortParameter.name.value, SortType.asc.value)).thenReturn(certificateList);
-        when(giftCertificateMapperMock.mapListEntityToListDto(certificateList)).thenReturn(certificateDtoList);
-
-        assertEquals(certificateDtoList, giftCertificateService.sortByParameter(SortParameter.name, SortType.asc));
-
-        verify(giftCertificateDaoMock).findAllWithOrder(SortParameter.name.value, SortType.asc.value);
-        verify(giftCertificateMapperMock).mapListEntityToListDto(certificateList);
         verifyNoMoreInteractions(giftCertificateDaoMock);
         verifyNoInteractions(tagDaoMock);
     }

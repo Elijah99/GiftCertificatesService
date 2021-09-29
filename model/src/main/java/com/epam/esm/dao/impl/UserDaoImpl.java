@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.entity.Order;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.IllegalSortTypeException;
@@ -40,14 +41,28 @@ public class UserDaoImpl implements UserDao {
         CriteriaQuery<User> query = builder.createQuery(User.class);
         Root<User> rootEntry = query.from(User.class);
         CriteriaQuery<User> all = query.select(rootEntry);
+
         try {
-            all.orderBy(builder.asc(rootEntry.get(parameters.getSortType())));
-        } catch (Exception e){
+            if (parameters.getSortType() != null && !parameters.getSortType().isEmpty()) {
+                if(parameters.getSortValue()!=null && !parameters.getSortValue().isEmpty()) {
+                    if (parameters.getSortValue().equals("asc")) {
+                        all.orderBy(builder.asc(rootEntry.get(parameters.getSortType())));
+                    } else {
+                        if (parameters.getSortValue().equals("desc")) {
+                            all.orderBy(builder.desc(rootEntry.get(parameters.getSortType())));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             throw new IllegalSortTypeException();
         }
         try {
-            all.where(builder.like(rootEntry.get(parameters.getSearchParameter()), "%" + parameters.getSearchValue() + "%"));
-        } catch (Exception e){
+            if (parameters.getSearchParameter() != null && !parameters.getSearchParameter().isEmpty()
+                    && parameters.getSearchValue() != null && !parameters.getSearchValue().isEmpty()) {
+                all.where(builder.like(rootEntry.get(parameters.getSearchParameter()), "%" + parameters.getSearchValue() + "%"));
+            }
+        } catch (Exception e) {
             throw new IllegalSearchValueException();
         }
         TypedQuery<User> allQuery = entityManager.createQuery(all);
@@ -61,4 +76,17 @@ public class UserDaoImpl implements UserDao {
 
         return allQuery.getResultList();
     }
+
+    @Override
+    public long count() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+
+        criteriaQuery.select(builder.count(userRoot));
+        TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
+
+        return query.getSingleResult();
+    }
+
 }

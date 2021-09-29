@@ -35,6 +35,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapListEntityToListDto(users);
     }
 
+    @Override
+    public long count(BigInteger userId, RequestParameters requestParameters) {
+        int pageSize = requestParameters.getPageSize();
+        long elementsAmount = userDao.count();
+        return elementsAmount % pageSize == 0
+                ? elementsAmount / pageSize
+                : elementsAmount / pageSize + 1;
+    }
+
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;

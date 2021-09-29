@@ -10,4 +10,6 @@ public interface UserService {
     UserDto findById(BigInteger id);
 
     List<UserDto> findAll(RequestParameters requestParameters);
+
+    long count(BigInteger userId, RequestParameters requestParameters);
 }

@@ -9,7 +9,7 @@ CREATE TABLE gift_certificate (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE tag (
+CREATE TABLE tagAudit (
     name character varying(50) NOT NULL,
     id bigint NOT NULL IDENTITY,
     PRIMARY KEY (id)
@@ -22,7 +22,7 @@ CREATE TABLE gift_certificate_tag (
     id bigint NOT NULL IDENTITY,
     PRIMARY KEY (id),
     FOREIGN KEY (id_gift_certificate) REFERENCES gift_certificate(id),
-    FOREIGN KEY (id_tag) REFERENCES tag(id)
+    FOREIGN KEY (id_tag) REFERENCES tagAudit(id)
 );
 
 

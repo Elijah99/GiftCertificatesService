@@ -11,4 +11,6 @@ public interface UserDao {
     Optional<User> findById(BigInteger id);
 
     List<User> findAll(QueryParameters parameters);
+
+    long count();
 }

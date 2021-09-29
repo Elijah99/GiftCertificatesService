@@ -74,10 +74,10 @@ public class OrderDaoImpl implements OrderDao {
     public long countByUserId(BigInteger userId) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
-        Root<Order> tagRoot = criteriaQuery.from(Order.class);
+        Root<Order> orderRoot = criteriaQuery.from(Order.class);
 
-        criteriaQuery.select(builder.count(tagRoot));
-        criteriaQuery.where(builder.equal(tagRoot.get("user").get("id"), userId));
+        criteriaQuery.select(builder.count(orderRoot));
+        criteriaQuery.where(builder.equal(orderRoot.get("user").get("id"), userId));
         TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
 
         return query.getSingleResult();

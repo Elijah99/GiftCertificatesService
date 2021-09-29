@@ -1,5 +1,7 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.listener.GiftCertificateAuditListener;
+import com.epam.esm.listener.OrderAuditListener;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@EntityListeners(OrderAuditListener.class)
 @Table(name = "order", schema = "public")
 public class Order {
 
