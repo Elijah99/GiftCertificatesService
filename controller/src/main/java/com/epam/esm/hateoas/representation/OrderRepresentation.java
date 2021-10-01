@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class OrderRepresentation extends RepresentationModel<OrderRepresentation>  implements Serializable {
+public class OrderRepresentation extends RepresentationModel<OrderRepresentation> implements Serializable {
 
     @Transient
     private final UserController controller = methodOn(UserController.class);
@@ -31,6 +31,7 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
     private BigInteger idUser;
 
     public OrderRepresentation() {
+        createLinks();
     }
 
     public OrderRepresentation(OrderDto orderDto) {
@@ -40,6 +41,7 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
         this.giftCertificates = orderDto.getGiftCertificates().stream().map(GiftCertificateRepresentation::new).collect(Collectors.toList());
         this.idUser = orderDto.getIdUser();
 
+        createLinks();
     }
 
     public BigInteger getId() {
@@ -111,7 +113,7 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
                 '}';
     }
 
-    private void createLinks(){
+    private void createLinks() {
         Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(idUser, id)).withSelfRel();
         Link ordersLink =
                 WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(idUser,

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@EntityListeners(GiftCertificateTagAuditListener.class)
 @Table(name = "gift_certificate_tag_audit", schema = "public")
 public class GiftCertificateTagAudit extends AbstractEntityAudit {
 
@@ -26,8 +25,8 @@ public class GiftCertificateTagAudit extends AbstractEntityAudit {
     public GiftCertificateTagAudit(GiftCertificateTag giftCertificateTag, AuditOperationEnum operation) {
         super(operation);
         this.idRow = giftCertificateTag.getId();
-        this.idGiftCertificate = giftCertificateTag.getIdGiftCertificate();
-        this.idTag = giftCertificateTag.getIdTag();
+        this.idGiftCertificate = giftCertificateTag.getGiftCertificate().getId();
+        this.idTag = giftCertificateTag.getTag().getId();
     }
 
     public BigInteger getIdRow() {

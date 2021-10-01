@@ -17,6 +17,6 @@ public class GiftCertificateTagRowMapper implements RowMapper<GiftCertificateTag
         BigInteger idGiftCertificate = new BigInteger(resultSet.getString("id_gift_certificate"));
         BigInteger idTag = new BigInteger(resultSet.getString("id_tag"));
 
-        return new GiftCertificateTag(id, idGiftCertificate, idTag);
+        return new GiftCertificateTag();
     }
 }

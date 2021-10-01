@@ -74,7 +74,7 @@ public class TagDaoImplTest {
 
     @Test
     public void testFindAll() {
-        List<Tag> actual = dao.findAll(QUERY_PARAMETERS);
+        List<Tag> actual = dao.findByParameters(QUERY_PARAMETERS);
         assertEquals(findAllExpected, actual);
     }
 
@@ -84,11 +84,6 @@ public class TagDaoImplTest {
         assertEquals(FIRST_TAG_OPTIONAL, actual);
     }
 
-    @Test
-    public void testFindByName() {
-        Optional<Tag> actual = dao.findByName(FIRST_TAG_NAME);
-        assertEquals(FIRST_TAG_OPTIONAL, actual);
-    }
 
     @Test
     public void testSave() {
@@ -102,8 +97,4 @@ public class TagDaoImplTest {
         assertEquals(ID_TO_DELETE, actual);
     }
 
-    @Test
-    public void test1(){
-        assertEquals(findAllExpected, dao.findByGiftCertificateIdIn(Arrays.asList(new BigInteger("1"), new BigInteger("2"))));
-    }
 }

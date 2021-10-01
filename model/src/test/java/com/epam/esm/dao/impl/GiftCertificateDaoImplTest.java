@@ -115,7 +115,7 @@ public class GiftCertificateDaoImplTest {
 
     @Test
     public void testFindAll() {
-        List<GiftCertificate> actual = dao.findAll(QUERY_PARAMETERS);
+        List<GiftCertificate> actual = dao.findByParameters(QUERY_PARAMETERS);
         assertEquals(findAllExpected, actual);
     }
 

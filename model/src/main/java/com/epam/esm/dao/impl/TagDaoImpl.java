@@ -6,6 +6,12 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.IllegalSearchValueException;
 import com.epam.esm.exception.IllegalSortTypeException;
 import com.epam.esm.mapper.TagRowMapper;
+import com.epam.esm.specification.OrderSpecification;
+import com.epam.esm.specification.PaginationSpecification;
+import com.epam.esm.specification.impl.OrderSpecificationImpl;
+import com.epam.esm.specification.impl.PaginationSpecificationImpl;
+import com.epam.esm.specification.impl.SearchTagByNameSpecification;
+import com.epam.esm.specification.impl.SearchUserByNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
@@ -25,6 +32,14 @@ import java.util.stream.Collectors;
 
 @Repository
 public class TagDaoImpl implements TagDao {
+
+    private static String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
+            " FROM tag WHERE tag.id = (SELECT gift_certificate_tag.id_tag" +
+            " FROM gift_certificate_tag WHERE gift_certificate_tag.id_gift_certificate IN" +
+            " (SELECT id_gift_certificate FROM \"order\" WHERE id_user=" +
+            "(SELECT id_user FROM \"order\" WHERE cost =" +
+            "(SELECT MAX(cost) FROM \"order\")LIMIT 1))" +
+            " GROUP BY id_tag ORDER BY COUNT(id_tag) DESC LIMIT 1);";
 
     @PersistenceUnit
     private final EntityManagerFactory entityManagerFactory;
@@ -38,84 +53,59 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> findAll(QueryParameters parameters) {
+    public List<Tag> findByParameters(QueryParameters parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tag> query = builder.createQuery(Tag.class);
-        Root<Tag> rootEntry = query.from(Tag.class);
-        CriteriaQuery<Tag> all = query.select(rootEntry);
+        Root<Tag> tagRoot = query.from(Tag.class);
+        CriteriaQuery<Tag> all = query.select(tagRoot);
 
-        try {
-            if (parameters.getSortType() != null && !parameters.getSortType().isEmpty()) {
-                if(parameters.getSortValue()!=null && !parameters.getSortValue().isEmpty()) {
-                    if (parameters.getSortValue().equals("asc")) {
-                        all.orderBy(builder.asc(rootEntry.get(parameters.getSortType())));
-                    } else {
-                        if (parameters.getSortValue().equals("desc")) {
-                            all.orderBy(builder.asc(rootEntry.get(parameters.getSortType())));
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new IllegalSortTypeException();
-        }
-        try {
-            if (parameters.getSearchParameter() != null && !parameters.getSearchParameter().isEmpty()
-                    && parameters.getSearchValue() != null && !parameters.getSearchValue().isEmpty()) {
-                all.where(builder.like(rootEntry.get(parameters.getSearchParameter()), "%" + parameters.getSearchValue() + "%"));
-            }
-        } catch (Exception e) {
-            throw new IllegalSearchValueException();
-        }
-        TypedQuery<Tag> allQuery = entityManager.createQuery(all);
-        if (parameters.getCurrentPage() != 0 && parameters.getPageSize() != 0) {
-            allQuery.setFirstResult((parameters.getCurrentPage() - 1) * parameters.getPageSize());
-            allQuery.setMaxResults(parameters.getPageSize());
-        } else {
-            allQuery.setFirstResult(QueryParameters.DEFAULT_PAGE);
-            allQuery.setMaxResults(QueryParameters.DEFAULT_PAGE_SIZE);
-        }
+        Predicate searchByTagId = new SearchTagByNameSpecification(parameters.getSearchValue()).createPredicate(tagRoot, builder);
+        all.where(searchByTagId);
 
-        return allQuery.getResultList();
+        OrderSpecification<Tag> orderSpecification = new OrderSpecificationImpl<Tag>(
+                parameters.getSearchParameter(),
+                parameters.getSortType());
+
+        all.orderBy(orderSpecification.createOrder(tagRoot, builder));
+
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(all);
+
+        PaginationSpecification<Tag> paginationSpecification = new PaginationSpecificationImpl<Tag>(typedQuery, parameters);
+
+        typedQuery = paginationSpecification.createPaginationTypedQuery();
+
+        return typedQuery.getResultList();
     }
 
     @Override
     public Optional<Tag> findById(BigInteger id) {
         Tag foundTag = entityManager.find(Tag.class, id);
-        return Optional.ofNullable(foundTag);    }
-
-    @Override
-    public List<Tag> findByGiftCertificateId(BigInteger id) {
-        //return jdbcTemplate.query(SELECT_BY_GIFT_CERTIFICATE_ID, rowMapper, id);
-        return new ArrayList<Tag>();
-    }
-
-    @Override
-    public Optional<Tag> findByName(String name) {
-        //return jdbcTemplate.query(SELECT_BY_NAME, rowMapper, name).stream().findAny();
-        return Optional.empty();
+        return Optional.ofNullable(foundTag);
     }
 
     @Override
     public BigInteger deleteById(BigInteger id) {
-//        jdbcTemplate.update(DELETE_FROM_LINK_TABLE_BY_ID, id);
-//        jdbcTemplate.update(DELETE_BY_ID, id);
-//        return id;
-        return new BigInteger("0");
+        Tag tag = entityManager.find(Tag.class, id);
+        if (tag != null) {
+            entityManager.remove(tag);
+            return id;
+        }
+        throw new EntityNotFoundException();
     }
 
     @Override
     public Tag save(Tag tag) {
-        entityManager.persist(tag);
-        entityManager.flush();
+        try {
+            entityManager.persist(tag);
+        } finally {
+            entityManager.close();
+        }
         return tag;
     }
 
     @Override
-    public List<Tag> findByGiftCertificateIdIn(List<BigInteger> idTags) {
-//        String idTagsParams = String.join(",", idTags.stream().map(id -> "?").collect(Collectors.toList()));
-//        return jdbcTemplate.query(String.format(SELECT_BY_GIFT_CERTIFICATE_ID_IN, idTagsParams), rowMapper, idTags.toArray());
-        return new ArrayList<Tag>();
+    public Tag findMostUsedTag() {
+        return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG,Tag.class).getSingleResult();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 public interface OrderService {
     OrderDto createOrder(BigInteger id, OrderDto dto);
 
-    List<OrderDto> findOrdersByUserId(BigInteger idUser);
+    List<OrderDto> findOrdersByUserId(BigInteger idUser, RequestParameters requestParameters);
 
     List<OrderDto> findAll();
 

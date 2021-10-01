@@ -49,12 +49,12 @@ public class TagServiceImplTest {
 
     @Test
     public void testFindAllShouldReturnListTags() {
-        when(tagDaoMock.findAll(QUERY_PARAMETERS)).thenReturn(TAG_LIST);
+        when(tagDaoMock.findByParameters(QUERY_PARAMETERS)).thenReturn(TAG_LIST);
         when(tagMapperMock.mapListEntityToListDto(TAG_LIST)).thenReturn(TAG_DTO_LIST);
 
         assertEquals(tagService.findAll(REQUEST_PARAMETERS), TAG_DTO_LIST);
 
-        verify(tagDaoMock).findAll(QUERY_PARAMETERS);
+        verify(tagDaoMock).findByParameters(QUERY_PARAMETERS);
         verifyNoMoreInteractions(tagDaoMock);
     }
 

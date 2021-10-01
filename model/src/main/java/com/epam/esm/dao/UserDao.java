@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserDao {
     Optional<User> findById(BigInteger id);
 
-    List<User> findAll(QueryParameters parameters);
+    List<User> findByParameters(QueryParameters parameters);
 
     long count();
 }

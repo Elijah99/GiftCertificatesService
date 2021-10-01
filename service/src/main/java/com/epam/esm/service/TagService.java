@@ -45,4 +45,6 @@ public interface TagService {
      * @return saved Tag instance
      */
     TagDto save(TagDto tag);
+
+    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders();
 }

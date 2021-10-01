@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll(RequestParameters requestParameters) {
-        List<User> users = userDao.findAll(requestParametersMapper.mapDtoToEntity(requestParameters));
+        List<User> users = userDao.findByParameters(requestParametersMapper.mapDtoToEntity(requestParameters));
         return userMapper.mapListEntityToListDto(users);
     }
 

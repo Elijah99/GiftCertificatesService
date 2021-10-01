@@ -2,11 +2,18 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.QueryParameters;
+import com.epam.esm.specification.OrderSpecification;
+import com.epam.esm.specification.PaginationSpecification;
+import com.epam.esm.specification.impl.OrderSpecificationImpl;
+import com.epam.esm.specification.impl.PaginationSpecificationImpl;
+import com.epam.esm.specification.impl.SearchOrdersByUserIdSpecification;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.util.List;
@@ -26,7 +33,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Order> findByParameters() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> query = builder.createQuery(Order.class);
         Root<Order> rootEntry = query.from(Order.class);
@@ -53,14 +60,28 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findByUserId(BigInteger idUser) {
+    public List<Order> findByUserId(BigInteger idUser, QueryParameters parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
-        Root<Order> tagRoot = criteriaQuery.from(Order.class);
-        criteriaQuery.where(builder.equal(tagRoot.get("user").get("id"), idUser));
-        TypedQuery query = entityManager.createQuery(criteriaQuery);
+        Root<Order> orderRoot = criteriaQuery.from(Order.class);
+        CriteriaQuery<Order> all = criteriaQuery.select(orderRoot);
 
-        return query.getResultList();
+        Predicate searchByUserId = new SearchOrdersByUserIdSpecification(idUser).createPredicate(orderRoot,builder);
+        all.where(searchByUserId);
+
+        OrderSpecification<Order> orderSpecification = new OrderSpecificationImpl<Order>(
+                parameters.getSearchParameter(),
+                parameters.getSortType());
+
+        all.orderBy(orderSpecification.createOrder(orderRoot,builder));
+
+        TypedQuery<Order> typedQuery = entityManager.createQuery(all);
+
+        PaginationSpecification<Order> paginationSpecification = new PaginationSpecificationImpl<Order>(typedQuery,parameters);
+
+        typedQuery = paginationSpecification.createPaginationTypedQuery();
+
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -82,4 +103,5 @@ public class OrderDaoImpl implements OrderDao {
 
         return query.getSingleResult();
     }
+
 }

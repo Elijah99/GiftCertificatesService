@@ -88,7 +88,7 @@ public class UserController {
                                                        @RequestParam(required = false) String searchValue) {
         RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
 
-        List<OrderRepresentation> links = orderService.findOrdersByUserId(id).stream().map(OrderRepresentation::new).collect(Collectors.toList());
+        List<OrderRepresentation> links = orderService.findOrdersByUserId(id,requestParameters).stream().map(OrderRepresentation::new).collect(Collectors.toList());
 
         return orderLinkManager.createLinks(links, requestParameters);
     }

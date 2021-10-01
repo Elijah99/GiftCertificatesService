@@ -1,19 +1,20 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.QueryParameters;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao {
-    List<Order> findAll();
+    List<Order> findByParameters();
 
     Optional<Order> findById(BigInteger id);
 
     BigInteger deleteById(BigInteger id);
 
-    List<Order> findByUserId(BigInteger idUser);
+    List<Order> findByUserId(BigInteger idUser, QueryParameters queryParameters);
 
     Order save(Order order);
 

@@ -4,16 +4,11 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.GiftCertificateTag;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.enums.RequestParameters;
-import com.epam.esm.enums.SearchParameter;
-import com.epam.esm.enums.SortParameter;
-import com.epam.esm.enums.SortType;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
-import com.epam.esm.exception.InvalidSearchParametersException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
+import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +24,7 @@ import java.util.Optional;
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private GiftCertificateMapper giftCertificateMapper;
+    private TagMapper tagMapper;
     private RequestParametersMapper requestParametersMapper;
     private GiftCertificateDao giftCertificateDao;
     private TagDao tagDao;
@@ -39,7 +34,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> findAll(RequestParameters parameters) {
-        List<GiftCertificate> giftCertificates = giftCertificateDao.findAll(requestParametersMapper.mapDtoToEntity(parameters));
+        List<GiftCertificate> giftCertificates = giftCertificateDao.findByParameters(requestParametersMapper.mapDtoToEntity(parameters));
         return giftCertificateMapper.mapListEntityToListDto(giftCertificates);
     }
 
@@ -87,8 +82,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if(updatedGiftCertificate.getDuration() != 0){
             giftCertificate.setDuration(updatedGiftCertificate.getDuration());
         }
-        if(updatedGiftCertificate.getTags() != null){
-            giftCertificate.setTags(updatedGiftCertificate.getTags());
+        if(updatedGiftCertificate.getGiftCertificateTags() != null){
+            giftCertificate.setGiftCertificateTags(updatedGiftCertificate.getGiftCertificateTags());
         }
         return giftCertificate;
     }

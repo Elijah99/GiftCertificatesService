@@ -2,12 +2,15 @@ package com.epam.esm.entity;
 
 import com.epam.esm.listener.GiftCertificateAuditListener;
 import com.epam.esm.listener.GiftCertificateTagAuditListener;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.BigInteger;
+import java.util.Objects;
 
-@Entity
+@Entity(name="GiftCertificateTag")
 @EntityListeners(GiftCertificateTagAuditListener.class)
 @Table(name = "gift_certificate_tag")
 public class GiftCertificateTag {
@@ -15,23 +18,25 @@ public class GiftCertificateTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private BigInteger id;
-    @Column(name = "id_gift_certificate")
-    private BigInteger idGiftCertificate;
-    @Column(name = "id_tag")
-    private BigInteger idTag;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_gift_certificate")
+    @JsonBackReference
+    private GiftCertificate giftCertificate;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_tag")
+    @JsonBackReference
+    private Tag tag;
 
     public GiftCertificateTag() {
     }
 
-    public GiftCertificateTag(BigInteger idGiftCertificate, BigInteger idTag) {
-        this.idGiftCertificate = idGiftCertificate;
-        this.idTag = idTag;
-    }
-
-    public GiftCertificateTag(BigInteger id, BigInteger idGiftCertificate, BigInteger idTag) {
-        this.id = id;
-        this.idGiftCertificate = idGiftCertificate;
-        this.idTag = idTag;
+    public GiftCertificateTag(GiftCertificate giftCertificate, Tag tag) {
+        this.giftCertificate = giftCertificate;
+        this.tag = tag;
     }
 
     public BigInteger getId() {
@@ -42,19 +47,35 @@ public class GiftCertificateTag {
         this.id = id;
     }
 
-    public BigInteger getIdGiftCertificate() {
-        return idGiftCertificate;
+    public GiftCertificate getGiftCertificate() {
+        return giftCertificate;
     }
 
-    public void setIdGiftCertificate(BigInteger idGiftCertificate) {
-        this.idGiftCertificate = idGiftCertificate;
+    public void setGiftCertificate(GiftCertificate giftCertificate) {
+        this.giftCertificate = giftCertificate;
     }
 
-    public BigInteger getIdTag() {
-        return idTag;
+    public Tag getTag() {
+        return tag;
     }
 
-    public void setIdTag(BigInteger idTag) {
-        this.idTag = idTag;
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificateTag that = (GiftCertificateTag) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(giftCertificate, that.giftCertificate) &&
+                Objects.equals(tag, that.tag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, giftCertificate, tag);
     }
 }

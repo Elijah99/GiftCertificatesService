@@ -3,18 +3,18 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.UserDao;
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.User;
 import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.UserNotFoundException;
 import com.epam.esm.mapper.impl.OrderMapper;
+import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.service.OrderService;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private GiftCertificateDao giftCertificateDao;
     private UserDao userDao;
     private OrderMapper orderMapper;
+    private RequestParametersMapper requestParametersMapper;
 
     @Override
     public OrderDto createOrder(BigInteger id, OrderDto dto) {
@@ -43,13 +44,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findOrdersByUserId(BigInteger idUser) {
-        return orderMapper.mapListEntityToListDto(orderDao.findByUserId(idUser));
+    public List<OrderDto> findOrdersByUserId(BigInteger idUser, RequestParameters requestParameters) {
+        QueryParameters queryParameters = requestParametersMapper.mapDtoToEntity(requestParameters);
+        return orderMapper.mapListEntityToListDto(orderDao.findByUserId(idUser, queryParameters));
     }
 
     @Override
     public List<OrderDto> findAll() {
-        return orderMapper.mapListEntityToListDto(orderDao.findAll());
+        return orderMapper.mapListEntityToListDto(orderDao.findByParameters());
     }
 
     @Override
@@ -116,5 +118,10 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Autowired
+    public void setRequestParametersMapper(RequestParametersMapper requestParametersMapper) {
+        this.requestParametersMapper = requestParametersMapper;
     }
 }

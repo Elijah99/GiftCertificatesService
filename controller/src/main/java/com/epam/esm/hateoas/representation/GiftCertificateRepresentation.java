@@ -31,6 +31,7 @@ public class GiftCertificateRepresentation extends RepresentationModel<GiftCerti
     private List<TagRepresentation> tags;
 
     public GiftCertificateRepresentation() {
+        createLinks();
     }
 
     public GiftCertificateRepresentation(GiftCertificateDto giftCertificateDto) {

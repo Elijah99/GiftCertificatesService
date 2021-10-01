@@ -23,6 +23,7 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
     private List<OrderRepresentation> orders;
 
     public UserRepresentation() {
+        createLinks();
     }
 
     public UserRepresentation(UserDto userDto) {

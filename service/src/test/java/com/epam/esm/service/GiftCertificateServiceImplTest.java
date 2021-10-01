@@ -68,9 +68,7 @@ public class GiftCertificateServiceImplTest {
     }
 
     private static void initCertificatesLists() {
-        giftCertificateTagList = Arrays.asList(
-                new GiftCertificateTag(new BigInteger("1"), new BigInteger("2")),
-                new GiftCertificateTag(new BigInteger("2"), new BigInteger("2")));
+
 
         tagList = Arrays.asList(
                 new Tag(new BigInteger("1"), "name1"),
@@ -81,11 +79,11 @@ public class GiftCertificateServiceImplTest {
                 new TagDto(new BigInteger("2"), "name2"));
 
 
-        certificateList = Arrays.asList(new GiftCertificate(new BigInteger("1"), "1st name",
-                        "1st description", new BigDecimal("10"),
-                        LocalDateTime.now(), LocalDateTime.now(), 7, tagList),
-                new GiftCertificate(new BigInteger("2"), "2st name", "2nd description",
-                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9, tagList));
+//        certificateList = Arrays.asList(new GiftCertificate(new BigInteger("1"), "1st name",
+//                        "1st description", new BigDecimal("10"),
+//                        LocalDateTime.now(), LocalDateTime.now(), 7, tagList),
+//                new GiftCertificate(new BigInteger("2"), "2st name", "2nd description",
+//                        new BigDecimal("20"), LocalDateTime.now(), LocalDateTime.now(), 9, tagList));
 
         certificateDtoList = Arrays.asList(new GiftCertificateDto(new BigInteger("1"), "1st name",
                         "1st description", new BigDecimal("10"),

@@ -9,10 +9,12 @@ import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "GiftCertificate")
 @EntityListeners(GiftCertificateAuditListener.class)
 @Table(name = "gift_certificate")
 public class GiftCertificate {
@@ -35,17 +37,11 @@ public class GiftCertificate {
     private LocalDateTime lastUpdateDate;
     @Column(name = "duration")
     private int duration;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "gift_certificate_tag",
-            joinColumns = @JoinColumn(name = "id_gift_certificate"),
-            inverseJoinColumns = @JoinColumn(name = "id_tag"))
-    private List<Tag> tags;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
-        this(id, name, description, price, createDate, lastUpdateDate, duration);
-        this.tags = tags;
-    }
+    @OneToMany(mappedBy = "giftCertificate",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<GiftCertificateTag> giftCertificateTags = new ArrayList<>();
 
     public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         this.id = id;
@@ -132,12 +128,34 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
-    public List<Tag> getTags() {
-        return tags;
+
+    public List<GiftCertificateTag> getGiftCertificateTags() {
+        return giftCertificateTags;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public void setGiftCertificateTags(List<GiftCertificateTag> giftCertificateTags) {
+        this.giftCertificateTags = giftCertificateTags;
+    }
+
+    public void addTag(Tag tag) {
+        GiftCertificateTag postTag = new GiftCertificateTag(this, tag);
+        giftCertificateTags.add(postTag);
+        tag.getGiftCertificateTags().add(postTag);
+    }
+
+    public void removeTag(Tag tag) {
+        for (Iterator<GiftCertificateTag> iterator = giftCertificateTags.iterator();
+             iterator.hasNext(); ) {
+            GiftCertificateTag postTag = iterator.next();
+
+            if (postTag.getGiftCertificate().equals(this) &&
+                    postTag.getTag().equals(tag)) {
+                iterator.remove();
+                postTag.getTag().getGiftCertificateTags().remove(postTag);
+                postTag.setGiftCertificate(null);
+                postTag.setTag(null);
+            }
+        }
     }
 
     @Override
@@ -150,13 +168,12 @@ public class GiftCertificate {
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(createDate, that.createDate) &&
-                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
-                Objects.equals(tags, that.tags);
+                Objects.equals(lastUpdateDate, that.lastUpdateDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, price, createDate, lastUpdateDate, duration, tags);
+        return Objects.hash(name, description, price, createDate, lastUpdateDate, duration);
     }
 
     @Override
@@ -169,7 +186,6 @@ public class GiftCertificate {
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", duration=" + duration +
-                ", tags=" + tags +
                 '}';
     }
 }

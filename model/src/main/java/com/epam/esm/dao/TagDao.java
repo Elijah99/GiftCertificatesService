@@ -9,19 +9,15 @@ import java.util.Optional;
 
 public interface TagDao {
 
-    List<Tag> findAll(QueryParameters parameters);
+    List<Tag> findByParameters(QueryParameters parameters);
 
     Optional<Tag> findById(BigInteger id);
-
-    List<Tag> findByGiftCertificateId(BigInteger id);
-
-    Optional<Tag> findByName(String name);
 
     BigInteger deleteById(BigInteger id);
 
     Tag save(Tag tag);
 
-    List<Tag> findByGiftCertificateIdIn(List<BigInteger> idGiftCertificates);
+    Tag findMostUsedTag();
 
     long count();
 }

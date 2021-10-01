@@ -9,18 +9,18 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class OrderByGiftCertificateSpecification implements OrderSpecification<GiftCertificate> {
+public class OrderSpecificationImpl<T> implements OrderSpecification<T> {
 
     private final String orderColumn;
     private final String orderType;
 
-    public OrderByGiftCertificateSpecification(String orderColumn, String orderType) {
+    public OrderSpecificationImpl(String orderColumn, String orderType) {
         this.orderColumn = orderColumn;
         this.orderType = orderType;
     }
 
     @Override
-    public Order createOrder(Root<GiftCertificate> root, CriteriaBuilder criteriaBuilder) {
+    public Order createOrder(Root<T> root, CriteriaBuilder criteriaBuilder) {
         if(isParametersNotNull()) {
             if (orderType.equals("asc")) {
                 return criteriaBuilder.asc(root.get(orderColumn));

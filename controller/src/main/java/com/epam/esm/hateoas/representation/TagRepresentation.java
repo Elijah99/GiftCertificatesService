@@ -17,6 +17,7 @@ public class TagRepresentation extends RepresentationModel<TagRepresentation> im
     private String name;
 
     public TagRepresentation() {
+        createLinks();
     }
 
     public TagRepresentation(TagDto tagDto) {

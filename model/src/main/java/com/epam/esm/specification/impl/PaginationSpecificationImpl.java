@@ -6,18 +6,18 @@ import com.epam.esm.specification.PaginationSpecification;
 
 import javax.persistence.TypedQuery;
 
-public class PaginationGiftCertificatesSpecification implements PaginationSpecification<GiftCertificate> {
+public class PaginationSpecificationImpl<T> implements PaginationSpecification<T> {
 
-    private final TypedQuery<GiftCertificate> query;
+    private final TypedQuery<T> query;
     private final QueryParameters parameters;
 
-    public PaginationGiftCertificatesSpecification(TypedQuery<GiftCertificate> query, QueryParameters parameters) {
+    public PaginationSpecificationImpl(TypedQuery<T> query, QueryParameters parameters) {
     this.query = query;
     this.parameters = parameters;
     }
 
     @Override
-    public TypedQuery<GiftCertificate> createPaginationTypedQuery() {
+    public TypedQuery<T> createPaginationTypedQuery() {
         if (parameters.getCurrentPage() != 0 && parameters.getPageSize() != 0) {
             query.setFirstResult((parameters.getCurrentPage() - 1) * parameters.getPageSize());
             query.setMaxResults(parameters.getPageSize());

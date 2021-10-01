@@ -6,9 +6,11 @@ import com.epam.esm.listener.TagAuditListener;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "Tag")
 @EntityListeners(TagAuditListener.class)
 @Table(name = "tag")
 public class Tag {
@@ -19,6 +21,11 @@ public class Tag {
     private BigInteger id;
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "tag",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<GiftCertificateTag> giftCertificateTags = new ArrayList<>();
 
     public Tag() {
     }
@@ -46,6 +53,14 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<GiftCertificateTag> getGiftCertificateTags() {
+        return giftCertificateTags;
+    }
+
+    public void setGiftCertificateTags(List<GiftCertificateTag> giftCertificateTags) {
+        this.giftCertificateTags = giftCertificateTags;
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.enums.RequestParameters;
-import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;
@@ -30,7 +29,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDto> findAll(RequestParameters parameters) {
-        List<Tag> tags = dao.findAll(requestParametersMapper.mapDtoToEntity(parameters));
+        List<Tag> tags = dao.findByParameters(requestParametersMapper.mapDtoToEntity(parameters));
         return tagMapper.mapListEntityToListDto(tags);
     }
 
@@ -61,6 +60,12 @@ public class TagServiceImpl implements TagService {
         Tag tag = tagMapper.mapDtoToEntity(tagDto);
         Tag savedTag = dao.save(tag);
         return tagMapper.mapEntityToDto(savedTag);
+    }
+
+    @Override
+    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders() {
+        Tag tag = dao.findMostUsedTag();
+        return tagMapper.mapEntityToDto(tag);
     }
 
     @Autowired

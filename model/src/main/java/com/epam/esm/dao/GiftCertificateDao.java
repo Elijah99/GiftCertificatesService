@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface GiftCertificateDao {
 
-    List<GiftCertificate> findAll(QueryParameters parameters);
+    List<GiftCertificate> findByParameters(QueryParameters parameters);
 
     Optional<GiftCertificate> findById(BigInteger id);
 

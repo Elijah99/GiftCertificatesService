@@ -7,8 +7,8 @@ import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
 import com.epam.esm.specification.PredicateSpecification;
 import com.epam.esm.specification.SpecificationBuilder;
-import com.epam.esm.specification.impl.OrderByGiftCertificateSpecification;
-import com.epam.esm.specification.impl.PaginationGiftCertificatesSpecification;
+import com.epam.esm.specification.impl.OrderSpecificationImpl;
+import com.epam.esm.specification.impl.PaginationSpecificationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +39,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public List<GiftCertificate> findAll(QueryParameters parameters) {
+    public List<GiftCertificate> findByParameters(QueryParameters parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> query = builder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> rootEntry = query.from(GiftCertificate.class);
@@ -52,7 +52,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         });
         all.where(predicates.toArray(new Predicate[]{}));
 
-        OrderSpecification<GiftCertificate> orderSpecification = new OrderByGiftCertificateSpecification(
+        OrderSpecification<GiftCertificate> orderSpecification = new OrderSpecificationImpl<GiftCertificate>(
                 parameters.getSearchParameter(),
                 parameters.getSortType());
 
@@ -60,7 +60,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(all);
 
-        PaginationSpecification<GiftCertificate> paginationSpecification = new PaginationGiftCertificatesSpecification(typedQuery,parameters);
+        PaginationSpecification<GiftCertificate> paginationSpecification = new PaginationSpecificationImpl<GiftCertificate>(typedQuery,parameters);
 
         typedQuery = paginationSpecification.createPaginationTypedQuery();
 
@@ -76,14 +76,16 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate save(GiftCertificate giftCertificate) {
-        entityManager.persist(giftCertificate);
-        entityManager.flush();
+        try {
+            entityManager.persist(giftCertificate);
+        } finally {
+            entityManager.close();
+        }
         return giftCertificate;
     }
 
     @Override
     public GiftCertificate update(GiftCertificate giftCertificate) {
-        entityManager.detach(giftCertificate);
         entityManager.merge(giftCertificate);
         return findById(giftCertificate.getId()).get();
     }

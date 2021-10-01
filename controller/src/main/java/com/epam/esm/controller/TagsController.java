@@ -1,9 +1,11 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.enums.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.hateoas.TagLinkManager;
+import com.epam.esm.hateoas.representation.OrderRepresentation;
 import com.epam.esm.hateoas.representation.TagRepresentation;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +96,13 @@ public class TagsController {
     @ResponseStatus(HttpStatus.OK)
     public BigInteger deleteTag(@PathVariable("id") BigInteger id) {
         return service.deleteById(id);
+    }
+
+    @GetMapping(value = "mostUsedTag")
+    @ResponseStatus(HttpStatus.OK)
+    public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders() {
+        TagDto tagDto = service.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders();
+        return new TagRepresentation(tagDto);
     }
 
     @Autowired
