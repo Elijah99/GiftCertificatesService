@@ -3,18 +3,12 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.*;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.IllegalSearchValueException;
-import com.epam.esm.exception.IllegalSortTypeException;
-import com.epam.esm.mapper.TagRowMapper;
 import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
 import com.epam.esm.specification.impl.OrderSpecificationImpl;
 import com.epam.esm.specification.impl.PaginationSpecificationImpl;
 import com.epam.esm.specification.impl.SearchTagByNameSpecification;
-import com.epam.esm.specification.impl.SearchUserByNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -23,12 +17,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -59,8 +50,14 @@ public class TagDaoImpl implements TagDao {
         Root<Tag> tagRoot = query.from(Tag.class);
         CriteriaQuery<Tag> all = query.select(tagRoot);
 
-        Predicate searchByTagId = new SearchTagByNameSpecification(parameters.getSearchValue()).createPredicate(tagRoot, builder);
-        all.where(searchByTagId);
+        List<Predicate> predicates = new ArrayList<>();
+        if(parameters.getSearchValue()!=null) {
+            parameters.getSearchValue().forEach(searchValue-> {
+                predicates.add(new SearchTagByNameSpecification(searchValue).createPredicate(tagRoot, builder));
+            });
+        }
+        Predicate search = builder.and(predicates.toArray(new Predicate[0]));
+        all.where(search);
 
         OrderSpecification<Tag> orderSpecification = new OrderSpecificationImpl<Tag>(
                 parameters.getSearchParameter(),
@@ -87,6 +84,9 @@ public class TagDaoImpl implements TagDao {
     public BigInteger deleteById(BigInteger id) {
         Tag tag = entityManager.find(Tag.class, id);
         if (tag != null) {
+            if (tag.getGiftCertificateTags() != null){
+                tag.getGiftCertificateTags().forEach(entityManager::remove);
+            }
             entityManager.remove(tag);
             return id;
         }
@@ -104,8 +104,23 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public Optional<Tag> findByName(String name) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> query = builder.createQuery(Tag.class);
+        Root<Tag> tagRoot = query.from(Tag.class);
+        CriteriaQuery<Tag> allQuery = query.select(tagRoot);
+
+        Predicate searchByTagName = new SearchTagByNameSpecification(name).createPredicate(tagRoot, builder);
+        allQuery.where(searchByTagName);
+
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(allQuery);
+
+        return Optional.ofNullable(typedQuery.getSingleResult());
+    }
+
+    @Override
     public Tag findMostUsedTag() {
-        return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG,Tag.class).getSingleResult();
+        return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG, Tag.class).getSingleResult();
     }
 
     @Override

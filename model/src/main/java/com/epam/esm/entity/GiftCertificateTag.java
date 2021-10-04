@@ -20,13 +20,13 @@ public class GiftCertificateTag {
     private BigInteger id;
 
     @ManyToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "id_gift_certificate")
     @JsonBackReference
     private GiftCertificate giftCertificate;
 
     @ManyToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "id_tag")
     @JsonBackReference
     private Tag tag;

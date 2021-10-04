@@ -17,6 +17,8 @@ public interface TagDao {
 
     Tag save(Tag tag);
 
+    Optional<Tag> findByName(String name);
+
     Tag findMostUsedTag();
 
     long count();

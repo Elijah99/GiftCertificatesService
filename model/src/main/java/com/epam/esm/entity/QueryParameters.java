@@ -13,9 +13,9 @@ public class QueryParameters {
     private String sortType;
     private String sortValue;
     private String searchParameter;
-    private String searchValue;
+    private List<String> searchValue;
 
-    public QueryParameters(int currentPage, int pageSize, String sortType, String sortValue, String searchParameter, String searchValue) {
+    public QueryParameters(int currentPage, int pageSize, String sortType, String sortValue, String searchParameter, List<String> searchValue) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.sortType = sortType;
@@ -64,11 +64,11 @@ public class QueryParameters {
         this.searchParameter = searchParameter;
     }
 
-    public String getSearchValue() {
+    public List<String> getSearchValue() {
         return searchValue;
     }
 
-    public void setSearchValue(String searchValue) {
+    public void setSearchValue(List<String> searchValue) {
         this.searchValue = searchValue;
     }
 

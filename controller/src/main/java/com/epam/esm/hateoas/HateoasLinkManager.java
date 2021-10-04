@@ -1,7 +1,6 @@
 package com.epam.esm.hateoas;
 
-import com.epam.esm.dto.UserDto;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;

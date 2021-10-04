@@ -14,12 +14,16 @@ public class SpecificationBuilder {
     public List<PredicateSpecification<GiftCertificate>> createPredicateSpecifications(QueryParameters parameters) {
         List<PredicateSpecification<GiftCertificate>> specifications = new ArrayList<>();
 
-        if(parameters.getSearchValue() != null && parameters.getSearchParameter()!=null){
-            if(!parameters.getSearchParameter().equals("tags")) {
-                specifications.add(new SearchByStringGiftCertificateSpecification(parameters.getSearchParameter(), parameters.getSearchValue()));
+        if (parameters.getSearchValue() != null && parameters.getSearchParameter() != null) {
+            if (!parameters.getSearchParameter().equals("tags")) {
+                parameters.getSearchValue().forEach(searchValue ->
+                        specifications.add(new SearchByStringGiftCertificateSpecification(parameters.getSearchParameter(), searchValue))
+                );
             }
-            if(parameters.getSearchParameter().equals("tags")){
-                specifications.add(new SearchByTagGiftCertificateSpecification(parameters.getSearchValue()));
+            if (parameters.getSearchParameter().equals("tags")) {
+                parameters.getSearchValue().forEach(searchValue ->
+                        specifications.add(new SearchByTagGiftCertificateSpecification(searchValue))
+                );
             }
         }
 

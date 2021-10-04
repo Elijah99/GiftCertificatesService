@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;

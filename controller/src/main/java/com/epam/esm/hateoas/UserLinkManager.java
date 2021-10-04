@@ -1,8 +1,7 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.UserController;
-import com.epam.esm.dto.UserDto;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.hateoas.representation.UserRepresentation;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

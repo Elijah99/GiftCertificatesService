@@ -8,6 +8,7 @@ import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
 import com.epam.esm.specification.impl.OrderSpecificationImpl;
 import com.epam.esm.specification.impl.PaginationSpecificationImpl;
+import com.epam.esm.specification.impl.SearchTagByNameSpecification;
 import com.epam.esm.specification.impl.SearchUserByNameSpecification;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,8 +48,14 @@ public class UserDaoImpl implements UserDao {
         Root<User> userRoot = query.from(User.class);
         CriteriaQuery<User> all = query.select(userRoot);
 
-        Predicate searchByUserId = new SearchUserByNameSpecification(parameters.getSearchValue()).createPredicate(userRoot,builder);
-        all.where(searchByUserId);
+        List<Predicate> predicates = new ArrayList<>();
+        if(parameters.getSearchValue()!=null) {
+            parameters.getSearchValue().forEach(searchValue-> {
+                predicates.add(new SearchUserByNameSpecification(searchValue).createPredicate(userRoot, builder));
+            });
+        }
+        Predicate search = builder.and(predicates.toArray(new Predicate[0]));
+        all.where(search);
 
         OrderSpecification<User> orderSpecification = new OrderSpecificationImpl<User>(
                 parameters.getSearchParameter(),

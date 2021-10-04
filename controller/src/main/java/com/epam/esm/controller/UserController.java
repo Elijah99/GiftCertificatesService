@@ -3,9 +3,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.enums.RequestParameters;
-import com.epam.esm.enums.SearchParameter;
-import com.epam.esm.enums.SortType;
+import com.epam.esm.dto.RequestParameters;
+import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.hateoas.OrderLinkManager;
 import com.epam.esm.hateoas.UserLinkManager;
 import com.epam.esm.hateoas.representation.OrderRepresentation;
@@ -15,19 +14,20 @@ import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * Provides a centralized request handling
+ * to Users and Users Orders resources
+ *
+ * @author Ilya Ramanouski
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -37,14 +37,30 @@ public class UserController {
     private UserLinkManager userLinkManager;
     private OrderLinkManager orderLinkManager;
 
+    /**
+     * Provides GET requests to the all Users with parameters
+     * request examples:
+     * .../users/  - returns all list of Users with default pagination
+     * .../users?searchBy=column&value=val  - finds Users which contains value 'val' at column 'column'
+     * .../users?sortBy=column&sortType=desc    - returns Users with default pagination sorted by column 'column' in descending order
+     * .../users/page=1&pageSize=10  - returns first 10 records of Users
+     *
+     * @param page            requested page
+     * @param pageSize        requested number of rows at page
+     * @param sortType        asc/desc value for order rows
+     * @param sortValue       column to sort rows
+     * @param searchParameter column to search
+     * @param searchValue     list of values to search
+     * @return CollectionModel of UserRepresentation.
+     */
     @GetMapping(produces = "application/hal+json")
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<UserRepresentation> getAllUsers(@RequestParam(required = false, defaultValue = "1") int page,
-                                                @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                @RequestParam(required = false) String sortType,
-                                                @RequestParam(required = false) String sortValue,
-                                                @RequestParam(required = false) String searchParameter,
-                                                @RequestParam(required = false) String searchValue) {
+                                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                           @RequestParam(required = false) String sortType,
+                                                           @RequestParam(required = false) String sortValue,
+                                                           @RequestParam(required = false) String searchParameter,
+                                                           @RequestParam(required = false) List<String> searchValue) {
 
         RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
 
@@ -53,6 +69,14 @@ public class UserController {
         return userLinkManager.createLinks(links, requestParameters);
     }
 
+    /**
+     * Provides GET request to the one User by its id
+     * request example:
+     * .../users/1  -  returns User with id '1'
+     *
+     * @param id path variable,id of requested User
+     * @return UserRepresentation if its presents
+     */
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserRepresentation getUserById(@PathVariable("id") BigInteger id) {
@@ -62,13 +86,30 @@ public class UserController {
         return new UserRepresentation(userDto);
     }
 
+    /**
+     * Provides POST request to add new Order
+     * request example:
+     * .../orders/  - saves new Order, requires request body in json format
+     *
+     * @param order OrderDto object bases on json object in request body
+     * @return created OrderRepresentation
+     */
     @PostMapping(value = "/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
-    public OrderRepresentation createOrder(@PathVariable("id") BigInteger id, @RequestBody OrderDto dto) {
-        OrderDto orderDto = orderService.createOrder(id, dto);
+    public OrderRepresentation createOrder(@PathVariable("id") BigInteger id, @RequestBody OrderDto order) {
+        OrderDto orderDto = orderService.createOrder(id, order);
         return new OrderRepresentation(orderDto);
     }
 
+    /**
+     * Provides GET request to the one User's Order by its id
+     * request example:
+     * .../users/1/orders/1  -  returns Order with id '1' of User with id '1'
+     *
+     * @param userId  path variable,id of User
+     * @param orderId path variable,id of requested Order
+     * @return OrderRepresentation if its presents
+     */
     @GetMapping(value = "/{id_user}/orders/{id_order}")
     @ResponseStatus(HttpStatus.OK)
     public OrderRepresentation getOrderById(
@@ -77,18 +118,37 @@ public class UserController {
         return new OrderRepresentation(orderDto);
     }
 
+    /**
+     * Provides GET request to the all User's Orders with parameters
+     * request example:
+     * .../users/1/orders/  -  returns Orders of User with id '1' with default pagination
+     * <p>
+     * .../users/1/orders?searchBy=column&value=val  - finds Orders of User with id '1' which contains value 'val' at column 'column'
+     * .../users/1/orders?sortBy=column&sortType=desc    - returns Orders of User with id '1' with default pagination
+     * sorted by column 'column' in descending order
+     * .../users/1/orders?page=1&pageSize=10  - returns first 10 records of Orders of User with id '1'
+     *
+     * @param id              path variable,id of User
+     * @param page            requested page
+     * @param pageSize        requested number of rows at page
+     * @param sortType        asc/desc value for order rows
+     * @param sortValue       column to sort rows
+     * @param searchParameter column to search
+     * @param searchValue     list of values to search
+     * @return OrderRepresentation if its presents
+     */
     @GetMapping(value = "/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<OrderRepresentation> getOrdersByUserId(@PathVariable("id") BigInteger id,
-                                                       @RequestParam(required = false, defaultValue = "1") Integer page,
-                                                       @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                       @RequestParam(required = false) String sortType,
-                                                       @RequestParam(required = false) String sortValue,
-                                                       @RequestParam(required = false) String searchParameter,
-                                                       @RequestParam(required = false) String searchValue) {
+                                                                  @RequestParam(required = false, defaultValue = "1") Integer page,
+                                                                  @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                                  @RequestParam(required = false) String sortType,
+                                                                  @RequestParam(required = false) String sortValue,
+                                                                  @RequestParam(required = false) String searchParameter,
+                                                                  @RequestParam(required = false) List<String> searchValue) {
         RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
 
-        List<OrderRepresentation> links = orderService.findOrdersByUserId(id,requestParameters).stream().map(OrderRepresentation::new).collect(Collectors.toList());
+        List<OrderRepresentation> links = orderService.findOrdersByUserId(id, requestParameters).stream().map(OrderRepresentation::new).collect(Collectors.toList());
 
         return orderLinkManager.createLinks(links, requestParameters);
     }

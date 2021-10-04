@@ -18,6 +18,6 @@ public class SearchOrdersByUserIdSpecification implements PredicateSpecification
 
     @Override
     public Predicate createPredicate(Root<Order> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(root.get("user").get("idUser"), idUser);
+        return criteriaBuilder.equal(root.get("user").get("id"), idUser);
     }
 }

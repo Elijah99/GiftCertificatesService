@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 
 @Repository
+@Transactional
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @PersistenceUnit
@@ -48,7 +50,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         List<PredicateSpecification<GiftCertificate>> specifications = specificationBuilder.createPredicateSpecifications(parameters);
         List<Predicate> predicates = new ArrayList<>();
         specifications.forEach(s -> {
-                    predicates.add(s.createPredicate(rootEntry, builder));
+            predicates.add(s.createPredicate(rootEntry, builder));
         });
         all.where(predicates.toArray(new Predicate[]{}));
 
@@ -56,11 +58,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 parameters.getSearchParameter(),
                 parameters.getSortType());
 
-        all.orderBy(orderSpecification.createOrder(rootEntry,builder));
+        all.orderBy(orderSpecification.createOrder(rootEntry, builder));
 
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(all);
 
-        PaginationSpecification<GiftCertificate> paginationSpecification = new PaginationSpecificationImpl<GiftCertificate>(typedQuery,parameters);
+        PaginationSpecification<GiftCertificate> paginationSpecification = new PaginationSpecificationImpl<GiftCertificate>(typedQuery, parameters);
 
         typedQuery = paginationSpecification.createPaginationTypedQuery();
 
@@ -86,16 +88,24 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate update(GiftCertificate giftCertificate) {
-        entityManager.merge(giftCertificate);
+        try {
+            entityManager.merge(giftCertificate);
+        } finally {
+            entityManager.close();
+        }
         return findById(giftCertificate.getId()).get();
     }
 
     @Override
     public BigInteger deleteById(BigInteger id) {
-        GiftCertificate certificate = entityManager.find(GiftCertificate.class, id);
-        if (certificate != null) {
-            entityManager.remove(certificate);
-            return id;
+        try {
+            GiftCertificate certificate = entityManager.find(GiftCertificate.class, id);
+            if (certificate != null) {
+                entityManager.remove(certificate);
+                return id;
+            }
+        } finally {
+            entityManager.close();
         }
         throw new EntityNotFoundException();
     }

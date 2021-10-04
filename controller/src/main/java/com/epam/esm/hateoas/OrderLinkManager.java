@@ -1,14 +1,11 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.UserController;
-import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.UserDto;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.hateoas.representation.OrderRepresentation;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;

@@ -3,8 +3,10 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +52,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto update(GiftCertificateDto giftCertificateDto, BigInteger id) {
+    public GiftCertificateDto update(GiftCertificateDto updatedGiftCertificate, BigInteger id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
             GiftCertificate giftCertificate = giftCertificateOptional.get();
-            GiftCertificate updatedGiftCertificate = giftCertificateMapper.mapDtoToEntity(giftCertificateDto);
-            giftCertificate = updateGiftCertificateFields(giftCertificate, updatedGiftCertificate);
+            updateGiftCertificateFields(giftCertificate, updatedGiftCertificate);
             giftCertificate.setLastUpdateDate(LocalDateTime.now());
             giftCertificateDao.update(giftCertificate);
             return giftCertificateMapper.mapEntityToDto(giftCertificate);
@@ -63,28 +65,58 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
-    private GiftCertificate updateGiftCertificateFields(GiftCertificate giftCertificate, GiftCertificate updatedGiftCertificate){
-        if(updatedGiftCertificate.getName() != null){
+    public GiftCertificate updateGiftCertificateFields(GiftCertificate giftCertificate, GiftCertificateDto updatedGiftCertificate) {
+        if (updatedGiftCertificate.getName() != null) {
             giftCertificate.setName(updatedGiftCertificate.getName());
         }
-        if(updatedGiftCertificate.getDescription() != null){
+        if (updatedGiftCertificate.getDescription() != null) {
             giftCertificate.setDescription(updatedGiftCertificate.getDescription());
         }
-        if(updatedGiftCertificate.getCreateDate() != null){
-            giftCertificate.setCreateDate(updatedGiftCertificate.getCreateDate());
-        }
-        if(updatedGiftCertificate.getLastUpdateDate() != null){
-            giftCertificate.setLastUpdateDate(updatedGiftCertificate.getLastUpdateDate());
-        }
-        if(updatedGiftCertificate.getPrice() != null){
+        if (updatedGiftCertificate.getPrice() != null) {
             giftCertificate.setPrice(updatedGiftCertificate.getPrice());
         }
-        if(updatedGiftCertificate.getDuration() != 0){
+        if (updatedGiftCertificate.getDuration() != 0) {
             giftCertificate.setDuration(updatedGiftCertificate.getDuration());
         }
-        if(updatedGiftCertificate.getGiftCertificateTags() != null){
-            giftCertificate.setGiftCertificateTags(updatedGiftCertificate.getGiftCertificateTags());
+        if (updatedGiftCertificate.getTags() != null) {
+            updateTags(giftCertificate, updatedGiftCertificate.getTags());
         }
+        return giftCertificate;
+    }
+
+    public GiftCertificate updateTags(GiftCertificate giftCertificate, List<TagDto> tagDtos) {
+        List<Tag> tags = giftCertificate.getTags();
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        if (tagDtos == null) {
+            tagDtos = new ArrayList<>();
+        }
+        List<String> updatedTagNames = new ArrayList<>();
+        List<String> storedTagNames = new ArrayList<>();
+        if (!tags.isEmpty()) {
+            tags.forEach(tag -> storedTagNames.add(tag.getName()));
+        }
+
+        if (!tagDtos.isEmpty()) {
+            tagDtos.forEach(tagDto -> updatedTagNames.add(tagDto.getName()));
+        }
+
+        //removes tag from gift certificate if it doesn't present in updated array of gift certificate tags
+        tags.forEach(tag -> {
+            if (!updatedTagNames.contains(tag.getName())) {
+                giftCertificate.removeTag(tag);
+            }
+        });
+
+        //added new tag to gift certificate if it doesn't present now
+        updatedTagNames.forEach(tagName -> {
+            if (!storedTagNames.contains(tagName)) {
+                giftCertificate.addTag(new Tag(tagName));
+
+            }
+        });
+
         return giftCertificate;
     }
 
@@ -129,4 +161,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagDao = tagDao;
     }
 
+    @Autowired
+    public void setTagMapper(TagMapper tagMapper) {
+        this.tagMapper = tagMapper;
+    }
 }

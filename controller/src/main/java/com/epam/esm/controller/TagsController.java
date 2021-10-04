@@ -1,11 +1,9 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.hateoas.TagLinkManager;
-import com.epam.esm.hateoas.representation.OrderRepresentation;
 import com.epam.esm.hateoas.representation.TagRepresentation;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +34,13 @@ public class TagsController {
      * request example:
      * .../tags/  - returns all list of Tags
      *
-     * @return list of Tags.
+     * @param page            requested page
+     * @param pageSize        requested number of rows at page
+     * @param sortType        asc/desc value for order rows
+     * @param sortValue       column to sort rows
+     * @param searchParameter column to search
+     * @param searchValue     list of values to search
+     * @return CollectionModel of TagRepresentation.
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -45,7 +49,7 @@ public class TagsController {
                                                          @RequestParam(required = false) String sortType,
                                                          @RequestParam(required = false) String sortValue,
                                                          @RequestParam(required = false) String searchParameter,
-                                                         @RequestParam(required = false) String searchValue) {
+                                                         @RequestParam(required = false) List<String> searchValue) {
         RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
 
         List<TagRepresentation> links = service.findAll(requestParameters).stream().map(TagRepresentation::new).collect(Collectors.toList());
@@ -56,10 +60,10 @@ public class TagsController {
     /**
      * Provides GET request to the one Tags by its id
      * request example:
-     * .../tags/1  -  returns GiftCertificate with id '1'
+     * .../tags/1  -  returns User with id '1'
      *
      * @param id path variable,id of requested GiftCertificate
-     * @return Tag if its presents
+     * @return TagRepresentation if its presents
      * @throws TagNotFoundException if Tag with given id is not present
      */
     @GetMapping(value = "/{id}")
@@ -74,8 +78,8 @@ public class TagsController {
      * request example:
      * .../tags/  - saves new Tag, requires request body in json format
      *
-     * @param tag Tag object bases on json object in request body
-     * @return
+     * @param tag TagDto object bases on json object in request body
+     * @return created TagRepresentation
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -90,7 +94,7 @@ public class TagsController {
      * *      .../tags/1  - deletes Tag with id '1'
      *
      * @param id index of Tag which need to update
-     * @return
+     * @return id of deleted tag
      */
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -98,6 +102,12 @@ public class TagsController {
         return service.deleteById(id);
     }
 
+    /**
+     * Provides GET mapping to find most widely used
+     * tag of a user with highest cost of all orders
+     *
+     * @return TagRepresentation if its present
+     */
     @GetMapping(value = "mostUsedTag")
     @ResponseStatus(HttpStatus.OK)
     public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders() {

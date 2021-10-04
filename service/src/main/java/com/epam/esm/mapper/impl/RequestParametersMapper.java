@@ -1,7 +1,7 @@
 package com.epam.esm.mapper.impl;
 
 import com.epam.esm.entity.QueryParameters;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.mapper.DtoMapper;
 import org.springframework.stereotype.Service;
 

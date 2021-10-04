@@ -38,6 +38,13 @@ public class GiftCertificate {
     @Column(name = "duration")
     private int duration;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "gift_certificate_tag",
+            joinColumns = @JoinColumn(name = "id_gift_certificate", updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "id_tag", updatable = false))
+    private List<Tag> tags;
+
     @OneToMany(mappedBy = "giftCertificate",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
@@ -135,6 +142,14 @@ public class GiftCertificate {
 
     public void setGiftCertificateTags(List<GiftCertificateTag> giftCertificateTags) {
         this.giftCertificateTags = giftCertificateTags;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public void addTag(Tag tag) {

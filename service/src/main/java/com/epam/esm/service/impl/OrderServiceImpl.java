@@ -8,7 +8,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.User;
-import com.epam.esm.enums.RequestParameters;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.UserNotFoundException;
@@ -36,9 +36,9 @@ public class OrderServiceImpl implements OrderService {
     private RequestParametersMapper requestParametersMapper;
 
     @Override
-    public OrderDto createOrder(BigInteger id, OrderDto dto) {
-        Order order = setOrder(id, dto);
-        User user = userDao.findById(id).orElseThrow(UserNotFoundException::new);
+    public OrderDto createOrder(BigInteger idUser, OrderDto orderDto) {
+        Order order = setOrder(idUser, orderDto);
+        User user = userDao.findById(idUser).orElseThrow(UserNotFoundException::new);
         order.setUser(user);
         return orderMapper.mapEntityToDto(orderDao.save(order));
     }

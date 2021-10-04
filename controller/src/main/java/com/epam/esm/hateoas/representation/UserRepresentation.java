@@ -2,7 +2,6 @@ package com.epam.esm.hateoas.representation;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.enums.RequestParameters;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -11,7 +10,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class UserRepresentation extends RepresentationModel<UserRepresentation> implements Serializable {

@@ -2,10 +2,7 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.enums.RequestParameters;
-import com.epam.esm.enums.SearchParameter;
-import com.epam.esm.enums.SortParameter;
-import com.epam.esm.enums.SortType;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 
 import java.math.BigInteger;
@@ -19,9 +16,9 @@ import java.util.List;
 public interface GiftCertificateService {
 
     /**
-     * Returns all of GiftCertificates.
+     * Returns all of GiftCertificates find by parameters.
      *
-     * @return list of all GiftCertificates
+     * @return list of all GiftCertificateDto
      */
     List<GiftCertificateDto> findAll(RequestParameters parameters);
 

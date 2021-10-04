@@ -25,8 +25,12 @@ public class GiftCertificateTagAudit extends AbstractEntityAudit {
     public GiftCertificateTagAudit(GiftCertificateTag giftCertificateTag, AuditOperationEnum operation) {
         super(operation);
         this.idRow = giftCertificateTag.getId();
-        this.idGiftCertificate = giftCertificateTag.getGiftCertificate().getId();
-        this.idTag = giftCertificateTag.getTag().getId();
+        if (giftCertificateTag.getGiftCertificate() != null) {
+            this.idGiftCertificate = giftCertificateTag.getGiftCertificate().getId();
+        }
+        if(giftCertificateTag.getTag() != null) {
+            this.idTag = giftCertificateTag.getTag().getId();
+        }
     }
 
     public BigInteger getIdRow() {
