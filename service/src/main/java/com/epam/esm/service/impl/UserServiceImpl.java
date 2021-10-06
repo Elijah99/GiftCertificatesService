@@ -1,9 +1,9 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.User;
-import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.UserNotFoundException;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.UserMapper;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long count(RequestParameters requestParameters) {
+    public long countPages(RequestParameters requestParameters) {
         int pageSize = requestParameters.getPageSize();
         long elementsAmount = userDao.count();
         return elementsAmount % pageSize == 0

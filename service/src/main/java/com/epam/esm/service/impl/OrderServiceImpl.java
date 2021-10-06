@@ -4,11 +4,11 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.OrderDto;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.User;
-import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.UserNotFoundException;
@@ -22,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,8 +52,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findAll() {
-        return orderMapper.mapListEntityToListDto(orderDao.findByParameters());
+    public List<OrderDto> findAll(RequestParameters parameters) {
+        List<Order> orders = orderDao.findByParameters(requestParametersMapper.mapDtoToEntity(parameters));
+        return orderMapper.mapListEntityToListDto(orders);
     }
 
     @Override
@@ -63,13 +66,13 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.mapEntityToDto(optionalOrder.get());
     }
 
-    BigDecimal calculateOrderCost(List<GiftCertificate> gifts) {
+    private BigDecimal calculateOrderCost(List<GiftCertificate> gifts) {
         List<BigDecimal> costs =
                 gifts.stream().map(GiftCertificate::getPrice).collect(Collectors.toList());
         return costs.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    Order setOrder(BigInteger userId, OrderDto orderDto) {
+    private Order setOrder(BigInteger userId, OrderDto orderDto) {
         orderDto.setIdUser(userId);
         Order order = orderMapper.mapDtoToEntity(orderDto);
 
@@ -77,9 +80,9 @@ public class OrderServiceImpl implements OrderService {
         for (GiftCertificate giftCertificate : order.getGiftCertificates()) {
             BigInteger giftCertificateDtoId = giftCertificate.getId();
             Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(giftCertificateDtoId);
-            if(giftCertificateOptional.isPresent()){
+            if (giftCertificateOptional.isPresent()) {
                 giftCertificates.add(giftCertificateOptional.get());
-            } else{
+            } else {
                 throw new GiftCertificateNotFoundException();
             }
         }
@@ -92,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long count(BigInteger userId, RequestParameters requestParameters) {
+    public long countPages(BigInteger userId, RequestParameters requestParameters) {
         int pageSize = requestParameters.getPageSize();
         long elementsAmount = orderDao.countByUserId(userId);
         return elementsAmount % pageSize == 0

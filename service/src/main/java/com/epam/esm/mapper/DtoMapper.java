@@ -8,13 +8,13 @@ public interface DtoMapper<E, T> {
 
     E mapDtoToEntity(T dto);
 
-    default public List<T> mapListEntityToListDto(List<E> entities) {
+    default List<T> mapListEntityToListDto(List<E> entities) {
         return entities.stream()
                 .map(this::mapEntityToDto)
                 .collect(Collectors.toList());
     }
 
-    default public List<E> mapListDtoToListEntity(List<T> dtos) {
+    default List<E> mapListDtoToListEntity(List<T> dtos) {
         return dtos.stream()
                 .map(this::mapDtoToEntity)
                 .collect(Collectors.toList());

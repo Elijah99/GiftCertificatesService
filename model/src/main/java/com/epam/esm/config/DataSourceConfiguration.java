@@ -1,7 +1,8 @@
 package com.epam.esm.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -15,9 +16,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@Profile("dev")
 @ComponentScan("com.epam.esm")
-public class DevDataSourceConfiguration {
+public class DataSourceConfiguration {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
@@ -36,5 +36,4 @@ public class DevDataSourceConfiguration {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-
 }

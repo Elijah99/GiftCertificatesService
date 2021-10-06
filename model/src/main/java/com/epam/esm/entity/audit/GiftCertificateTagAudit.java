@@ -1,11 +1,11 @@
 package com.epam.esm.entity.audit;
 
 import com.epam.esm.entity.GiftCertificateTag;
-import com.epam.esm.listener.GiftCertificateTagAuditListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -28,7 +28,7 @@ public class GiftCertificateTagAudit extends AbstractEntityAudit {
         if (giftCertificateTag.getGiftCertificate() != null) {
             this.idGiftCertificate = giftCertificateTag.getGiftCertificate().getId();
         }
-        if(giftCertificateTag.getTag() != null) {
+        if (giftCertificateTag.getTag() != null) {
             this.idTag = giftCertificateTag.getTag().getId();
         }
     }

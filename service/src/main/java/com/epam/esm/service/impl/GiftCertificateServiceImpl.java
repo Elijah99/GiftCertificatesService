@@ -1,16 +1,14 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
-import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,10 +25,8 @@ import java.util.Optional;
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private GiftCertificateMapper giftCertificateMapper;
-    private TagMapper tagMapper;
     private RequestParametersMapper requestParametersMapper;
     private GiftCertificateDao giftCertificateDao;
-    private TagDao tagDao;
 
     public GiftCertificateServiceImpl() {
     }
@@ -141,6 +137,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateMapper.mapEntityToDto(savedGiftCertificate);
     }
 
+    @Override
+    public long countPages(RequestParameters requestParameters) {
+        int pageSize = requestParameters.getPageSize();
+        long elementsAmount = giftCertificateDao.count();
+        return elementsAmount % pageSize == 0
+                ? elementsAmount / pageSize
+                : elementsAmount / pageSize + 1;
+    }
+
     @Autowired
     public void setGiftCertificateMapper(GiftCertificateMapper giftCertificateMapper) {
         this.giftCertificateMapper = giftCertificateMapper;
@@ -154,15 +159,5 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Autowired
     public void setGiftCertificateDao(GiftCertificateDao giftCertificateDao) {
         this.giftCertificateDao = giftCertificateDao;
-    }
-
-    @Autowired
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
-    }
-
-    @Autowired
-    public void setTagMapper(TagMapper tagMapper) {
-        this.tagMapper = tagMapper;
     }
 }

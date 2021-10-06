@@ -6,7 +6,6 @@ import com.epam.esm.dto.GiftCertificateDto;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -125,8 +124,17 @@ public class GiftCertificateRepresentation extends RepresentationModel<GiftCerti
                 '}';
     }
 
-    private void createLinks(){
+    private void createLinks() {
         Link selfRel = linkTo(controller.getGiftCertificate(id)).withSelfRel();
         add(selfRel);
+
+        Link postLink = linkTo(controller.createGiftCertificate(null)).withRel("create");
+        add(postLink);
+
+        Link putLink = linkTo(controller.updateGiftCertificate(null, getId())).withRel("update");
+        add(putLink);
+
+        Link deleteLink = linkTo(controller.deleteGiftCertificate(getId())).withRel("delete");
+        add(deleteLink);
     }
 }

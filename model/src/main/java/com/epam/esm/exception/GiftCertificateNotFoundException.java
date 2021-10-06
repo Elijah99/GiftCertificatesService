@@ -2,7 +2,7 @@ package com.epam.esm.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class GiftCertificateNotFoundException extends ServiceException {
+public class GiftCertificateNotFoundException extends DaoException {
 
     private final HttpStatus status = HttpStatus.NOT_FOUND;
     private final String message = "Gift certificate not found";

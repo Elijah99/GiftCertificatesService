@@ -1,9 +1,8 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.DaoTestData;
 import com.epam.esm.TestApplication;
-import com.epam.esm.dao.TagDao;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dao.OrderDao;
+import com.epam.esm.entity.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.esm.DaoTestData.*;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = TestApplication.class)
@@ -26,60 +25,54 @@ import static org.junit.Assert.assertEquals;
 @EntityScan({"com.epam.esm.entity", "com.epam.esm.entity.audit"})
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class TagDaoImplTest {
+public class OrderDaoImplTest {
 
-    public static final BigInteger ID_TAG_INVALID = new BigInteger("999");
-    public static final Tag TAG_TO_SAVE = new Tag("saved name");
-    public static final Tag TAG_SAVED = new Tag(new BigInteger("5"), "saved name");
-    public static final BigInteger ID_TO_DELETE = new BigInteger("1");
 
-    private static final long COUNT_EXPECTED = 4;
+    private static final long FIRST_USER_ORDERS_COUNT_EXPECTED = 2;
+    private static final BigInteger ORDER_ID_INVALID = new BigInteger("999");
 
     @Autowired
-    private TagDao dao;
+    private OrderDao orderDao;
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testFindAll() {
-        List<Tag> actual = dao.findByParameters(DaoTestData.DEFAULT_QUERY_PARAMETERS);
-        assertEquals(DaoTestData.ALL_TAGS, actual);
+    public void testFindByParameters() {
+        List<Order> actual = orderDao.findByParameters(DEFAULT_QUERY_PARAMETERS);
+        assertEquals(ALL_ORDERS, actual);
     }
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testFindByIdShouldReturnTag() {
-        Optional<Tag> actual = dao.findById(DaoTestData.FIRST_TAG.getId());
-        assertEquals(DaoTestData.FIRST_TAG_OPTIONAL, actual);
+    public void testFindByIdShouldReturnOrderOptionalWhenOrderPresent() {
+        Optional<Order> actual = orderDao.findById(FIRST_ORDER.getId());
+        assertEquals(FIRST_ORDER_OPTIONAL, actual);
     }
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testFindByIdShouldReturnOptionalEmptyWhenTagNotFound() {
-        Optional<Tag> actual = dao.findById(ID_TAG_INVALID);
+    public void testFindByIdShouldReturnOptionalEmptyWhenOrderNotPresent() {
+        Optional<Order> actual = orderDao.findById(ORDER_ID_INVALID);
         assertEquals(Optional.empty(), actual);
     }
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testSave() {
-        Tag actual = dao.save(TAG_TO_SAVE);
-        assertEquals(TAG_SAVED, actual);
+    public void testFindByUserId() {
+        List<Order> actual = orderDao.findByUserId(FIRST_USER.getId(), DEFAULT_QUERY_PARAMETERS);
+        assertEquals(FIRST_USER.getOrders(), actual);
     }
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testDeleteById() {
-        BigInteger actual = dao.deleteById(ID_TO_DELETE);
-
-        List<Tag> expected = new ArrayList<>(DaoTestData.ALL_TAGS);
-        expected.remove(DaoTestData.FIRST_TAG);
-        assertEquals(expected, dao.findByParameters(DaoTestData.DEFAULT_QUERY_PARAMETERS));
+    public void testSaveShouldReturnOrderIfSaved() {
+        Order actual = orderDao.save(ORDER_FOR_SAVE);
+        assertEquals(ORDER_FOR_SAVE, actual);
     }
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testCountShouldReturnNumberOfRows() {
-        long actual = dao.count();
-        assertEquals(COUNT_EXPECTED, actual);
+        long actual = orderDao.countByUserId(FIRST_USER.getId());
+        assertEquals(FIRST_USER_ORDERS_COUNT_EXPECTED, actual);
     }
 }

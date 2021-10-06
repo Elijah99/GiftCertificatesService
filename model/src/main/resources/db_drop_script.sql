@@ -1,3 +1,12 @@
-DROP TABLE gift_certificate_tag;
-DROP TABLE gift_certificate;
-DROP TABLE tagAudit;
+DROP TABLE public.gift_certificate_tag;
+DROP TABLE public.gift_certificate_tag_audit;
+DROP TABLE public.order_gift_certificate;
+DROP TABLE public.order_gift_certificate_audit;
+DROP TABLE public.tag;
+DROP TABLE public.tag_audit;
+DROP TABLE public.gift_certificate;
+DROP TABLE public.gift_certificate_audit;
+DROP TABLE public.order;
+DROP TABLE public.order_audit;
+DROP TABLE public.user;
+DROP TABLE public.user_audit;

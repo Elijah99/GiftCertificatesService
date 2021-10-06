@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "order_gift_certificate_audit", schema = "public")
-public class OrderGiftCertificateAudit extends AbstractEntityAudit{
+public class OrderGiftCertificateAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
     private BigInteger idRow;

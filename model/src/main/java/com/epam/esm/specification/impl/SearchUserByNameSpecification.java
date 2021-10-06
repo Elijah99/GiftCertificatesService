@@ -9,7 +9,7 @@ import javax.persistence.criteria.Root;
 
 public class SearchUserByNameSpecification implements PredicateSpecification<User> {
 
-    private String name;
+    private final String name;
 
     public SearchUserByNameSpecification(String name) {
         this.name = name;

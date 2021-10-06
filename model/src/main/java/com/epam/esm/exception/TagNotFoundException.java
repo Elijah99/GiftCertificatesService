@@ -2,10 +2,10 @@ package com.epam.esm.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends ServiceException{
+public class TagNotFoundException extends DaoException {
     private final HttpStatus status = HttpStatus.NOT_FOUND;
-    private final String message = "User not found";
-    private final int errorCode = 40402;
+    private final String message = "Tag not found";
+    private final int errorCode = 40401;
 
     public HttpStatus getStatus() {
         return status;
@@ -19,4 +19,5 @@ public class UserNotFoundException extends ServiceException{
     public int getErrorCode() {
         return errorCode;
     }
+
 }

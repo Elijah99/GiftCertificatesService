@@ -7,7 +7,7 @@ public enum AuditOperationEnum {
 
     public final String value;
 
-    private AuditOperationEnum(String value) {
+    AuditOperationEnum(String value) {
         this.value = value;
     }
 }

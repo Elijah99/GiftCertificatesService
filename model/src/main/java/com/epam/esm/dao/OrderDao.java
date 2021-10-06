@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao {
-    List<Order> findByParameters();
+    List<Order> findByParameters(QueryParameters parameters);
 
     Optional<Order> findById(BigInteger id);
-
-    BigInteger deleteById(BigInteger id);
 
     List<Order> findByUserId(BigInteger idUser, QueryParameters queryParameters);
 

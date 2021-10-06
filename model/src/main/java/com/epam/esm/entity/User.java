@@ -1,6 +1,5 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.listener.GiftCertificateAuditListener;
 import com.epam.esm.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -9,7 +8,6 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @EntityListeners(UserAuditListener.class)
@@ -22,9 +20,19 @@ public class User {
     private BigInteger id;
     @Column(name = "name")
     private String name;
-    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Order> orders;
+
+    public User() {
+    }
+
+    public User(BigInteger id, String name, List<Order> orders) {
+        this.id = id;
+        this.name = name;
+        this.orders = orders;
+    }
 
     public BigInteger getId() {
         return id;
@@ -62,5 +70,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

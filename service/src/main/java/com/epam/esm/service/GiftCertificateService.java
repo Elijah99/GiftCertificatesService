@@ -56,4 +56,12 @@ public interface GiftCertificateService {
      * @return saved GiftCertificate.
      */
     GiftCertificateDto save(GiftCertificateDto giftCertificate);
+
+    /**
+     * Counts number of all GiftCertificate records pages.
+     *
+     * @param requestParameters parameters of request. must not be {@literal null}.
+     * @return counted number of GiftCertificate records pages.
+     */
+    long countPages(RequestParameters requestParameters);
 }

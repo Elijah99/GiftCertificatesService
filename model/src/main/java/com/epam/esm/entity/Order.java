@@ -1,9 +1,7 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.listener.GiftCertificateAuditListener;
 import com.epam.esm.listener.OrderAuditListener;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -11,7 +9,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @EntityListeners(OrderAuditListener.class)
@@ -31,12 +31,23 @@ public class Order {
     @JoinColumn(name = "id_user", nullable = false)
     @JsonBackReference
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "order_gift_certificate",
             joinColumns = @JoinColumn(name = "id_order"),
             inverseJoinColumns = @JoinColumn(name = "id_gift_certificate"))
     private List<GiftCertificate> giftCertificates = new ArrayList<>();
+
+    public Order() {
+    }
+
+    public Order(BigInteger id, BigDecimal cost, LocalDateTime purchaseDate, User user, List<GiftCertificate> giftCertificates) {
+        this.id = id;
+        this.cost = cost;
+        this.purchaseDate = purchaseDate;
+        this.user = user;
+        this.giftCertificates = giftCertificates;
+    }
 
     public BigInteger getId() {
         return id;
@@ -91,5 +102,15 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hash(id, cost, purchaseDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", cost=" + cost +
+                ", purchaseDate=" + purchaseDate +
+                ", giftCertificates=" + giftCertificates +
+                '}';
     }
 }

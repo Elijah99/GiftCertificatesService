@@ -19,7 +19,7 @@ public class SearchByTagGiftCertificateSpecification implements PredicateSpecifi
 
     @Override
     public Predicate createPredicate(Root<GiftCertificate> root, CriteriaBuilder criteriaBuilder) {
-        Join<Tag, GiftCertificate> join = root.join("tags");
-        return criteriaBuilder.equal(join.get("name"), tagName);
+        Join<Tag, GiftCertificate> join = root.join("giftCertificateTags");
+        return criteriaBuilder.like(join.get("tag").get("name"), '%' + tagName + '%');
     }
 }

@@ -5,9 +5,6 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.DtoMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class TagMapper implements DtoMapper<Tag, TagDto> {
     @Override

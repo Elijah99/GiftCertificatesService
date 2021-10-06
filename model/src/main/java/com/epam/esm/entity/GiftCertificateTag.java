@@ -1,16 +1,14 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.listener.GiftCertificateAuditListener;
 import com.epam.esm.listener.GiftCertificateTagAuditListener;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.Objects;
 
-@Entity(name="GiftCertificateTag")
+@Entity(name = "GiftCertificateTag")
 @EntityListeners(GiftCertificateTagAuditListener.class)
 @Table(name = "gift_certificate_tag")
 public class GiftCertificateTag {
@@ -20,13 +18,13 @@ public class GiftCertificateTag {
     private BigInteger id;
 
     @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_gift_certificate")
     @JsonBackReference
     private GiftCertificate giftCertificate;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_tag")
     @JsonBackReference
     private Tag tag;

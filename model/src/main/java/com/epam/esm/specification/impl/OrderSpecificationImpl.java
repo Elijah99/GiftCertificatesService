@@ -1,12 +1,9 @@
 package com.epam.esm.specification.impl;
 
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.specification.OrderSpecification;
-import com.epam.esm.specification.PredicateSpecification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 public class OrderSpecificationImpl<T> implements OrderSpecification<T> {
@@ -21,7 +18,7 @@ public class OrderSpecificationImpl<T> implements OrderSpecification<T> {
 
     @Override
     public Order createOrder(Root<T> root, CriteriaBuilder criteriaBuilder) {
-        if(isParametersNotNull()) {
+        if (isParametersNotNull()) {
             if (orderType.equals("asc")) {
                 return criteriaBuilder.asc(root.get(orderColumn));
             }
@@ -33,12 +30,9 @@ public class OrderSpecificationImpl<T> implements OrderSpecification<T> {
 
     }
 
-    private boolean isParametersNotNull(){
-        if(orderType!= null && orderColumn != null
-        && !orderType.isEmpty() && !orderColumn.isEmpty()){
-            return true;
-        }
-        return false;
+    private boolean isParametersNotNull() {
+        return orderType != null && orderColumn != null
+                && !orderType.isEmpty() && !orderColumn.isEmpty();
     }
 
 }

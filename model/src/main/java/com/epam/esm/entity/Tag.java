@@ -1,6 +1,5 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.listener.GiftCertificateAuditListener;
 import com.epam.esm.listener.TagAuditListener;
 
 import javax.persistence.Entity;

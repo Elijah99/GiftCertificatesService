@@ -11,7 +11,7 @@ import java.math.BigInteger;
 
 public class TagRepresentation extends RepresentationModel<TagRepresentation> implements Serializable {
 
-    private TagsController controller = WebMvcLinkBuilder.methodOn(TagsController.class);
+    private final TagsController controller = WebMvcLinkBuilder.methodOn(TagsController.class);
 
     private BigInteger id;
     private String name;
@@ -51,8 +51,14 @@ public class TagRepresentation extends RepresentationModel<TagRepresentation> im
                 '}';
     }
 
-    private void createLinks(){
+    private void createLinks() {
         Link selfRel = WebMvcLinkBuilder.linkTo(controller.getTag(getId())).withSelfRel();
         add(selfRel);
+
+        Link postLink = WebMvcLinkBuilder.linkTo(controller.createTag(null)).withRel("create");
+        add(postLink);
+
+        Link deleteLink = WebMvcLinkBuilder.linkTo(controller.deleteTag(getId())).withRel("delete");
+        add(deleteLink);
     }
 }

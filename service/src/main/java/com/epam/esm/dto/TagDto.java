@@ -1,7 +1,5 @@
 package com.epam.esm.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 

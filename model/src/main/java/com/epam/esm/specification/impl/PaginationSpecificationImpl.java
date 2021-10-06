@@ -1,6 +1,5 @@
 package com.epam.esm.specification.impl;
 
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.specification.PaginationSpecification;
 
@@ -12,8 +11,8 @@ public class PaginationSpecificationImpl<T> implements PaginationSpecification<T
     private final QueryParameters parameters;
 
     public PaginationSpecificationImpl(TypedQuery<T> query, QueryParameters parameters) {
-    this.query = query;
-    this.parameters = parameters;
+        this.query = query;
+        this.parameters = parameters;
     }
 
     @Override

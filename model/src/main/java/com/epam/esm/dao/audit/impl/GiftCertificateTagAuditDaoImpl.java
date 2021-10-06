@@ -1,7 +1,6 @@
 package com.epam.esm.dao.audit.impl;
 
 import com.epam.esm.dao.audit.GiftCertificateTagAuditDao;
-import com.epam.esm.entity.audit.GiftCertificateAudit;
 import com.epam.esm.entity.audit.GiftCertificateTagAudit;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
-import javax.transaction.Transactional;
 
 @Repository
 public class GiftCertificateTagAuditDaoImpl implements GiftCertificateTagAuditDao {

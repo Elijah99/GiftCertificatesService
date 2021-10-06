@@ -6,8 +6,8 @@ import javax.persistence.criteria.Root;
 
 public interface OrderSpecification<T> {
 
-    public static final String DEFAULT_ORDER_COLUMN = "id";
+    String DEFAULT_ORDER_COLUMN = "id";
 
-    public Order createOrder(Root<T> root, CriteriaBuilder criteriaBuilder);
+    Order createOrder(Root<T> root, CriteriaBuilder criteriaBuilder);
 
 }

@@ -1,13 +1,12 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.GiftCertificate;
-import org.springframework.hateoas.RepresentationModel;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class OrderDto implements Serializable {
 
@@ -17,6 +16,16 @@ public class OrderDto implements Serializable {
     private List<GiftCertificateDto> giftCertificates = new ArrayList<>();
     private BigInteger idUser;
 
+    public OrderDto() {
+    }
+
+    public OrderDto(BigInteger id, BigDecimal cost, LocalDateTime purchaseDate, List<GiftCertificateDto> giftCertificates, BigInteger idUser) {
+        this.id = id;
+        this.cost = cost;
+        this.purchaseDate = purchaseDate;
+        this.giftCertificates = giftCertificates;
+        this.idUser = idUser;
+    }
 
     public BigInteger getId() {
         return id;

@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
-
 @Repository
 @Transactional
 public class GiftCertificateDaoImpl implements GiftCertificateDao {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class UserRepresentation extends RepresentationModel<UserRepresentation> implements Serializable {
 
-    private UserController usersController = WebMvcLinkBuilder.methodOn(UserController.class);
+    private final UserController usersController = WebMvcLinkBuilder.methodOn(UserController.class);
 
     private BigInteger id;
     private String name;
@@ -71,7 +71,7 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
                         null)).withRel("orders");
         Link userTagLink =
                 WebMvcLinkBuilder.linkTo(
-                        usersController.getTheMostWidelyUsedTagOfUserWithTheHighestCostOfAllOrders(getId()))
+                        usersController.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(getId()))
                         .withRel("most_used_tag");
         add(selfLink, ordersLink, userTagLink);
     }

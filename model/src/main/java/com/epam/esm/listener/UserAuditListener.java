@@ -6,7 +6,6 @@ import com.epam.esm.entity.audit.AuditOperationEnum;
 import com.epam.esm.entity.audit.UserAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
@@ -16,7 +15,7 @@ import javax.persistence.PreUpdate;
 public class UserAuditListener {
 
     private static UserAuditDao userAuditDao;
-    
+
     @PreUpdate
     public void auditUpdate(User entity) {
         UserAudit userAudit = new UserAudit(entity, AuditOperationEnum.UPDATE);

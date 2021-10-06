@@ -3,7 +3,9 @@ package com.epam.esm.entity.audit;
 import com.epam.esm.entity.Order;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -11,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "order_audit", schema = "public")
-public class OrderAudit extends AbstractEntityAudit{
+public class OrderAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
     private BigInteger idRow;

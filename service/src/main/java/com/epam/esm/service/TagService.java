@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.RequestParameters;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
 
@@ -17,7 +17,7 @@ public interface TagService {
     /**
      * Retrieves all Order of User with parameters.
      *
-     * @param idUser id of Order's User. must not be {@literal null}.
+     * @param idUser            id of Order's User. must not be {@literal null}.
      * @param requestParameters parameters to search orders. must not be {@literal null}.
      * @return list of OrderDto.
      * @throws OrderNotFoundException if Order with given id doesn't exists.
@@ -49,5 +49,13 @@ public interface TagService {
      */
     TagDto save(TagDto tag);
 
-    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders();
+    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser);
+
+    /**
+     * Counts number of all Tag records pages.
+     *
+     * @param requestParameters parameters of request. must not be {@literal null}.
+     * @return counted number of Tag records pages.
+     */
+    long countPages(RequestParameters requestParameters);
 }

@@ -1,15 +1,16 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.OrderDto;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.dto.RequestParameters;
-import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.hateoas.OrderLinkManager;
 import com.epam.esm.hateoas.UserLinkManager;
 import com.epam.esm.hateoas.representation.OrderRepresentation;
+import com.epam.esm.hateoas.representation.TagRepresentation;
 import com.epam.esm.hateoas.representation.UserRepresentation;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.TagService;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Provides a centralized request handling
@@ -34,6 +33,7 @@ public class UserController {
 
     private UserService userService;
     private OrderService orderService;
+    private TagService tagService;
     private UserLinkManager userLinkManager;
     private OrderLinkManager orderLinkManager;
 
@@ -153,6 +153,19 @@ public class UserController {
         return orderLinkManager.createLinks(links, requestParameters);
     }
 
+    /**
+     * Provides GET mapping to find most widely used
+     * tag of a user with highest cost of all orders
+     *
+     * @return TagRepresentation if its present
+     */
+    @GetMapping(value = "/{id}/mostUsedTag")
+    @ResponseStatus(HttpStatus.OK)
+    public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(@PathVariable("id") BigInteger idUser) {
+        TagDto tagDto = tagService.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(idUser);
+        return new TagRepresentation(tagDto);
+    }
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -173,8 +186,8 @@ public class UserController {
         this.orderLinkManager = orderLinkManager;
     }
 
-
-    public TagDto getTheMostWidelyUsedTagOfUserWithTheHighestCostOfAllOrders(BigInteger idUser) {
-        return null;
+    @Autowired
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
 }

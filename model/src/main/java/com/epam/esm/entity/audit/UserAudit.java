@@ -2,14 +2,15 @@ package com.epam.esm.entity.audit;
 
 import com.epam.esm.entity.User;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user_audit", schema = "public")
-public class UserAudit extends AbstractEntityAudit{
+public class UserAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
     private BigInteger idRow;

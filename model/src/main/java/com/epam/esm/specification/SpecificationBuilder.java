@@ -4,12 +4,12 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.specification.impl.SearchByStringGiftCertificateSpecification;
 import com.epam.esm.specification.impl.SearchByTagGiftCertificateSpecification;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 public class SpecificationBuilder {
     public List<PredicateSpecification<GiftCertificate>> createPredicateSpecifications(QueryParameters parameters) {
         List<PredicateSpecification<GiftCertificate>> specifications = new ArrayList<>();

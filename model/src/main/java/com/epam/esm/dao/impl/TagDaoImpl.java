@@ -1,7 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.entity.*;
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
@@ -16,15 +16,17 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class TagDaoImpl implements TagDao {
 
-    private static String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
+    private static final String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
             " FROM tag WHERE tag.id = (SELECT gift_certificate_tag.id_tag" +
             " FROM gift_certificate_tag WHERE gift_certificate_tag.id_gift_certificate IN" +
             " (SELECT id_gift_certificate FROM \"order\" WHERE id_user=" +
@@ -51,8 +53,8 @@ public class TagDaoImpl implements TagDao {
         CriteriaQuery<Tag> all = query.select(tagRoot);
 
         List<Predicate> predicates = new ArrayList<>();
-        if(parameters.getSearchValue()!=null) {
-            parameters.getSearchValue().forEach(searchValue-> {
+        if (parameters.getSearchValue() != null) {
+            parameters.getSearchValue().forEach(searchValue -> {
                 predicates.add(new SearchTagByNameSpecification(searchValue).createPredicate(tagRoot, builder));
             });
         }
@@ -84,7 +86,7 @@ public class TagDaoImpl implements TagDao {
     public BigInteger deleteById(BigInteger id) {
         Tag tag = entityManager.find(Tag.class, id);
         if (tag != null) {
-            if (tag.getGiftCertificateTags() != null){
+            if (tag.getGiftCertificateTags() != null) {
                 tag.getGiftCertificateTags().forEach(entityManager::remove);
             }
             entityManager.remove(tag);

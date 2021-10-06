@@ -1,8 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.UserDto;
 import com.epam.esm.dto.RequestParameters;
-import com.epam.esm.exception.OrderNotFoundException;
+import com.epam.esm.dto.UserDto;
 import com.epam.esm.exception.UserNotFoundException;
 
 import java.math.BigInteger;
@@ -38,5 +37,5 @@ public interface UserService {
      * @param requestParameters parameters of request. must not be {@literal null}.
      * @return counted number of User records.
      */
-    long count(RequestParameters requestParameters);
+    long countPages(RequestParameters requestParameters);
 }

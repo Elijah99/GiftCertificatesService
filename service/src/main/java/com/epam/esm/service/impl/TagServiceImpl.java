@@ -1,9 +1,9 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.impl.TagDaoImpl;
+import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    private TagDaoImpl dao;
+    private TagDao dao;
     private TagMapper tagMapper;
     private RequestParametersMapper requestParametersMapper;
 
@@ -63,9 +63,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders() {
+    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser) {
         Tag tag = dao.findMostUsedTag();
         return tagMapper.mapEntityToDto(tag);
+    }
+
+    @Override
+    public long countPages(RequestParameters requestParameters) {
+        int pageSize = requestParameters.getPageSize();
+        long elementsAmount = dao.count();
+        return elementsAmount % pageSize == 0
+                ? elementsAmount / pageSize
+                : elementsAmount / pageSize + 1;
     }
 
     @Autowired
@@ -74,7 +83,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Autowired
-    public void setDao(TagDaoImpl dao) {
+    public void setDao(TagDao dao) {
         this.dao = dao;
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
 
     private static final int FIRST_PAGE = 1;
-    private UserController usersController =
+    private final UserController usersController =
             WebMvcLinkBuilder.methodOn(UserController.class);
     private OrderLinkManager orderLinkManager;
     private UserService userService;
@@ -25,12 +25,12 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
     @Override
     public CollectionModel<UserRepresentation> createLinks(List<UserRepresentation> list, RequestParameters requestParameters) {
         CollectionModel<UserRepresentation> model = CollectionModel.of(list);
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             return model;
         }
         BigInteger userId = list.get(0).getId();
         int page = requestParameters.getCurrentPage();
-        int pageAmount = (int) userService.count(userId, requestParameters);
+        int pageAmount = (int) userService.countPages(requestParameters);
         if (pageAmount != 0) {
             Link firstPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                     getAllUsers(FIRST_PAGE,

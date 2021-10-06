@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.RequestParameters;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.hateoas.TagLinkManager;
 import com.epam.esm.hateoas.representation.TagRepresentation;
@@ -100,19 +100,6 @@ public class TagsController {
     @ResponseStatus(HttpStatus.OK)
     public BigInteger deleteTag(@PathVariable("id") BigInteger id) {
         return service.deleteById(id);
-    }
-
-    /**
-     * Provides GET mapping to find most widely used
-     * tag of a user with highest cost of all orders
-     *
-     * @return TagRepresentation if its present
-     */
-    @GetMapping(value = "mostUsedTag")
-    @ResponseStatus(HttpStatus.OK)
-    public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders() {
-        TagDto tagDto = service.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders();
-        return new TagRepresentation(tagDto);
     }
 
     @Autowired

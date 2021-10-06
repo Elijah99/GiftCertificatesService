@@ -19,19 +19,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation> {
 
     private static final int FIRST_PAGE = 1;
-    private UserController controller = methodOn(UserController.class);
+    private final UserController controller = methodOn(UserController.class);
     private GiftCertificatesLinkManager giftCertificatesLinkManager;
     private OrderService service;
 
     @Override
     public CollectionModel<OrderRepresentation> createLinks(List<OrderRepresentation> list, RequestParameters requestParameters) {
         CollectionModel<OrderRepresentation> model = CollectionModel.of(list);
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             return model;
         }
         BigInteger userId = list.get(0).getIdUser();
         int page = requestParameters.getCurrentPage();
-        int pageAmount = (int) service.count(userId, requestParameters);
+        int pageAmount = (int) service.countPages(userId, requestParameters);
         if (pageAmount != 0) {
             Link firstPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                     getOrdersByUserId(userId,

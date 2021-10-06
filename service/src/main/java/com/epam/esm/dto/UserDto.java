@@ -1,20 +1,24 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
-import org.springframework.hateoas.RepresentationModel;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.List;
 
 public class UserDto implements Serializable {
 
     private BigInteger id;
     private String name;
     private List<OrderDto> orders;
+
+    public UserDto() {
+    }
+
+    public UserDto(BigInteger id, String name, List<OrderDto> orders) {
+        this.id = id;
+        this.name = name;
+        this.orders = orders;
+    }
 
     public BigInteger getId() {
         return id;
