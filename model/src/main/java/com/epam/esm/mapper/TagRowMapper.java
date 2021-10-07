@@ -10,6 +10,13 @@ import java.sql.SQLException;
 
 @Component
 public class TagRowMapper implements RowMapper<Tag> {
+
+    /**
+     * Mapping ResultSet to Tag entity
+     *
+     * @deprecated No longer necessary.
+     */
+    @Deprecated
     @Override
     public Tag mapRow(ResultSet resultSet, int i) throws SQLException {
         BigInteger id = new BigInteger(resultSet.getString("id"));

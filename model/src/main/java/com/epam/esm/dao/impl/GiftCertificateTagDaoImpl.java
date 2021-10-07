@@ -2,65 +2,63 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.entity.GiftCertificateTag;
-import com.epam.esm.mapper.GiftCertificateTagRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.*;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
 
-    private static final String SELECT_ALL = "SELECT * FROM gift_certificate_tag";
-    private static final String SELECT_BY_ID = "SELECT * FROM gift_certificate_tag WHERE id = ?";
-    private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM gift_certificate_tag WHERE id_gift_certificate = ?";
-    private static final String SELECT_BY_TAG_ID = "SELECT * FROM gift_certificate_tag WHERE id_tag = ?";
-    private static final String INSERT = "INSERT INTO  gift_certificate_tag (id_gift_certificate, id_tag) VALUES (?, ?)";
-    private static final String DELETE_BY_ID = "DELETE FROM  gift_certificate_tag WHERE id = ?";
+    @PersistenceUnit
+    private final EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
-    private final JdbcTemplate jdbcTemplate;
-    private final GiftCertificateTagRowMapper rowMapper;
-
-    @Autowired
-    public GiftCertificateTagDaoImpl(JdbcTemplate jdbcTemplate, GiftCertificateTagRowMapper rowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.rowMapper = rowMapper;
-    }
-
-    @Override
-    public List<GiftCertificateTag> findAll() {
-        return jdbcTemplate.query(SELECT_ALL, rowMapper);
+    public GiftCertificateTagDaoImpl(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     @Override
     public Optional<GiftCertificateTag> findById(BigInteger id) {
-        GiftCertificateTag result = jdbcTemplate.queryForObject(SELECT_BY_ID, new Object[]{id}, rowMapper);
-        return Optional.of(result);
+        GiftCertificateTag foundGiftCertificateTag = entityManager.find(GiftCertificateTag.class, id);
+        return Optional.ofNullable(foundGiftCertificateTag);
     }
 
     @Override
-    public List<GiftCertificateTag> findByGiftCertificateId(BigInteger id) {
-        return jdbcTemplate.query(SELECT_BY_GIFT_CERTIFICATE_ID, new Object[]{id}, rowMapper);
+    public GiftCertificateTag update(GiftCertificateTag giftCertificateTag) {
+        try {
+            entityManager.merge(giftCertificateTag);
+        } finally {
+            entityManager.close();
+        }
+        return findById(giftCertificateTag.getId()).get();
     }
 
     @Override
-    public List<GiftCertificateTag> findByTagId(BigInteger id) {
-        return jdbcTemplate.query(SELECT_BY_TAG_ID, new Object[]{id}, rowMapper);
+    public BigInteger deleteById(BigInteger id) {
+        try {
+            GiftCertificateTag giftCertificateTag = entityManager.find(GiftCertificateTag.class, id);
+            if (giftCertificateTag != null) {
+                entityManager.remove(giftCertificateTag);
+                return id;
+            }
+        } finally {
+            entityManager.close();
+        }
+        throw new EntityNotFoundException();
     }
 
     @Override
-    public void deleteById(BigInteger id) {
-        jdbcTemplate.update(DELETE_BY_ID, id);
-    }
-
-    @Override
-    public void save(GiftCertificateTag giftCertificateTag) {
-        jdbcTemplate.update(INSERT,
-                giftCertificateTag.getIdGiftCertificate(),
-                giftCertificateTag.getIdTag());
+    public GiftCertificateTag save(GiftCertificateTag giftCertificateTag) {
+        try {
+            entityManager.persist(giftCertificateTag);
+        } finally {
+            entityManager.close();
+        }
+        return giftCertificateTag;
     }
 
 }

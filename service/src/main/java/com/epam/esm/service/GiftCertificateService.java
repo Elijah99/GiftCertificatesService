@@ -2,9 +2,7 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.enums.SearchParameter;
-import com.epam.esm.enums.SortParameter;
-import com.epam.esm.enums.SortType;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 
 import java.math.BigInteger;
@@ -18,11 +16,11 @@ import java.util.List;
 public interface GiftCertificateService {
 
     /**
-     * Returns all of GiftCertificates.
+     * Returns all of GiftCertificates find by parameters.
      *
-     * @return list of all GiftCertificates
+     * @return list of all GiftCertificateDto
      */
-    List<GiftCertificateDto> findAll();
+    List<GiftCertificateDto> findAll(RequestParameters parameters);
 
     /**
      * Retrieves an GiftCertificate by its id.
@@ -60,20 +58,10 @@ public interface GiftCertificateService {
     GiftCertificateDto save(GiftCertificateDto giftCertificate);
 
     /**
-     * Returns list of all found by parameters GiftCertificates.
+     * Counts number of all GiftCertificate records pages.
      *
-     * @param searchParameter column name to search.
-     * @param value           given value to search.
-     * @return list of found GiftCertificates.
+     * @param requestParameters parameters of request. must not be {@literal null}.
+     * @return counted number of GiftCertificate records pages.
      */
-    List<GiftCertificateDto> searchByValue(SearchParameter searchParameter, String value);
-
-    /**
-     * Returns sorted by parameter list of GiftCertificates.
-     *
-     * @param sortParameter column to sort
-     * @param sortType      asc/desc sort.
-     * @return sorted list of GiftCertificates.
-     */
-    List<GiftCertificateDto> sortByParameter(SortParameter sortParameter, SortType sortType);
+    long countPages(RequestParameters requestParameters);
 }

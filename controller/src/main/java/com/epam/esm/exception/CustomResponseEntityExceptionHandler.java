@@ -16,6 +16,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
+    @ExceptionHandler(DaoException.class)
+    public ResponseEntity<CustomExceptionResponse> handleDaoExceptions(DaoException ex) {
+        CustomExceptionResponse response = new CustomExceptionResponse(ex.getStatus(), ex.getMessage(), ex.getErrorCode());
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CustomExceptionResponse> handleProjectException(Exception ex) {
         CustomExceptionResponse response = new CustomExceptionResponse(HttpStatus.BAD_REQUEST, "Bad request", 40011);

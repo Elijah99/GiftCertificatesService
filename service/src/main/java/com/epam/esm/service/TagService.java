@@ -1,6 +1,8 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
 
 import java.math.BigInteger;
@@ -12,13 +14,15 @@ import java.util.List;
  * @author Ilya Ramanouski
  */
 public interface TagService {
-
     /**
-     * Returns all of Tags.
+     * Retrieves all Order of User with parameters.
      *
-     * @return list of all Tags
+     * @param idUser            id of Order's User. must not be {@literal null}.
+     * @param requestParameters parameters to search orders. must not be {@literal null}.
+     * @return list of OrderDto.
+     * @throws OrderNotFoundException if Order with given id doesn't exists.
      */
-    List<TagDto> findAll();
+    List<TagDto> findAll(RequestParameters parameters);
 
     /**
      * Retrieves a Tag by its id.
@@ -44,4 +48,14 @@ public interface TagService {
      * @return saved Tag instance
      */
     TagDto save(TagDto tag);
+
+    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser);
+
+    /**
+     * Counts number of all Tag records pages.
+     *
+     * @param requestParameters parameters of request. must not be {@literal null}.
+     * @return counted number of Tag records pages.
+     */
+    long countPages(RequestParameters requestParameters);
 }

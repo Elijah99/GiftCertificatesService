@@ -1,101 +1,88 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.config.TestDataSourceConfiguration;
+import com.epam.esm.DaoTestData;
+import com.epam.esm.TestApplication;
+import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Tag;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
+@SpringBootTest(classes = TestApplication.class)
+@ComponentScan("com.epam.esm")
+@EntityScan({"com.epam.esm.entity", "com.epam.esm.entity.audit"})
 @ActiveProfiles("test")
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestDataSourceConfiguration.class})
-@PropertySource("classpath:db_hsqldb.properties")
+@RunWith(SpringRunner.class)
 public class TagDaoImplTest {
 
-    public static final Optional<Tag> FIRST_TAG_OPTIONAL = Optional.of(new Tag(new BigInteger("1"), "1 name"));
-    public static final BigInteger ID_FIRST_TAG = new BigInteger("1");
-    public static final String FIRST_TAG_NAME = "1 name";
+    public static final BigInteger ID_TAG_INVALID = new BigInteger("999");
     public static final Tag TAG_TO_SAVE = new Tag("saved name");
     public static final Tag TAG_SAVED = new Tag(new BigInteger("5"), "saved name");
-    public static final BigInteger ID_TO_DELETE = new BigInteger("5");
-    public static final List<Tag> findAllExpected = Arrays.asList(
-            new Tag(new BigInteger("1"), "1 name"),
-            new Tag(new BigInteger("2"), "2 name"),
-            new Tag(new BigInteger("3"), "3 name"),
-            new Tag(new BigInteger("4"), "4 name"));
-    @Value("${dataSource.schemaLocation}")
-    private String SCHEMA_LOCATION;
-    @Value("${dataSource.initScriptLocation}")
-    private String INIT_SCRIPT_LOCATION;
-    @Value("${dataSource.dbDropScript}")
-    private String DROP_DB_SCRIPT;
-    @Autowired
-    private TagDaoImpl dao;
+    public static final BigInteger ID_TO_DELETE = new BigInteger("1");
+
+    private static final long COUNT_EXPECTED = 4;
 
     @Autowired
-    private BasicDataSource dataSource;
-
-    @Before
-    public void createDb() {
-        Resource schemaResource = new ClassPathResource(SCHEMA_LOCATION);
-        Resource initScriptResource = new ClassPathResource(INIT_SCRIPT_LOCATION);
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(schemaResource, initScriptResource);
-        databasePopulator.execute(dataSource);
-    }
-
-    @After
-    public void dropDb() {
-        Resource schemaResource = new ClassPathResource(DROP_DB_SCRIPT);
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(schemaResource);
-        databasePopulator.execute(dataSource);
-    }
+    private TagDao dao;
 
     @Test
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testFindAll() {
-        List<Tag> actual = dao.findAll();
-        assertEquals(findAllExpected, actual);
+        List<Tag> actual = dao.findByParameters(DaoTestData.DEFAULT_QUERY_PARAMETERS);
+        assertEquals(DaoTestData.ALL_TAGS, actual);
     }
 
     @Test
-    public void testFindById() {
-        Optional<Tag> actual = dao.findById(ID_FIRST_TAG);
-        assertEquals(FIRST_TAG_OPTIONAL, actual);
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
+    public void testFindByIdShouldReturnTag() {
+        Optional<Tag> actual = dao.findById(DaoTestData.FIRST_TAG.getId());
+        assertEquals(DaoTestData.FIRST_TAG_OPTIONAL, actual);
     }
 
     @Test
-    public void testFindByName() {
-        Optional<Tag> actual = dao.findByName(FIRST_TAG_NAME);
-        assertEquals(FIRST_TAG_OPTIONAL, actual);
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
+    public void testFindByIdShouldReturnOptionalEmptyWhenTagNotFound() {
+        Optional<Tag> actual = dao.findById(ID_TAG_INVALID);
+        assertEquals(Optional.empty(), actual);
     }
 
     @Test
+    @Transactional
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testSave() {
         Tag actual = dao.save(TAG_TO_SAVE);
         assertEquals(TAG_SAVED, actual);
     }
 
     @Test
+    @Transactional
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testDeleteById() {
         BigInteger actual = dao.deleteById(ID_TO_DELETE);
-        assertEquals(ID_TO_DELETE, actual);
+
+        List<Tag> expected = new ArrayList<>(DaoTestData.ALL_TAGS);
+        expected.remove(DaoTestData.FIRST_TAG);
+        assertEquals(expected, dao.findByParameters(DaoTestData.DEFAULT_QUERY_PARAMETERS));
     }
 
+    @Test
+    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
+    public void testCountShouldReturnNumberOfRows() {
+        long actual = dao.count();
+        assertEquals(COUNT_EXPECTED, actual);
+    }
 }

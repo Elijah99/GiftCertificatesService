@@ -1,14 +1,19 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.TagNotFoundException;
+import com.epam.esm.hateoas.TagLinkManager;
+import com.epam.esm.hateoas.representation.TagRepresentation;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides a centralized request handling
@@ -20,37 +25,52 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagsController {
 
-    public static final String POST_RESPONSE_MESSAGE = "Created: ";
-    public static final String DELETE_RESPONSE_MESSAGE = "Successfully deleted tag with id: ";
-
     private TagService service;
+
+    private TagLinkManager tagLinkManager;
 
     /**
      * Provides GET request to the list of all Tags
      * request example:
      * .../tags/  - returns all list of Tags
      *
-     * @return list of Tags.
+     * @param page            requested page
+     * @param pageSize        requested number of rows at page
+     * @param sortType        asc/desc value for order rows
+     * @param sortValue       column to sort rows
+     * @param searchParameter column to search
+     * @param searchValue     list of values to search
+     * @return CollectionModel of TagRepresentation.
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDto> getAllTags() {
-        return service.findAll();
+    public CollectionModel<TagRepresentation> getAllTags(@RequestParam(required = false, defaultValue = "1") int page,
+                                                         @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                         @RequestParam(required = false) String sortType,
+                                                         @RequestParam(required = false) String sortValue,
+                                                         @RequestParam(required = false) String searchParameter,
+                                                         @RequestParam(required = false) List<String> searchValue) {
+        RequestParameters requestParameters = new RequestParameters(page, pageSize, sortType, sortValue, searchParameter, searchValue);
+
+        List<TagRepresentation> links = service.findAll(requestParameters).stream().map(TagRepresentation::new).collect(Collectors.toList());
+
+        return tagLinkManager.createLinks(links, requestParameters);
     }
 
     /**
      * Provides GET request to the one Tags by its id
      * request example:
-     * .../tags/1  -  returns GiftCertificate with id '1'
+     * .../tags/1  -  returns User with id '1'
      *
      * @param id path variable,id of requested GiftCertificate
-     * @return Tag if its presents
+     * @return TagRepresentation if its presents
      * @throws TagNotFoundException if Tag with given id is not present
      */
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TagDto getTag(@PathVariable("id") BigInteger id) {
-        return service.findById(id);
+    public TagRepresentation getTag(@PathVariable("id") BigInteger id) {
+        TagDto tagDto = service.findById(id);
+        return new TagRepresentation(tagDto);
     }
 
     /**
@@ -58,12 +78,14 @@ public class TagsController {
      * request example:
      * .../tags/  - saves new Tag, requires request body in json format
      *
-     * @param tag Tag object bases on json object in request body
+     * @param tag TagDto object bases on json object in request body
+     * @return created TagRepresentation
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String createTag(@RequestBody TagDto tag) {
-        return POST_RESPONSE_MESSAGE + service.save(tag);
+    public TagRepresentation createTag(@RequestBody TagDto tag) {
+        TagDto tagDto = service.save(tag);
+        return new TagRepresentation(tagDto);
     }
 
     /**
@@ -72,15 +94,21 @@ public class TagsController {
      * *      .../tags/1  - deletes Tag with id '1'
      *
      * @param id index of Tag which need to update
+     * @return id of deleted tag
      */
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteTag(@PathVariable("id") BigInteger id) {
-        return DELETE_RESPONSE_MESSAGE + service.deleteById(id);
+    public BigInteger deleteTag(@PathVariable("id") BigInteger id) {
+        return service.deleteById(id);
     }
 
     @Autowired
     public void setService(TagService service) {
         this.service = service;
+    }
+
+    @Autowired
+    public void setTagLinkManager(TagLinkManager tagLinkManager) {
+        this.tagLinkManager = tagLinkManager;
     }
 }

@@ -1,31 +1,35 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.impl.TagDaoImpl;
+import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
+import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TagServiceImpl implements TagService {
 
-    private TagDaoImpl dao;
+    private TagDao dao;
     private TagMapper tagMapper;
+    private RequestParametersMapper requestParametersMapper;
 
     public TagServiceImpl() {
     }
 
     @Override
-    public List<TagDto> findAll() {
-        List<Tag> tags = dao.findAll();
+    public List<TagDto> findAll(RequestParameters parameters) {
+        List<Tag> tags = dao.findByParameters(requestParametersMapper.mapDtoToEntity(parameters));
         return tagMapper.mapListEntityToListDto(tags);
     }
 
@@ -58,13 +62,33 @@ public class TagServiceImpl implements TagService {
         return tagMapper.mapEntityToDto(savedTag);
     }
 
+    @Override
+    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser) {
+        Tag tag = dao.findMostUsedTag();
+        return tagMapper.mapEntityToDto(tag);
+    }
+
+    @Override
+    public long countPages(RequestParameters requestParameters) {
+        int pageSize = requestParameters.getPageSize();
+        long elementsAmount = dao.count();
+        return elementsAmount % pageSize == 0
+                ? elementsAmount / pageSize
+                : elementsAmount / pageSize + 1;
+    }
+
     @Autowired
     public void setTagMapper(TagMapper tagMapper) {
         this.tagMapper = tagMapper;
     }
 
     @Autowired
-    public void setDao(TagDaoImpl dao) {
+    public void setDao(TagDao dao) {
         this.dao = dao;
+    }
+
+    @Autowired
+    public void setRequestParametersMapper(RequestParametersMapper requestParametersMapper) {
+        this.requestParametersMapper = requestParametersMapper;
     }
 }

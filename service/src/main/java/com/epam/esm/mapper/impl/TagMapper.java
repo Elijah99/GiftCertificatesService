@@ -3,12 +3,9 @@ package com.epam.esm.mapper.impl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.DtoMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Service
+@Component
 public class TagMapper implements DtoMapper<Tag, TagDto> {
     @Override
     public TagDto mapEntityToDto(Tag entity) {
@@ -24,17 +21,5 @@ public class TagMapper implements DtoMapper<Tag, TagDto> {
         tag.setId(dto.getId());
         tag.setName(dto.getName());
         return tag;
-    }
-
-    public List<TagDto> mapListEntityToListDto(List<Tag> entities) {
-        return entities.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<Tag> mapListDtoToListEntity(List<TagDto> dtos) {
-        return dtos.stream()
-                .map(this::mapDtoToEntity)
-                .collect(Collectors.toList());
     }
 }

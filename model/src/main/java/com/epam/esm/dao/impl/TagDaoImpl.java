@@ -1,85 +1,138 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.mapper.TagRowMapper;
+import com.epam.esm.specification.OrderSpecification;
+import com.epam.esm.specification.PaginationSpecification;
+import com.epam.esm.specification.impl.OrderSpecificationImpl;
+import com.epam.esm.specification.impl.PaginationSpecificationImpl;
+import com.epam.esm.specification.impl.SearchTagByNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.math.BigInteger;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class TagDaoImpl implements TagDao {
 
-    private static final String SELECT_ALL = "SELECT * FROM tag";
-    private static final String SELECT_BY_ID = "SELECT * FROM tag WHERE id = ?";
-    private static final String SELECT_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
-    private static final String SELECT_BY_GIFT_CERTIFICATE_ID = "SELECT * FROM tag INNER JOIN gift_certificate_tag" +
-            " ON tag.id = gift_certificate_tag.id_tag WHERE gift_certificate_tag.id_gift_certificate = ?";
-    private static final String INSERT = "INSERT INTO tag (name) VALUES (?)";
-    private static final String DELETE_BY_ID = "DELETE FROM tag WHERE id = ?";
-    private static final String DELETE_FROM_LINK_TABLE_BY_ID = "DELETE FROM gift_certificate_tag WHERE id_tag = ?";
+    private static final String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
+            " FROM tag WHERE tag.id = (SELECT gift_certificate_tag.id_tag" +
+            " FROM gift_certificate_tag WHERE gift_certificate_tag.id_gift_certificate IN" +
+            " (SELECT id_gift_certificate FROM \"order\" WHERE id_user=" +
+            "(SELECT id_user FROM \"order\" WHERE cost =" +
+            "(SELECT MAX(cost) FROM \"order\")LIMIT 1))" +
+            " GROUP BY id_tag ORDER BY COUNT(id_tag) DESC LIMIT 1);";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final TagRowMapper rowMapper;
+    @PersistenceUnit
+    private final EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Autowired
-    public TagDaoImpl(JdbcTemplate jdbcTemplate, TagRowMapper rowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.rowMapper = rowMapper;
+    public TagDaoImpl(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(SELECT_ALL, rowMapper);
+    public List<Tag> findByParameters(QueryParameters parameters) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> query = builder.createQuery(Tag.class);
+        Root<Tag> tagRoot = query.from(Tag.class);
+        CriteriaQuery<Tag> all = query.select(tagRoot);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (parameters.getSearchValue() != null) {
+            parameters.getSearchValue().forEach(searchValue -> {
+                predicates.add(new SearchTagByNameSpecification(searchValue).createPredicate(tagRoot, builder));
+            });
+        }
+        Predicate search = builder.and(predicates.toArray(new Predicate[0]));
+        all.where(search);
+
+        OrderSpecification<Tag> orderSpecification = new OrderSpecificationImpl<Tag>(
+                parameters.getSearchParameter(),
+                parameters.getSortType());
+
+        all.orderBy(orderSpecification.createOrder(tagRoot, builder));
+
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(all);
+
+        PaginationSpecification<Tag> paginationSpecification = new PaginationSpecificationImpl<Tag>(typedQuery, parameters);
+
+        typedQuery = paginationSpecification.createPaginationTypedQuery();
+
+        return typedQuery.getResultList();
     }
 
     @Override
     public Optional<Tag> findById(BigInteger id) {
-        return jdbcTemplate.query(SELECT_BY_ID, rowMapper, id).stream().findAny();
-    }
-
-    @Override
-    public List<Tag> findByGiftCertificateId(BigInteger id) {
-        return jdbcTemplate.query(SELECT_BY_GIFT_CERTIFICATE_ID, rowMapper, id);
-    }
-
-    @Override
-    public Optional<Tag> findByName(String name) {
-        return jdbcTemplate.query(SELECT_BY_NAME, rowMapper, name).stream().findAny();
+        Tag foundTag = entityManager.find(Tag.class, id);
+        return Optional.ofNullable(foundTag);
     }
 
     @Override
     public BigInteger deleteById(BigInteger id) {
-        jdbcTemplate.update(DELETE_FROM_LINK_TABLE_BY_ID, id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
-        return id;
+        Tag tag = entityManager.find(Tag.class, id);
+        if (tag != null) {
+            if (tag.getGiftCertificateTags() != null) {
+                tag.getGiftCertificateTags().forEach(entityManager::remove);
+            }
+            entityManager.remove(tag);
+            return id;
+        }
+        throw new EntityNotFoundException();
     }
 
     @Override
     public Tag save(Tag tag) {
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection
-                    .prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, tag.getName());
-            return ps;
-        }, keyHolder);
-        Long idLong;
-        if (keyHolder.getKeys().size() > 1) {
-            idLong = (Long) keyHolder.getKeys().get("id");
-        } else {
-            idLong = keyHolder.getKey().longValue();
+        try {
+            entityManager.persist(tag);
+        } finally {
+            entityManager.close();
         }
-        tag.setId(BigInteger.valueOf(idLong));
         return tag;
     }
 
+    @Override
+    public Optional<Tag> findByName(String name) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> query = builder.createQuery(Tag.class);
+        Root<Tag> tagRoot = query.from(Tag.class);
+        CriteriaQuery<Tag> allQuery = query.select(tagRoot);
+
+        Predicate searchByTagName = new SearchTagByNameSpecification(name).createPredicate(tagRoot, builder);
+        allQuery.where(searchByTagName);
+
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(allQuery);
+
+        return Optional.ofNullable(typedQuery.getSingleResult());
+    }
+
+    @Override
+    public Tag findMostUsedTag() {
+        return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG, Tag.class).getSingleResult();
+    }
+
+    @Override
+    public long count() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<Tag> tagRoot = criteriaQuery.from(Tag.class);
+
+        criteriaQuery.select(builder.count(tagRoot));
+        TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
+
+        return query.getSingleResult();
+    }
 }

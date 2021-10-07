@@ -1,15 +1,17 @@
 package com.epam.esm.mapper.impl;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
+@Component
 public class GiftCertificateMapper implements DtoMapper<GiftCertificate, GiftCertificateDto> {
 
     private final TagMapper tagMapper;
@@ -29,8 +31,10 @@ public class GiftCertificateMapper implements DtoMapper<GiftCertificate, GiftCer
         giftCertificateDto.setDuration(entity.getDuration());
         giftCertificateDto.setCreateDate(entity.getCreateDate());
         giftCertificateDto.setLastUpdateDate(entity.getLastUpdateDate());
-        if (entity.getTags() != null) {
-            giftCertificateDto.setTags(tagMapper.mapListEntityToListDto(entity.getTags()));
+        if (entity.getGiftCertificateTags() != null) {
+            List<Tag> tags = new ArrayList<>();
+            entity.getGiftCertificateTags().forEach(giftCertificateTag -> tags.add(giftCertificateTag.getTag()));
+            giftCertificateDto.setTags(tagMapper.mapListEntityToListDto(tags));
         }
         return giftCertificateDto;
     }
@@ -46,20 +50,12 @@ public class GiftCertificateMapper implements DtoMapper<GiftCertificate, GiftCer
         giftCertificate.setCreateDate(dto.getCreateDate());
         giftCertificate.setLastUpdateDate(dto.getLastUpdateDate());
         if (dto.getTags() != null) {
-            giftCertificate.setTags(tagMapper.mapListDtoToListEntity(dto.getTags()));
+            for (TagDto tag : dto.getTags()) {
+                giftCertificate.addTag(tagMapper.mapDtoToEntity(tag));
+            }
         }
         return giftCertificate;
     }
 
-    public List<GiftCertificateDto> mapListEntityToListDto(List<GiftCertificate> entities) {
-        return entities.stream()
-                .map(this::mapEntityToDto)
-                .collect(Collectors.toList());
-    }
 
-    public List<GiftCertificate> mapListDtoToListEntity(List<GiftCertificateDto> dtos) {
-        return dtos.stream()
-                .map(this::mapDtoToEntity)
-                .collect(Collectors.toList());
-    }
 }
