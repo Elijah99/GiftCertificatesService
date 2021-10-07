@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.esm.DaoTestData.FIRST_GIFT_CERTIFICATE;
+import static com.epam.esm.DaoTestData.FIRST_TAG;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -40,19 +42,10 @@ public class GiftCertificateDaoImplTest {
 
     private static final LocalDateTime DEFAULT_DATE = DaoTestData.DEFAULT_DATE;
 
-    private static final GiftCertificate FIRST_GIFT_CERTIFICATE_UPDATE_FIELDS = new GiftCertificate(new BigInteger("1"), "updated name",
-            "updated description", new BigDecimal("11"), DEFAULT_DATE, DEFAULT_DATE, 360);
-    private static final GiftCertificate FIRST_GIFT_CERTIFICATE_UPDATED = new GiftCertificate(new BigInteger("1"), "updated name",
-            "updated description", new BigDecimal("11"), DEFAULT_DATE, DEFAULT_DATE, 360);
     private static final GiftCertificate GIFT_CERTIFICATE_TO_SAVE = new GiftCertificate("save",
             "saving description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120);
     private static final GiftCertificate GIFT_CERTIFICATE_SAVED = new GiftCertificate(new BigInteger("5"), "save",
-            "saving description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120);
-
-    private static final String SEARCH_COLUMN_NAME = "description";
-    private static final String SEARCH_VALUE = "desc";
-    private static final String SORT_COLUMN_NAME = "name";
-    private static final String SORT_TYPE = "asc";
+            "saving description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120, null);
 
     private static final long COUNT_EXPECTED = 4;
 
@@ -86,8 +79,15 @@ public class GiftCertificateDaoImplTest {
     public void testUpdate() {
         try (MockedStatic<LocalDateTime> mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
             when(LocalDateTime.now()).thenReturn(DEFAULT_DATE);
-            GiftCertificate actual = dao.update(FIRST_GIFT_CERTIFICATE_UPDATE_FIELDS);
-            assertEquals(FIRST_GIFT_CERTIFICATE_UPDATED, actual);
+            GiftCertificate updated = FIRST_GIFT_CERTIFICATE;
+            updated.setDescription("updated description");
+            updated.setName("updated name");
+            updated.addTag(FIRST_TAG);
+
+            dao.update(updated);
+
+            GiftCertificate actual = dao.findById(updated.getId()).get();
+            assertEquals(updated, actual);
         }
     }
 

@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS public.order_gift_certificate
     CONSTRAINT order_gift_certificate_id_gift_certificate_fkey FOREIGN KEY (id_gift_certificate)
         REFERENCES public.gift_certificate (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON DELETE CASCADE,
     CONSTRAINT order_gift_certificate_id_order_fkey FOREIGN KEY (id_order)
         REFERENCES public.order (id) MATCH SIMPLE
         ON UPDATE NO ACTION

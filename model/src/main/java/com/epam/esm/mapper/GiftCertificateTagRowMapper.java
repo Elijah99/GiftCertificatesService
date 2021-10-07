@@ -11,6 +11,13 @@ import java.sql.SQLException;
 @Component
 public class GiftCertificateTagRowMapper implements RowMapper<GiftCertificateTag> {
 
+    /**
+     * Mapping ResultSet to GiftCertificateTag entity
+     *
+     * @deprecated No longer necessary. Returns Empty Entity.
+     * Do not use!
+     */
+    @Deprecated
     @Override
     public GiftCertificateTag mapRow(ResultSet resultSet, int i) throws SQLException {
         BigInteger id = new BigInteger(resultSet.getString("id"));

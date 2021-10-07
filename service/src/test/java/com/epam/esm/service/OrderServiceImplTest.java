@@ -3,19 +3,27 @@ package com.epam.esm.service;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.mapper.impl.OrderMapper;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.service.impl.OrderServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Optional;
 
 import static com.epam.esm.ServiceTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceImplTest {
 
@@ -31,6 +39,11 @@ public class OrderServiceImplTest {
     private RequestParametersMapper requestParametersMapperMock;
     @InjectMocks
     private OrderServiceImpl orderService;
+
+    @BeforeEach
+    public void setUpMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testCreateOrderShouldReturnCreatedOrderDto() {
@@ -88,6 +101,42 @@ public class OrderServiceImplTest {
         verify(orderDaoMock).findById(FIRST_ORDER.getId());
         verify(orderMapperMock).mapEntityToDto(FIRST_ORDER);
         verifyNoMoreInteractions(orderDaoMock, orderMapperMock);
+    }
+
+    @Test
+    public void testFindOrderByIdThrowsOrderNotFoundException() {
+        when(orderDaoMock.findById(FIRST_ORDER.getId())).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> {
+            orderService.findOrderById(FIRST_USER.getId(), FIRST_ORDER.getId());
+        });
+
+        verify(orderDaoMock).findById(FIRST_ORDER.getId());
+        verifyNoMoreInteractions(orderDaoMock, orderMapperMock);
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeIsMultipleOfNumberRecords() {
+        when(orderDaoMock.countByUserId(any())).thenReturn(10L);
+        long expected = 10;
+
+        assertEquals(expected, orderService.countPages(FIRST_USER.getId(), REQUEST_PARAMETERS_WITH_PAGE_SIZE_1));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeNotMultipleOfNumberRecords() {
+        when(orderDaoMock.countByUserId(any())).thenReturn(10L);
+        long expected = 2;
+
+        assertEquals(expected, orderService.countPages(FIRST_USER.getId(), REQUEST_PARAMETERS_WITH_PAGE_SIZE_9));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeMoreThanNumberRecords() {
+        when(orderDaoMock.countByUserId(any())).thenReturn(10L);
+        long expected = 1;
+
+        assertEquals(expected, orderService.countPages(FIRST_USER.getId(), REQUEST_PARAMETERS_WITH_PAGE_SIZE_100));
     }
 
 }

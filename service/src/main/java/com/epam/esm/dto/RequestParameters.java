@@ -1,6 +1,7 @@
 package com.epam.esm.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RequestParameters {
 
@@ -66,5 +67,35 @@ public class RequestParameters {
 
     public void setSearchValue(List<String> searchValue) {
         this.searchValue = searchValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestParameters that = (RequestParameters) o;
+        return currentPage == that.currentPage &&
+                pageSize == that.pageSize &&
+                Objects.equals(sortType, that.sortType) &&
+                Objects.equals(sortValue, that.sortValue) &&
+                Objects.equals(searchParameter, that.searchParameter) &&
+                Objects.equals(searchValue, that.searchValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentPage, pageSize, sortType, sortValue, searchParameter, searchValue);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestParameters{" +
+                "currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                ", sortType='" + sortType + '\'' +
+                ", sortValue='" + sortValue + '\'' +
+                ", searchParameter='" + searchParameter + '\'' +
+                ", searchValue=" + searchValue +
+                '}';
     }
 }

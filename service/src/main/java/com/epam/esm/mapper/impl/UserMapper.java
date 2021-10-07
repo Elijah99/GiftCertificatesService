@@ -4,9 +4,9 @@ import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.User;
 import com.epam.esm.mapper.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class UserMapper implements DtoMapper<User, UserDto> {
 
     private OrderMapper orderMapper;

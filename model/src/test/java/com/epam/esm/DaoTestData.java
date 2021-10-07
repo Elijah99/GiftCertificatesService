@@ -40,18 +40,26 @@ public class DaoTestData {
 
     // GiftCertificates
     public static final GiftCertificate FIRST_GIFT_CERTIFICATE = new GiftCertificate(new BigInteger("1"), "name",
-            "description", new BigDecimal("11"), DEFAULT_DATE, DEFAULT_DATE, 360);
+            "description", new BigDecimal("11"), DEFAULT_DATE, DEFAULT_DATE, 360,
+            Arrays.asList(FIRST_TAG, SECOND_TAG));
     public static final GiftCertificate SECOND_GIFT_CERTIFICATE = new GiftCertificate(new BigInteger("2"), "2nd name",
-            "2nd description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120);
+            "2nd description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120,
+            Arrays.asList(FOURTH_TAG, THIRD_TAG));
     public static final GiftCertificate THIRD_GIFT_CERTIFICATE = new GiftCertificate(new BigInteger("3"), "3rd name",
-            "desc", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250);
+            "desc", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250,
+            Arrays.asList(SECOND_TAG));
     public static final GiftCertificate FOURTH_GIFT_CERTIFICATE = new GiftCertificate(new BigInteger("4"), "4th name",
-            "asc", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 20);
+            "asc", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 20,
+            Arrays.asList(FIRST_TAG));
 
     public static final GiftCertificate GIFT_CERTIFICATE_FOR_SAVE = new GiftCertificate(null, "for save",
-            "desc for save", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250);
+            "desc for save", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250, null);
     public static final GiftCertificate GIFT_CERTIFICATE_SAVED = new GiftCertificate(new BigInteger("5"), "for save",
-            "desc for save", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250);
+            "desc for save", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 250, null);
+
+    public static final GiftCertificate GIFT_CERTIFICATE_FOR_UPDATE = new GiftCertificate(null, "updated",
+            "updated", new BigDecimal("1111"), DEFAULT_DATE, DEFAULT_DATE, 111,
+            Arrays.asList(FIRST_TAG));
 
 
     public static final List<GiftCertificate> ALL_GIFT_CERTIFICATES = Arrays.asList(FIRST_GIFT_CERTIFICATE,
@@ -67,16 +75,21 @@ public class DaoTestData {
 
     // Orders
     public static final Order FIRST_ORDER = new Order(new BigInteger("1"), new BigDecimal(33),
-            DEFAULT_DATE, null, Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE));
+            DEFAULT_DATE, new User(new BigInteger("1"), "1st name", null),
+            Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE));
     public static final Order SECOND_ORDER = new Order(new BigInteger("2"), new BigDecimal(44),
-            DEFAULT_DATE, null, Arrays.asList(THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
+            DEFAULT_DATE, new User(new BigInteger("1"), "1st name", null),
+            Arrays.asList(THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
     public static final Order THIRD_ORDER = new Order(new BigInteger("3"), new BigDecimal(77),
-            DEFAULT_DATE, null, Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE,
-            THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
+            DEFAULT_DATE, new User(new BigInteger("2"), "2nd name", null),
+            Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE,
+                    THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
     public static final Order FOURTH_ORDER = new Order(new BigInteger("4"), new BigDecimal(22),
-            DEFAULT_DATE, null, Arrays.asList(THIRD_GIFT_CERTIFICATE));
+            DEFAULT_DATE, new User(new BigInteger("3"), "3rd name", null),
+            Arrays.asList(THIRD_GIFT_CERTIFICATE));
     public static final Order FIFTH_ORDER = new Order(new BigInteger("5"), new BigDecimal(44),
-            DEFAULT_DATE, null, Arrays.asList(SECOND_GIFT_CERTIFICATE, THIRD_GIFT_CERTIFICATE));
+            DEFAULT_DATE, new User(new BigInteger("3"), "3rd name", null),
+            Arrays.asList(SECOND_GIFT_CERTIFICATE, THIRD_GIFT_CERTIFICATE));
 
     public static final List<Order> ALL_ORDERS = Arrays.asList(FIRST_ORDER,
             SECOND_ORDER,

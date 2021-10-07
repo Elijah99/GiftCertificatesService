@@ -3,9 +3,9 @@ package com.epam.esm.mapper.impl;
 import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.mapper.DtoMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class RequestParametersMapper implements DtoMapper<QueryParameters, RequestParameters> {
     @Override
     public RequestParameters mapEntityToDto(QueryParameters entity) {

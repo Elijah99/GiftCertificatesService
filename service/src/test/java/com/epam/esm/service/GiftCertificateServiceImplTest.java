@@ -3,12 +3,14 @@ package com.epam.esm.service;
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
+import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class GiftCertificateServiceImplTest {
 
@@ -27,6 +30,23 @@ public class GiftCertificateServiceImplTest {
     private GiftCertificateDaoImpl giftCertificateDaoMock;
     @Mock
     private GiftCertificateMapper giftCertificateMapperMock;
+    @Mock
+    private RequestParametersMapper requestParametersMapperMock;
+
+
+    @Test
+    public void testFindAll() {
+        when(giftCertificateDaoMock.findByParameters(DEFAULT_QUERY_PARAMETERS)).thenReturn(ALL_GIFT_CERTIFICATES);
+        when(requestParametersMapperMock.mapDtoToEntity(DEFAULT_REQUEST_PARAMETERS)).thenReturn(DEFAULT_QUERY_PARAMETERS);
+        when(giftCertificateMapperMock.mapListEntityToListDto(ALL_GIFT_CERTIFICATES)).thenReturn(ALL_GIFT_CERTIFICATES_DTO);
+
+        giftCertificateService.findAll(DEFAULT_REQUEST_PARAMETERS);
+
+        verify(giftCertificateDaoMock).findByParameters(DEFAULT_QUERY_PARAMETERS);
+        verify(requestParametersMapperMock).mapDtoToEntity(DEFAULT_REQUEST_PARAMETERS);
+        verify(giftCertificateMapperMock).mapListEntityToListDto(ALL_GIFT_CERTIFICATES);
+        verifyNoMoreInteractions(giftCertificateDaoMock, requestParametersMapperMock, giftCertificateMapperMock);
+    }
 
     @Test
     public void testFindByIdShouldReturnGiftCertificate() {
@@ -43,7 +63,16 @@ public class GiftCertificateServiceImplTest {
     public void testUpdate() {
         when(giftCertificateDaoMock.findById(FIRST_GIFT_CERTIFICATE.getId())).thenReturn(FIRST_GIFT_CERTIFICATE_OPTIONAL);
 
-        giftCertificateService.update(FIRST_GIFT_CERTIFICATE_DTO, FIRST_GIFT_CERTIFICATE.getId());
+        giftCertificateService.update(FIRST_GIFT_CERTIFICATE_DTO, FIRST_GIFT_CERTIFICATE_DTO.getId());
+
+        verify(giftCertificateDaoMock).findById(FIRST_GIFT_CERTIFICATE.getId());
+    }
+
+    @Test
+    public void testUpdateGiftCertificateWithoutTags() {
+        when(giftCertificateDaoMock.findById(FIRST_GIFT_CERTIFICATE.getId())).thenReturn(FIRST_GIFT_CERTIFICATE_OPTIONAL);
+
+        giftCertificateService.update(GIFT_CERTIFICATE_DTO_WITH_NULL_FIELDS, FIRST_GIFT_CERTIFICATE.getId());
 
         verify(giftCertificateDaoMock).update(any());
         verifyNoMoreInteractions(giftCertificateDaoMock);
@@ -94,5 +123,29 @@ public class GiftCertificateServiceImplTest {
 
         verify(giftCertificateDaoMock).findById(FIRST_GIFT_CERTIFICATE.getId());
         verifyNoMoreInteractions(giftCertificateDaoMock);
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeIsMultipleOfNumberRecords() {
+        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        long expected = 10;
+
+        assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_1));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeNotMultipleOfNumberRecords() {
+        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        long expected = 2;
+
+        assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_9));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeMoreThanNumberRecords() {
+        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        long expected = 1;
+
+        assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_100));
     }
 }

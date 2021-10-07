@@ -6,11 +6,14 @@ import com.epam.esm.mapper.impl.RequestParametersMapper;
 import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -19,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class TagServiceImplTest {
 
@@ -30,6 +34,11 @@ public class TagServiceImplTest {
     private RequestParametersMapper requestParametersMapper;
     @InjectMocks
     private TagServiceImpl tagService;
+
+    @BeforeEach
+    public void setUpMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testFindAllShouldReturnListTags() {
@@ -92,5 +101,29 @@ public class TagServiceImplTest {
 
         verify(tagDaoMock).findById(FIRST_TAG.getId());
         verifyNoMoreInteractions(tagDaoMock);
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeIsMultipleOfNumberRecords() {
+        when(tagDaoMock.count()).thenReturn(10L);
+        long expected = 10;
+
+        assertEquals(expected, tagService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_1));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeNotMultipleOfNumberRecords() {
+        when(tagDaoMock.count()).thenReturn(10L);
+        long expected = 2;
+
+        assertEquals(expected, tagService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_9));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeMoreThanNumberRecords() {
+        when(tagDaoMock.count()).thenReturn(10L);
+        long expected = 1;
+
+        assertEquals(expected, tagService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_100));
     }
 }

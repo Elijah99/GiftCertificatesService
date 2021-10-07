@@ -9,11 +9,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import static com.epam.esm.ServiceTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
@@ -50,5 +52,29 @@ public class UserServiceImplTest {
         verify(userMapperMock).mapListEntityToListDto(ALL_USERS);
         verify(requestParametersMapperMock).mapDtoToEntity(DEFAULT_REQUEST_PARAMETERS);
         verifyNoMoreInteractions(userDaoMock, userMapperMock, requestParametersMapperMock);
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeIsMultipleOfNumberRecords() {
+        when(userDaoMock.count()).thenReturn(10L);
+        long expected = 10;
+
+        assertEquals(expected, userService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_1));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeNotMultipleOfNumberRecords() {
+        when(userDaoMock.count()).thenReturn(10L);
+        long expected = 2;
+
+        assertEquals(expected, userService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_9));
+    }
+
+    @Test
+    public void testCountPagesWhenPageSizeMoreThanNumberRecords() {
+        when(userDaoMock.count()).thenReturn(10L);
+        long expected = 1;
+
+        assertEquals(expected, userService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_100));
     }
 }

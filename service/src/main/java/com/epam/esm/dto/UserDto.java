@@ -58,4 +58,13 @@ public class UserDto implements Serializable {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", orders=" + orders +
+                '}';
+    }
 }

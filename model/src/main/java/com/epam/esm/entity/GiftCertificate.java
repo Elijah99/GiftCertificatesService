@@ -41,9 +41,9 @@ public class GiftCertificate {
     @OneToMany(mappedBy = "giftCertificate",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<GiftCertificateTag> giftCertificateTags = new ArrayList<>();
+    private List<GiftCertificateTag> giftCertificateTags;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -51,6 +51,9 @@ public class GiftCertificate {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.duration = duration;
+        if (tags != null) {
+            tags.forEach(this::addTag);
+        }
     }
 
     public GiftCertificate(String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
@@ -139,12 +142,18 @@ public class GiftCertificate {
 
     public List<Tag> getTags() {
         List<Tag> tags = new ArrayList<>();
-        this.giftCertificateTags.forEach(giftCertificateTag -> tags.add(giftCertificateTag.getTag()));
-        return tags;
+        if (this.giftCertificateTags != null) {
+            this.giftCertificateTags.forEach(giftCertificateTag -> tags.add(giftCertificateTag.getTag()));
+            return tags;
+        }
+        return null;
     }
 
     public void addTag(Tag tag) {
         GiftCertificateTag postTag = new GiftCertificateTag(this, tag);
+        if (giftCertificateTags == null) {
+            giftCertificateTags = new ArrayList<GiftCertificateTag>();
+        }
         giftCertificateTags.add(postTag);
         tag.getGiftCertificateTags().add(postTag);
     }

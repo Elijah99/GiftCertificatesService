@@ -6,11 +6,11 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.mapper.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class OrderMapper implements DtoMapper<Order, OrderDto> {
 
     private GiftCertificateMapper giftCertificateMapper;

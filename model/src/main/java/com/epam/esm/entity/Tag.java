@@ -34,6 +34,12 @@ public class Tag {
         this.name = name;
     }
 
+    public Tag(BigInteger id, String name, List<GiftCertificateTag> giftCertificateTags) {
+        this.id = id;
+        this.name = name;
+        this.giftCertificateTags = giftCertificateTags;
+    }
+
     public Tag(String name) {
         this.name = name;
     }
@@ -67,11 +73,12 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return name.equals(tag.name);
+        return Objects.equals(id, tag.id) &&
+                Objects.equals(name, tag.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 }

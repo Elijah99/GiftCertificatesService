@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class GiftCertificateDto implements Serializable {
 
@@ -103,6 +104,26 @@ public class GiftCertificateDto implements Serializable {
 
     public void setTags(List<TagDto> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificateDto that = (GiftCertificateDto) o;
+        return duration == that.duration &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(createDate, that.createDate) &&
+                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
+                Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, createDate, lastUpdateDate, duration, tags);
     }
 
     @Override
