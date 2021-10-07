@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -75,6 +76,7 @@ public class GiftCertificateDaoImplTest {
     }
 
     @Test
+    @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testUpdate() {
         try (MockedStatic<LocalDateTime> mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
@@ -93,6 +95,7 @@ public class GiftCertificateDaoImplTest {
 
 
     @Test
+    @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testSave() {
         GiftCertificate actual = dao.save(GIFT_CERTIFICATE_TO_SAVE);
@@ -100,6 +103,7 @@ public class GiftCertificateDaoImplTest {
     }
 
     @Test
+    @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testDeleteById() {
         BigInteger actual = dao.deleteById(ID_TO_DELETE);

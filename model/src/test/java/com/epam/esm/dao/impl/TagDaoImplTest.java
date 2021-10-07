@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class TagDaoImplTest {
     }
 
     @Test
+    @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testSave() {
         Tag actual = dao.save(TAG_TO_SAVE);
@@ -67,6 +69,7 @@ public class TagDaoImplTest {
     }
 
     @Test
+    @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testDeleteById() {
         BigInteger actual = dao.deleteById(ID_TO_DELETE);

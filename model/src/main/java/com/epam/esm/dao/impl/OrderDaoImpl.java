@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public class OrderDaoImpl implements OrderDao {
 
     @PersistenceUnit

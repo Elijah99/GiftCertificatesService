@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public class TagDaoImpl implements TagDao {
 
     private static final String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
