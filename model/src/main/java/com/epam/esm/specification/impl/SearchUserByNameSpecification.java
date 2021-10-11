@@ -17,6 +17,6 @@ public class SearchUserByNameSpecification implements PredicateSpecification<Use
 
     @Override
     public Predicate createPredicate(Root<User> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(root.get("name"), name);
+        return criteriaBuilder.like(root.get("name"), "%" + name + "%");
     }
 }

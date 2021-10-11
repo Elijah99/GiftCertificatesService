@@ -43,6 +43,17 @@ public class GiftCertificate {
             orphanRemoval = true)
     private List<GiftCertificateTag> giftCertificateTags;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.DETACH})
+    @JoinTable(
+            name = "order_gift_certificate",
+            joinColumns = @JoinColumn(name = "id_gift_certificate"),
+            inverseJoinColumns = @JoinColumn(name = "id_order")
+    )
+    private List<Order> orders;
+
     public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
         this.id = id;
         this.name = name;
@@ -131,6 +142,13 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public List<GiftCertificateTag> getGiftCertificateTags() {
         return giftCertificateTags;
@@ -152,7 +170,7 @@ public class GiftCertificate {
     public void addTag(Tag tag) {
         GiftCertificateTag postTag = new GiftCertificateTag(this, tag);
         if (giftCertificateTags == null) {
-            giftCertificateTags = new ArrayList<GiftCertificateTag>();
+            giftCertificateTags = new ArrayList<>();
         }
         giftCertificateTags.add(postTag);
         tag.getGiftCertificateTags().add(postTag);

@@ -31,7 +31,10 @@ public class Order {
     @JoinColumn(name = "id_user", nullable = false)
     @JsonBackReference
     private User user;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.DETACH})
     @JoinTable(
             name = "order_gift_certificate",
             joinColumns = @JoinColumn(name = "id_order"),

@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.QueryParameters;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.TagNotFoundException;
 import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
 import com.epam.esm.specification.impl.OrderSpecificationImpl;
@@ -16,7 +17,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,15 @@ import java.util.Optional;
 @Repository
 public class TagDaoImpl implements TagDao {
 
-    private static final String QUERY_MOST_USED_TAG = "SELECT tag.id,tag.name" +
-            " FROM tag WHERE tag.id = (SELECT gift_certificate_tag.id_tag" +
-            " FROM gift_certificate_tag WHERE gift_certificate_tag.id_gift_certificate IN" +
-            " (SELECT id_gift_certificate FROM \"order\" WHERE id_user=" +
-            "(SELECT id_user FROM \"order\" WHERE cost =" +
-            "(SELECT MAX(cost) FROM \"order\")LIMIT 1))" +
-            " GROUP BY id_tag ORDER BY COUNT(id_tag) DESC LIMIT 1);";
+    private static final String ID_USER_PARAMETER = "idUser";
+
+    private static final String QUERY_MOST_USED_TAG = "select tag.id, tag.name from " +
+            "public.user inner join public.order on public.user.id = public.order.id_user " +
+            "            inner join order_gift_certificate" +
+            "            on public.order.id = order_gift_certificate.id_order inner join gift_certificate " +
+            "on gift_certificate.id =  order_gift_certificate.id_gift_certificate inner join gift_certificate_tag on " +
+            "            gift_certificate.id=gift_certificate_tag.id_gift_certificate inner join tag on gift_certificate_tag.id_tag=tag.id " +
+            "            where public.order.id_user=(:idUser) group by tag.id,tag.name order by sum(cost) desc limit 1;";
 
     @PersistenceUnit
     private final EntityManagerFactory entityManagerFactory;
@@ -61,7 +63,7 @@ public class TagDaoImpl implements TagDao {
         all.where(search);
 
         OrderSpecification<Tag> orderSpecification = new OrderSpecificationImpl<Tag>(
-                parameters.getSearchParameter(),
+                parameters.getSortValue(),
                 parameters.getSortType());
 
         all.orderBy(orderSpecification.createOrder(tagRoot, builder));
@@ -120,8 +122,14 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag findMostUsedTag() {
-        return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG, Tag.class).getSingleResult();
+    public Tag findMostUsedTag(BigInteger idUser) {
+        try {
+            return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG, Tag.class)
+                    .setParameter(ID_USER_PARAMETER, idUser)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new TagNotFoundException();
+        }
     }
 
     @Override

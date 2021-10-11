@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
         all.where(search);
 
         OrderSpecification<User> orderSpecification = new OrderSpecificationImpl<User>(
-                parameters.getSearchParameter(),
+                parameters.getSortValue(),
                 parameters.getSortType());
 
         all.orderBy(orderSpecification.createOrder(userRoot, builder));
