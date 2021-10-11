@@ -52,7 +52,7 @@ public class OrderDaoImpl implements OrderDao {
         all.where(search);
 
         OrderSpecification<Order> orderSpecification = new OrderSpecificationImpl<Order>(
-                parameters.getSearchParameter(),
+                parameters.getSortValue(),
                 parameters.getSortType());
 
         all.orderBy(orderSpecification.createOrder(orderRoot, builder));

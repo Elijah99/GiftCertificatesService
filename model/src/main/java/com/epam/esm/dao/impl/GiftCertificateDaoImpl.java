@@ -52,7 +52,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         all.where(predicates.toArray(new Predicate[]{}));
 
         OrderSpecification<GiftCertificate> orderSpecification = new OrderSpecificationImpl<GiftCertificate>(
-                parameters.getSearchParameter(),
+                parameters.getSortValue(),
                 parameters.getSortType());
 
         all.orderBy(orderSpecification.createOrder(rootEntry, builder));
