@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -61,17 +62,6 @@ public class OrderDaoImplTest {
         List<Order> actual = orderDao.findByUserId(FIRST_USER.getId(), DEFAULT_QUERY_PARAMETERS);
         assertEquals(FIRST_USER.getOrders(), actual);
     }
-
-/*  Throws java.lang.ClassCastException:
-    class org.hibernate.action.internal.DelayedPostInsertIdentifier
-    cannot be cast to class java.math.BigInteger
-
-    @Test
-    @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
-    public void testSaveShouldReturnOrderIfSaved() {
-        Order actual = orderDao.save(ORDER_FOR_SAVE);
-        assertEquals(ORDER_FOR_SAVE, actual);
-    }*/
 
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})

@@ -7,28 +7,26 @@ import com.epam.esm.entity.audit.GiftCertificateAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
 @Component
 public class GiftCertificateAuditListener {
 
     private static GiftCertificateAuditDao giftCertificateAuditDao;
 
-    @PreUpdate
+    @PostUpdate
     public void auditUpdate(GiftCertificate entity) {
         GiftCertificateAudit giftCertificateAudit = new GiftCertificateAudit(entity, AuditOperationEnum.UPDATE);
         giftCertificateAuditDao.save(giftCertificateAudit);
     }
 
-    @PrePersist
+    @PostPersist
     public void auditInsert(GiftCertificate entity) {
         GiftCertificateAudit giftCertificateAudit = new GiftCertificateAudit(entity, AuditOperationEnum.INSERT);
         giftCertificateAuditDao.save(giftCertificateAudit);
     }
 
-    @PreRemove
+    @PostRemove
     public void auditDelete(GiftCertificate entity) {
         GiftCertificateAudit giftCertificateAudit = new GiftCertificateAudit(entity, AuditOperationEnum.DELETE);
         giftCertificateAuditDao.save(giftCertificateAudit);

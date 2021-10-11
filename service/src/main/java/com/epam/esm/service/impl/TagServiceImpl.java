@@ -64,7 +64,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser) {
-        Tag tag = dao.findMostUsedTag();
+        Tag tag = dao.findMostUsedTag(idUser);
         return tagMapper.mapEntityToDto(tag);
     }
 

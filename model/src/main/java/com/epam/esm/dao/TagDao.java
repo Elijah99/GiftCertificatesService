@@ -19,7 +19,7 @@ public interface TagDao {
 
     Optional<Tag> findByName(String name);
 
-    Tag findMostUsedTag();
+    Tag findMostUsedTag(BigInteger idUser);
 
     long count();
 }
