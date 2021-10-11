@@ -7,28 +7,26 @@ import com.epam.esm.entity.audit.TagAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
 @Component
 public class TagAuditListener {
 
     private static TagAuditDao tagAuditDao;
 
-    @PreUpdate
+    @PostUpdate
     public void auditUpdate(Tag entity) {
         TagAudit tagAudit = new TagAudit(entity, AuditOperationEnum.UPDATE);
         tagAuditDao.save(tagAudit);
     }
 
-    @PrePersist
+    @PostPersist
     public void auditInsert(Tag entity) {
         TagAudit tagAudit = new TagAudit(entity, AuditOperationEnum.INSERT);
         tagAuditDao.save(tagAudit);
     }
 
-    @PreRemove
+    @PostRemove
     public void auditDelete(Tag entity) {
         TagAudit tagAudit = new TagAudit(entity, AuditOperationEnum.DELETE);
         tagAuditDao.save(tagAudit);

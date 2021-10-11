@@ -7,28 +7,26 @@ import com.epam.esm.entity.audit.OrderAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
 @Component
 public class OrderAuditListener {
 
     private static OrderAuditDao orderAuditDao;
 
-    @PreUpdate
+    @PostUpdate
     public void auditUpdate(Order entity) {
         OrderAudit orderAudit = new OrderAudit(entity, AuditOperationEnum.UPDATE);
         orderAuditDao.save(orderAudit);
     }
 
-    @PrePersist
+    @PostPersist
     public void auditInsert(Order entity) {
         OrderAudit orderAudit = new OrderAudit(entity, AuditOperationEnum.INSERT);
         orderAuditDao.save(orderAudit);
     }
 
-    @PreRemove
+    @PostRemove
     public void auditDelete(Order entity) {
         OrderAudit orderAudit = new OrderAudit(entity, AuditOperationEnum.DELETE);
         orderAuditDao.save(orderAudit);
