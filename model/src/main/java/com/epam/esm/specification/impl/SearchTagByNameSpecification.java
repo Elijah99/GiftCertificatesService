@@ -16,6 +16,6 @@ public class SearchTagByNameSpecification implements PredicateSpecification<Tag>
 
     @Override
     public Predicate createPredicate(Root<Tag> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get("name"), "%" +  name + "%");
+        return criteriaBuilder.like(root.get("name"), "%" + name + "%");
     }
 }

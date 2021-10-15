@@ -1,6 +1,12 @@
 package com.epam.esm.entity.audit;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Objects;

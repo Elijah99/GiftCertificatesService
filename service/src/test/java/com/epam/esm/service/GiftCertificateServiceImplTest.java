@@ -14,10 +14,27 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.ServiceTestData.ALL_GIFT_CERTIFICATES;
+import static com.epam.esm.ServiceTestData.ALL_GIFT_CERTIFICATES_DTO;
+import static com.epam.esm.ServiceTestData.DEFAULT_QUERY_PARAMETERS;
+import static com.epam.esm.ServiceTestData.DEFAULT_REQUEST_PARAMETERS;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE_OPTIONAL;
+import static com.epam.esm.ServiceTestData.GIFT_CERTIFICATE_DTO_WITH_NULL_FIELDS;
+import static com.epam.esm.ServiceTestData.GIFT_CERTIFICATE_FOR_SAVE;
+import static com.epam.esm.ServiceTestData.GIFT_CERTIFICATE_FOR_SAVE_DTO;
+import static com.epam.esm.ServiceTestData.GIFT_CERTIFICATE_SAVED;
+import static com.epam.esm.ServiceTestData.GIFT_CERTIFICATE_SAVED_DTO;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_1;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_100;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_9;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)

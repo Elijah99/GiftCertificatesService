@@ -10,16 +10,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
 public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
 
     private static final int FIRST_PAGE = 1;
-    private final UserController usersController =
-            WebMvcLinkBuilder.methodOn(UserController.class);
-    private OrderLinkManager orderLinkManager;
     private UserService userService;
 
     @Override
@@ -28,7 +24,6 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
         if (list.isEmpty()) {
             return model;
         }
-        BigInteger userId = list.get(0).getId();
         int page = requestParameters.getCurrentPage();
         int pageAmount = (int) userService.countPages(requestParameters);
         if (pageAmount != 0) {
@@ -86,11 +81,6 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
         }
 
         return model;
-    }
-
-    @Autowired
-    public void setOrderLinkManager(OrderLinkManager orderLinkManager) {
-        this.orderLinkManager = orderLinkManager;
     }
 
     @Autowired

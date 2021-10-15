@@ -1,6 +1,10 @@
 package com.epam.esm;
 
-import com.epam.esm.entity.*;
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Order;
+import com.epam.esm.entity.QueryParameters;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.entity.User;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

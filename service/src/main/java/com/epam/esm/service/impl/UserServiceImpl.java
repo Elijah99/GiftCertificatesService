@@ -25,8 +25,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(BigInteger id) {
         Optional<User> userOptional = userDao.findById(id);
-        return userMapper.mapEntityToDto(
-                userOptional.orElseThrow(UserNotFoundException::new));
+        if (userOptional.isPresent()) {
+            return userMapper.mapEntityToDto(userOptional.get());
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     @Override

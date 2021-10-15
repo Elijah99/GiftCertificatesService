@@ -1,6 +1,10 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.*;
+import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.OrderDto;
+import com.epam.esm.dto.RequestParameters;
+import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.Arrays;

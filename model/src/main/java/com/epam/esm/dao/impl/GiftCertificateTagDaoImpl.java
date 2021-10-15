@@ -4,7 +4,11 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.entity.GiftCertificateTag;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import java.math.BigInteger;
 import java.util.Optional;
 

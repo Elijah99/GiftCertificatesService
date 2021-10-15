@@ -14,10 +14,26 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.epam.esm.DaoTestData.*;
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.DaoTestData.ALL_ORDERS;
+import static com.epam.esm.DaoTestData.FIFTH_ORDER;
+import static com.epam.esm.DaoTestData.FIRST_GIFT_CERTIFICATE;
+import static com.epam.esm.DaoTestData.FIRST_ORDER;
+import static com.epam.esm.DaoTestData.FOURTH_ORDER;
+import static com.epam.esm.DaoTestData.SECOND_GIFT_CERTIFICATE;
+import static com.epam.esm.DaoTestData.SECOND_ORDER;
+import static com.epam.esm.DaoTestData.THIRD_ORDER;
+import static com.epam.esm.ServiceTestData.ALL_ORDERS_DTO;
+import static com.epam.esm.ServiceTestData.FIFTH_ORDER_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_ORDER_DTO;
+import static com.epam.esm.ServiceTestData.FOURTH_ORDER_DTO;
+import static com.epam.esm.ServiceTestData.SECOND_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.SECOND_ORDER_DTO;
+import static com.epam.esm.ServiceTestData.THIRD_ORDER_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
