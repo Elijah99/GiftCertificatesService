@@ -7,7 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,9 +16,10 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
 
     private final UserController usersController = WebMvcLinkBuilder.methodOn(UserController.class);
 
-    private BigInteger id;
+    private Long id;
     private String name;
-    private List<OrderRepresentation> orders;
+    private String login;
+    private List<OrderRepresentation> orders = new ArrayList<>();
 
     public UserRepresentation() {
         createLinks();
@@ -27,12 +28,15 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
     public UserRepresentation(UserDto userDto) {
         this.id = userDto.getId();
         this.name = userDto.getName();
-        this.orders = userDto.getOrders().stream().map(OrderRepresentation::new).collect(Collectors.toList());
+        this.login = userDto.getLogin();
+        if (userDto.getOrders() != null) {
+            this.orders = userDto.getOrders().stream().map(OrderRepresentation::new).collect(Collectors.toList());
+        }
 
         createLinks();
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
@@ -42,6 +46,10 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
 
     public List<OrderRepresentation> getOrders() {
         return orders;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     @Override
@@ -71,7 +79,7 @@ public class UserRepresentation extends RepresentationModel<UserRepresentation> 
                         null)).withRel("orders");
         Link userTagLink =
                 WebMvcLinkBuilder.linkTo(
-                        usersController.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(getId()))
+                                usersController.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(getId()))
                         .withRel("most_used_tag");
         add(selfLink, ordersLink, userTagLink);
     }

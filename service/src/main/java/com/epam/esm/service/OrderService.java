@@ -4,7 +4,6 @@ import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.OrderNotFoundException;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ public interface OrderService {
      * @param orderDto OrderDto to create. must not be {@literal null}.
      * @return saved GiftCertificate.
      */
-    OrderDto createOrder(BigInteger idUser, OrderDto orderDto);
+    OrderDto createOrder(Long idUser, OrderDto orderDto);
 
     /**
      * Retrieves all Order of User with parameters.
@@ -30,7 +29,7 @@ public interface OrderService {
      * @return list of OrderDto.
      * @throws OrderNotFoundException if Order with given id doesn't exists.
      */
-    List<OrderDto> findOrdersByUserId(BigInteger idUser, RequestParameters requestParameters);
+    List<OrderDto> findOrdersByUserId(Long idUser, RequestParameters requestParameters);
 
     /**
      * Returns all of Orders find by parameters.
@@ -47,7 +46,7 @@ public interface OrderService {
      * @return the OrderDto with the given id.
      * @throws OrderNotFoundException if Order with given id doesn't exists.
      */
-    OrderDto findOrderById(BigInteger userId, BigInteger orderId);
+    OrderDto findOrderById(Long userId, Long orderId);
 
     /**
      * Counts number of all Order records at database.
@@ -56,5 +55,5 @@ public interface OrderService {
      * @param requestParameters parameters of request. must not be {@literal null}.
      * @return counted number of Order records.
      */
-    long countPages(BigInteger userId, RequestParameters requestParameters);
+    long countPages(Long userId, RequestParameters requestParameters);
 }

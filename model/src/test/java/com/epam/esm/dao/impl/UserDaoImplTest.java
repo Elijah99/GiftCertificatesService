@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class UserDaoImplTest {
 
     private static final long COUNT_EXPECTED = 4;
-    private static final BigInteger FIRST_USER_ID = new BigInteger("1");
+    private static final Long FIRST_USER_ID = new Long("1");
 
     private static final QueryParameters DEFAULT_QUERY_PARAMETERS = new QueryParameters(1, 10, null, null, null, null);
 

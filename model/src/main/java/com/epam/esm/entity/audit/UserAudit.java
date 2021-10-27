@@ -1,11 +1,11 @@
 package com.epam.esm.entity.audit;
 
+import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -13,9 +13,15 @@ import java.util.Objects;
 public class UserAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
-    private BigInteger idRow;
+    private Long idRow;
     @Column(name = "name")
     private String name;
+    @Column(name = "login")
+    private String login;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "role")
+    private Role role;
 
     public UserAudit() {
     }
@@ -24,13 +30,16 @@ public class UserAudit extends AbstractEntityAudit {
         super(operation);
         this.idRow = user.getId();
         this.name = user.getName();
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+        this.role = user.getRole();
     }
 
-    public BigInteger getIdRow() {
+    public Long getIdRow() {
         return idRow;
     }
 
-    public void setIdRow(BigInteger id) {
+    public void setIdRow(Long id) {
         this.idRow = id;
     }
 
@@ -48,11 +57,14 @@ public class UserAudit extends AbstractEntityAudit {
         if (o == null || getClass() != o.getClass()) return false;
         UserAudit userAudit = (UserAudit) o;
         return Objects.equals(idRow, userAudit.idRow) &&
-                Objects.equals(name, userAudit.name);
+                Objects.equals(name, userAudit.name) &&
+                Objects.equals(login, userAudit.login) &&
+                Objects.equals(password, userAudit.password) &&
+                Objects.equals(role, userAudit.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRow, name);
+        return Objects.hash(idRow, name, login, password, role);
     }
 }

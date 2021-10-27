@@ -15,7 +15,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +28,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 public class TagDaoImplTest {
 
-    public static final BigInteger ID_TAG_INVALID = new BigInteger("999");
+    public static final Long ID_TAG_INVALID = new Long("999");
     public static final Tag TAG_TO_SAVE = new Tag("saved name");
-    public static final Tag TAG_SAVED = new Tag(new BigInteger("5"), "saved name");
-    public static final BigInteger ID_TO_DELETE = new BigInteger("1");
+    public static final Tag TAG_SAVED = new Tag(new Long("5"), "saved name");
+    public static final Long ID_TO_DELETE = new Long("1");
 
     private static final long COUNT_EXPECTED = 4;
 
@@ -72,7 +71,7 @@ public class TagDaoImplTest {
     @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testDeleteById() {
-        BigInteger actual = dao.deleteById(ID_TO_DELETE);
+        Long actual = dao.deleteById(ID_TO_DELETE);
 
         List<Tag> expected = new ArrayList<>(DaoTestData.ALL_TAGS);
         expected.remove(DaoTestData.FIRST_TAG);

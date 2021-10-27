@@ -2,15 +2,13 @@ package com.epam.esm.hateoas.representation;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.OrderDto;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,11 +20,11 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
     @Transient
     private final UserController controller = methodOn(UserController.class);
 
-    private BigInteger id;
+    private Long id;
     private BigDecimal cost;
     private LocalDateTime purchaseDate;
-    private List<GiftCertificateRepresentation> giftCertificates;
-    private BigInteger idUser;
+    private List<GiftCertificateRepresentation> giftCertificates = new ArrayList<>();
+    private Long idUser;
 
     public OrderRepresentation() {
         createLinks();
@@ -36,17 +34,18 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
         this.id = orderDto.getId();
         this.cost = orderDto.getCost();
         this.purchaseDate = orderDto.getPurchaseDate();
-        this.giftCertificates = orderDto.getGiftCertificates().stream().map(GiftCertificateRepresentation::new).collect(Collectors.toList());
         this.idUser = orderDto.getIdUser();
-
+        if (orderDto.getGiftCertificates() != null) {
+            this.giftCertificates = orderDto.getGiftCertificates().stream().map(GiftCertificateRepresentation::new).collect(Collectors.toList());
+        }
         createLinks();
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -74,11 +73,11 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
         this.giftCertificates = giftCertificates;
     }
 
-    public BigInteger getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(BigInteger idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 
@@ -113,18 +112,18 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
 
     private void createLinks() {
 
-        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(idUser, id)).withSelfRel();
-        Link ordersLink =
-                WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(idUser,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null))
-                        .withRel("orders");
-
-        Link addLink = WebMvcLinkBuilder.linkTo(controller.createOrder(idUser, new OrderDto())).withRel("create");
-        add(dtoLink, addLink, ordersLink);
+//        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(idUser, id)).withSelfRel();
+//        Link ordersLink =
+//                WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(idUser,
+//                        null,
+//                        null,
+//                        null,
+//                        null,
+//                        null,
+//                        null))
+//                        .withRel("orders");
+//
+//        Link addLink = WebMvcLinkBuilder.linkTo(controller.createOrder(idUser, new OrderDto())).withRel("create");
+//        add(dtoLink, addLink, ordersLink);
     }
 }

@@ -1,30 +1,34 @@
 package com.epam.esm.dto;
 
+import com.epam.esm.entity.Role;
+
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
 public class UserDto implements Serializable {
 
-    private BigInteger id;
+    private Long id;
     private String name;
+    private String login;
+    private String password;
+    private Role role;
     private List<OrderDto> orders;
 
     public UserDto() {
     }
 
-    public UserDto(BigInteger id, String name, List<OrderDto> orders) {
+    public UserDto(Long id, String name, List<OrderDto> orders) {
         this.id = id;
         this.name = name;
         this.orders = orders;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -44,19 +48,41 @@ public class UserDto implements Serializable {
         this.orders = orders;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id) &&
-                Objects.equals(name, userDto.name) &&
-                Objects.equals(orders, userDto.orders);
+        return Objects.equals(id, userDto.id) && Objects.equals(name, userDto.name) && Objects.equals(login, userDto.login) && Objects.equals(password, userDto.password) && role == userDto.role && Objects.equals(orders, userDto.orders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, login, password, role, orders);
     }
 
     @Override
@@ -64,6 +90,8 @@ public class UserDto implements Serializable {
         return "UserDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", role=" + role +
                 ", orders=" + orders +
                 '}';
     }

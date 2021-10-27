@@ -9,6 +9,8 @@ import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ public class TagsController {
      * @return CollectionModel of TagRepresentation.
      */
     @GetMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<TagRepresentation> getAllTags(@RequestParam(required = false, defaultValue = "1") int page,
                                                          @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -75,8 +77,9 @@ public class TagsController {
      * @throws TagNotFoundException if Tag with given id is not present
      */
     @GetMapping(value = "/{id}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    public TagRepresentation getTag(@PathVariable("id") BigInteger id) {
+    public TagRepresentation getTag(@PathVariable("id") Long id) {
         TagDto tagDto = service.findById(id);
         return new TagRepresentation(tagDto);
     }
@@ -90,6 +93,7 @@ public class TagsController {
      * @return created TagRepresentation
      */
     @PostMapping
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     public TagRepresentation createTag(@RequestBody TagDto tag) {
         TagDto tagDto = service.save(tag);
@@ -105,9 +109,11 @@ public class TagsController {
      * @return id of deleted tag
      */
     @DeleteMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.OK)
-    public BigInteger deleteTag(@PathVariable("id") BigInteger id) {
-        return service.deleteById(id);
+    public ResponseEntity<TagRepresentation> deleteTag(@PathVariable("id") long id) {
+        service.deleteById(id);
+        return new ResponseEntity<TagRepresentation>(HttpStatus.OK);
     }
 
     @Autowired

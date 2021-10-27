@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
     @Deprecated
     @Override
     public GiftCertificate mapRow(ResultSet resultSet, int i) throws SQLException {
-        BigInteger id = new BigInteger(resultSet.getString("id"));
+        Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String description = resultSet.getString("description");
         BigDecimal price = resultSet.getBigDecimal("price");

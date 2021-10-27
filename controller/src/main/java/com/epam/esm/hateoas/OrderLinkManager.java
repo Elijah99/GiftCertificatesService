@@ -10,7 +10,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -25,7 +24,7 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
         if (list.isEmpty()) {
             return model;
         }
-        BigInteger userId = list.get(0).getIdUser();
+        Long userId = new Long(list.get(0).getIdUser().toString());
         int page = requestParameters.getCurrentPage();
         int pageAmount = (int) service.countPages(userId, requestParameters);
         if (pageAmount != 0) {

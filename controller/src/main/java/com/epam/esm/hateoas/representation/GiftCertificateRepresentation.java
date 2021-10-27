@@ -8,8 +8,8 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +20,14 @@ public class GiftCertificateRepresentation extends RepresentationModel<GiftCerti
 
     private final GiftCertificatesController controller = methodOn(GiftCertificatesController.class);
 
-    private BigInteger id;
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private int duration;
-    private List<TagRepresentation> tags;
+    private List<TagRepresentation> tags = new ArrayList<>();
 
     public GiftCertificateRepresentation() {
         createLinks();
@@ -41,16 +41,17 @@ public class GiftCertificateRepresentation extends RepresentationModel<GiftCerti
         this.createDate = giftCertificateDto.getCreateDate();
         this.lastUpdateDate = giftCertificateDto.getLastUpdateDate();
         this.duration = giftCertificateDto.getDuration();
-        this.tags = giftCertificateDto.getTags().stream().map(TagRepresentation::new).collect(Collectors.toList());
-
+        if (giftCertificateDto.getTags() != null) {
+            this.tags = giftCertificateDto.getTags().stream().map(TagRepresentation::new).collect(Collectors.toList());
+        }
         createLinks();
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

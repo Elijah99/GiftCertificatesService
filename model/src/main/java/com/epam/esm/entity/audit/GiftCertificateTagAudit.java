@@ -5,7 +5,6 @@ import com.epam.esm.entity.GiftCertificateTag;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -13,11 +12,11 @@ import java.util.Objects;
 public class GiftCertificateTagAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
-    private BigInteger idRow;
+    private Long idRow;
     @Column(name = "id_gift_certificate")
-    private BigInteger idGiftCertificate;
+    private Long idGiftCertificate;
     @Column(name = "id_tag")
-    private BigInteger idTag;
+    private Long idTag;
 
     public GiftCertificateTagAudit() {
     }
@@ -33,27 +32,27 @@ public class GiftCertificateTagAudit extends AbstractEntityAudit {
         }
     }
 
-    public BigInteger getIdRow() {
+    public Long getIdRow() {
         return idRow;
     }
 
-    public void setIdRow(BigInteger id) {
+    public void setIdRow(Long id) {
         this.idRow = id;
     }
 
-    public BigInteger getIdGiftCertificate() {
+    public Long getIdGiftCertificate() {
         return idGiftCertificate;
     }
 
-    public void setIdGiftCertificate(BigInteger idGiftCertificate) {
+    public void setIdGiftCertificate(Long idGiftCertificate) {
         this.idGiftCertificate = idGiftCertificate;
     }
 
-    public BigInteger getIdTag() {
+    public Long getIdTag() {
         return idTag;
     }
 
-    public void setIdTag(BigInteger idTag) {
+    public void setIdTag(Long idTag) {
         this.idTag = idTag;
     }
 

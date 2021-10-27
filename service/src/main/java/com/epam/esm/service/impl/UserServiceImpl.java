@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.UserDto;
+import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.UserNotFoundException;
 import com.epam.esm.mapper.impl.RequestParametersMapper;
@@ -11,11 +12,12 @@ import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private RequestParametersMapper requestParametersMapper;
 
     @Override
-    public UserDto findById(BigInteger id) {
+    public UserDto findById(Long id) {
         Optional<User> userOptional = userDao.findById(id);
         if (userOptional.isPresent()) {
             return userMapper.mapEntityToDto(userOptional.get());
@@ -36,6 +38,14 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAll(RequestParameters requestParameters) {
         List<User> users = userDao.findByParameters(requestParametersMapper.mapDtoToEntity(requestParameters));
         return userMapper.mapListEntityToListDto(users);
+    }
+
+    @Override
+    public UserDto registerUser(UserDto userDto) {
+        User user = userMapper.mapDtoToEntity(userDto);
+        user.setRole(Role.ROLE_USER);
+        User savedUser = userDao.save(user);
+        return userMapper.mapEntityToDto(savedUser);
     }
 
     @Override

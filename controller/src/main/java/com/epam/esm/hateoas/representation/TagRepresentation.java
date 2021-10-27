@@ -7,13 +7,12 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
 public class TagRepresentation extends RepresentationModel<TagRepresentation> implements Serializable {
 
     private final TagsController controller = WebMvcLinkBuilder.methodOn(TagsController.class);
 
-    private BigInteger id;
+    private Long id;
     private String name;
 
     public TagRepresentation() {
@@ -27,11 +26,11 @@ public class TagRepresentation extends RepresentationModel<TagRepresentation> im
         createLinks();
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

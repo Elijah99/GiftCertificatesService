@@ -5,7 +5,6 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.OrderNotFoundException;
 import com.epam.esm.exception.TagNotFoundException;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -32,14 +31,14 @@ public interface TagService {
      * @throws TagNotFoundException if Tag with
      *                              given id doesn't exists.
      */
-    TagDto findById(BigInteger id);
+    TagDto findById(Long id);
 
     /**
      * Deletes the Tag with given id.
      *
      * @param id must not be {@literal null}.
      */
-    BigInteger deleteById(BigInteger id);
+    Long deleteById(Long id);
 
     /**
      * Saves a given Tag.
@@ -49,7 +48,7 @@ public interface TagService {
      */
     TagDto save(TagDto tag);
 
-    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser);
+    TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(Long idUser);
 
     /**
      * Counts number of all Tag records pages.

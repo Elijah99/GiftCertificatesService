@@ -22,7 +22,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +70,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public Optional<GiftCertificate> findById(BigInteger id) {
+    public Optional<GiftCertificate> findById(Long id) {
         GiftCertificate foundGiftCertificate = entityManager.find(GiftCertificate.class, id);
         return Optional.ofNullable(foundGiftCertificate);
     }
@@ -98,7 +97,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public BigInteger deleteById(BigInteger id) {
+    public Long deleteById(Long id) {
         try {
             GiftCertificate certificate = entityManager.find(GiftCertificate.class, id);
             if (certificate != null) {

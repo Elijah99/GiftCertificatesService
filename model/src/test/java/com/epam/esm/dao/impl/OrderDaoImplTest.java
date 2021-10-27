@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class OrderDaoImplTest {
 
 
     private static final long FIRST_USER_ORDERS_COUNT_EXPECTED = 2;
-    private static final BigInteger ORDER_ID_INVALID = new BigInteger("999");
+    private static final Long ORDER_ID_INVALID = new Long("999");
 
     @Autowired
     private OrderDao orderDao;

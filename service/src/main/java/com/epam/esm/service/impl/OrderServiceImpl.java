@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private RequestParametersMapper requestParametersMapper;
 
     @Override
-    public OrderDto createOrder(BigInteger idUser, OrderDto orderDto) {
+    public OrderDto createOrder(Long idUser, OrderDto orderDto) {
         Order order = setOrder(idUser, orderDto);
         User user = userDao.findById(idUser).orElseThrow(UserNotFoundException::new);
         order.setUser(user);
@@ -46,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findOrdersByUserId(BigInteger idUser, RequestParameters requestParameters) {
+    public List<OrderDto> findOrdersByUserId(Long idUser, RequestParameters requestParameters) {
         QueryParameters queryParameters = requestParametersMapper.mapDtoToEntity(requestParameters);
         return orderMapper.mapListEntityToListDto(orderDao.findByUserId(idUser, queryParameters));
     }
@@ -58,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto findOrderById(BigInteger userId, BigInteger orderId) {
+    public OrderDto findOrderById(Long userId, Long orderId) {
         Optional<Order> optionalOrder = orderDao.findById(orderId);
         if (!optionalOrder.isPresent()) {
             throw new OrderNotFoundException();
@@ -72,13 +71,13 @@ public class OrderServiceImpl implements OrderService {
         return costs.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private Order setOrder(BigInteger userId, OrderDto orderDto) {
-        orderDto.setIdUser(userId);
+    private Order setOrder(Long userId, OrderDto orderDto) {
+        //orderDto.setIdUser(userId);
         Order order = orderMapper.mapDtoToEntity(orderDto);
 
         List<GiftCertificate> giftCertificates = new ArrayList<>();
         for (GiftCertificate giftCertificate : order.getGiftCertificates()) {
-            BigInteger giftCertificateDtoId = giftCertificate.getId();
+            Long giftCertificateDtoId = giftCertificate.getId();
             Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(giftCertificateDtoId);
             if (giftCertificateOptional.isPresent()) {
                 giftCertificates.add(giftCertificateOptional.get());
@@ -95,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long countPages(BigInteger userId, RequestParameters requestParameters) {
+    public long countPages(Long userId, RequestParameters requestParameters) {
         int pageSize = requestParameters.getPageSize();
         long elementsAmount = orderDao.countByUserId(userId);
         return elementsAmount % pageSize == 0

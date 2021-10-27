@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +37,14 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class GiftCertificateDaoImplTest {
 
-    private static final BigInteger GIFT_CERTIFICATE_ID_INVALID = new BigInteger("-1");
-    private static final BigInteger ID_TO_DELETE = new BigInteger("4");
+    private static final Long GIFT_CERTIFICATE_ID_INVALID = new Long("-1");
+    private static final Long ID_TO_DELETE = new Long("4");
 
     private static final LocalDateTime DEFAULT_DATE = DaoTestData.DEFAULT_DATE;
 
     private static final GiftCertificate GIFT_CERTIFICATE_TO_SAVE = new GiftCertificate("save",
             "saving description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120);
-    private static final GiftCertificate GIFT_CERTIFICATE_SAVED = new GiftCertificate(new BigInteger("5"), "save",
+    private static final GiftCertificate GIFT_CERTIFICATE_SAVED = new GiftCertificate(new Long("5"), "save",
             "saving description", new BigDecimal("22"), DEFAULT_DATE, DEFAULT_DATE, 120, null);
 
     private static final long COUNT_EXPECTED = 4;
@@ -106,7 +105,7 @@ public class GiftCertificateDaoImplTest {
     @Transactional
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testDeleteById() {
-        BigInteger actual = dao.deleteById(ID_TO_DELETE);
+        Long actual = dao.deleteById(ID_TO_DELETE);
         assertEquals(ID_TO_DELETE, actual);
     }
 

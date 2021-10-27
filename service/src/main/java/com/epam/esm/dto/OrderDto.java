@@ -2,7 +2,6 @@ package com.epam.esm.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +9,16 @@ import java.util.Objects;
 
 public class OrderDto implements Serializable {
 
-    private BigInteger id;
+    private Long id;
     private BigDecimal cost;
     private LocalDateTime purchaseDate;
     private List<GiftCertificateDto> giftCertificates = new ArrayList<>();
-    private BigInteger idUser;
+    private Long idUser;
 
     public OrderDto() {
     }
 
-    public OrderDto(BigInteger id, BigDecimal cost, LocalDateTime purchaseDate, List<GiftCertificateDto> giftCertificates, BigInteger idUser) {
+    public OrderDto(Long id, BigDecimal cost, LocalDateTime purchaseDate, List<GiftCertificateDto> giftCertificates, Long idUser) {
         this.id = id;
         this.cost = cost;
         this.purchaseDate = purchaseDate;
@@ -27,11 +26,11 @@ public class OrderDto implements Serializable {
         this.idUser = idUser;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,11 +58,11 @@ public class OrderDto implements Serializable {
         this.giftCertificates = giftCertificates;
     }
 
-    public BigInteger getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(BigInteger idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 

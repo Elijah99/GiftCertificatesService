@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class RequestParametersMapperTest {
 
-    private RequestParametersMapper requestParametersMapper = new RequestParametersMapper();
+    private final RequestParametersMapper requestParametersMapper = new RequestParametersMapper();
 
     @Test
     public void testMapDtoToEntityDefault() {
