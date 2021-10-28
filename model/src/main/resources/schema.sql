@@ -47,6 +47,9 @@ CREATE TABLE IF NOT EXISTS public.user
 (
     id   bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     name character varying(50),
+    login character varying(25),
+    password character varying(255),
+    role character varying(25),
     CONSTRAINT user_pkey PRIMARY KEY (id),
     CONSTRAINT user_name_key UNIQUE (name)
 );
@@ -57,6 +60,9 @@ CREATE TABLE IF NOT EXISTS public.user_audit
     id         bigint                   NOT NULL GENERATED ALWAYS AS IDENTITY,
     id_row     bigint,
     name       character varying(50),
+    login character varying(25),
+    password character varying(255),
+    role character varying(25),
     operation  character varying(10),
     audit_date timestamp with time zone NOT NULL,
     CONSTRAINT user_audit_pkey PRIMARY KEY (id)

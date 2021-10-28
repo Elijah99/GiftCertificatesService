@@ -32,7 +32,7 @@ public class OrderDaoImplTest {
 
 
     private static final long FIRST_USER_ORDERS_COUNT_EXPECTED = 2;
-    private static final Long ORDER_ID_INVALID = new Long("999");
+    private static final Long ORDER_ID_INVALID = 999L;
 
     @Autowired
     private OrderDao orderDao;

@@ -44,12 +44,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, List<Order> orders) {
+    public User(Long id, String name, String login, String password, Role role, List<Order> orders) {
         this.id = id;
         this.name = name;
+        this.login = login;
+        this.password = password;
+        this.role = role;
         this.orders = orders;
     }
-
 
     public Long getId() {
         return id;
@@ -122,7 +124,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", login='" + login + '\'' +
-                ", role='" + role.getValue() + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

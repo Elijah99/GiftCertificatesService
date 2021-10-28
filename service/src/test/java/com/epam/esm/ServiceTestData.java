@@ -108,10 +108,14 @@ public class ServiceTestData extends DaoTestData {
             FIFTH_ORDER_DTO);
 
     // User dtos
-    public static final UserDto FIRST_USER_DTO = new UserDto(FIRST_USER.getId(), FIRST_USER.getName(), Arrays.asList(FIRST_ORDER_DTO, SECOND_ORDER_DTO));
-    public static final UserDto SECOND_USER_DTO = new UserDto(SECOND_USER.getId(), SECOND_USER.getName(), Arrays.asList(THIRD_ORDER_DTO));
-    public static final UserDto THIRD_USER_DTO = new UserDto(THIRD_USER.getId(), THIRD_USER.getName(), Arrays.asList(FOURTH_ORDER_DTO, FIFTH_ORDER_DTO));
-    public static final UserDto FOURTH_USER_DTO = new UserDto(FOURTH_USER.getId(), FOURTH_USER.getName(), new ArrayList<>());
+    public static final UserDto FIRST_USER_DTO = new UserDto(FIRST_USER.getId(), FIRST_USER.getName(),
+            FIRST_USER.getLogin(), FIRST_USER.getPassword(), FIRST_USER.getRole(), Arrays.asList(FIRST_ORDER_DTO, SECOND_ORDER_DTO));
+    public static final UserDto SECOND_USER_DTO = new UserDto(SECOND_USER.getId(), SECOND_USER.getName(),
+            SECOND_USER.getLogin(), SECOND_USER.getPassword(), SECOND_USER.getRole(), Arrays.asList(THIRD_ORDER_DTO));
+    public static final UserDto THIRD_USER_DTO = new UserDto(THIRD_USER.getId(), THIRD_USER.getName(),
+            THIRD_USER.getLogin(), THIRD_USER.getPassword(), THIRD_USER.getRole(), Arrays.asList(FOURTH_ORDER_DTO, FIFTH_ORDER_DTO));
+    public static final UserDto FOURTH_USER_DTO = new UserDto(FOURTH_USER.getId(), FOURTH_USER.getName(),
+            FOURTH_USER.getLogin(), FOURTH_USER.getPassword(), FOURTH_USER.getRole(), new ArrayList<>());
 
     public static final List<UserDto> ALL_USERS_DTO = Arrays.asList(FIRST_USER_DTO,
             SECOND_USER_DTO,

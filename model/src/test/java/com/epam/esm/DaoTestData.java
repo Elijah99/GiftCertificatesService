@@ -3,6 +3,7 @@ package com.epam.esm;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.QueryParameters;
+import com.epam.esm.entity.Role;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 
@@ -75,21 +76,21 @@ public class DaoTestData {
     public static final Optional<GiftCertificate> FOURTH_GIFT_CERTIFICATE_OPTIONAL = Optional.of(FOURTH_GIFT_CERTIFICATE);
 
     // Orders
-    public static final Order FIRST_ORDER = new Order(1L, new BigDecimal(33),
-            DEFAULT_DATE, new User(1L, "1st name", null),
+    public static final Order FIRST_ORDER = new Order(1L, new BigDecimal(33), DEFAULT_DATE,
+            new User(1L, "1st name", "1st login", "1st password", Role.ROLE_USER, null),
             Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE));
-    public static final Order SECOND_ORDER = new Order(2L, new BigDecimal(44),
-            DEFAULT_DATE, new User(1L, "1st name", null),
+    public static final Order SECOND_ORDER = new Order(2L, new BigDecimal(44), DEFAULT_DATE,
+            new User(1L, "1st name", "1st login", "1st password", Role.ROLE_USER, null),
             Arrays.asList(THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
-    public static final Order THIRD_ORDER = new Order(3L, new BigDecimal(77),
-            DEFAULT_DATE, new User(2L, "2nd name", null),
+    public static final Order THIRD_ORDER = new Order(3L, new BigDecimal(77), DEFAULT_DATE,
+            new User(2L, "2nd name", "2nd login", "2nd password", Role.ROLE_USER, null),
             Arrays.asList(FIRST_GIFT_CERTIFICATE, SECOND_GIFT_CERTIFICATE,
                     THIRD_GIFT_CERTIFICATE, FOURTH_GIFT_CERTIFICATE));
-    public static final Order FOURTH_ORDER = new Order(4L, new BigDecimal(22),
-            DEFAULT_DATE, new User(3L, "3rd name", null),
+    public static final Order FOURTH_ORDER = new Order(4L, new BigDecimal(22), DEFAULT_DATE,
+            new User(3L, "3rd name", "3rd login", "3rd password", Role.ROLE_USER, null),
             Arrays.asList(THIRD_GIFT_CERTIFICATE));
-    public static final Order FIFTH_ORDER = new Order(5L, new BigDecimal(44),
-            DEFAULT_DATE, new User(3L, "3rd name", null),
+    public static final Order FIFTH_ORDER = new Order(5L, new BigDecimal(44), DEFAULT_DATE,
+            new User(3L, "3rd name", "3rd login", "3rd password", Role.ROLE_USER, null),
             Arrays.asList(SECOND_GIFT_CERTIFICATE, THIRD_GIFT_CERTIFICATE));
 
     public static final List<Order> ALL_ORDERS = Arrays.asList(FIRST_ORDER,
@@ -108,10 +109,14 @@ public class DaoTestData {
 
 
     // Users
-    public static final User FIRST_USER = new User(1L, "1st name", Arrays.asList(FIRST_ORDER, SECOND_ORDER));
-    public static final User SECOND_USER = new User(2L, "2nd name", Arrays.asList(THIRD_ORDER));
-    public static final User THIRD_USER = new User(3L, "3rd name", Arrays.asList(FOURTH_ORDER, FIFTH_ORDER));
-    public static final User FOURTH_USER = new User(4L, "4th name", new ArrayList<>());
+    public static final User FIRST_USER = new User(1L, "1st name",
+            "1st login", "1st password", Role.ROLE_USER, Arrays.asList(FIRST_ORDER, SECOND_ORDER));
+    public static final User SECOND_USER = new User(2L, "2nd name",
+            "2nd login", "2nd password", Role.ROLE_USER, Arrays.asList(THIRD_ORDER));
+    public static final User THIRD_USER = new User(3L, "3rd name",
+            "3rd login", "3rd password", Role.ROLE_USER, Arrays.asList(FOURTH_ORDER, FIFTH_ORDER));
+    public static final User FOURTH_USER = new User(4L, "4th name",
+            "4th login", "4th password", Role.ROLE_ADMIN, new ArrayList<>());
 
     public static final List<User> ALL_USERS = Arrays.asList(FIRST_USER,
             SECOND_USER,

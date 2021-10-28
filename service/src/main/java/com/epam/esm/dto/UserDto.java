@@ -18,9 +18,12 @@ public class UserDto implements Serializable {
     public UserDto() {
     }
 
-    public UserDto(Long id, String name, List<OrderDto> orders) {
+    public UserDto(Long id, String name, String login, String password, Role role, List<OrderDto> orders) {
         this.id = id;
         this.name = name;
+        this.login = login;
+        this.password = password;
+        this.role = role;
         this.orders = orders;
     }
 

@@ -28,10 +28,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 public class TagDaoImplTest {
 
-    public static final Long ID_TAG_INVALID = new Long("999");
+    public static final Long ID_TAG_INVALID = 999L;
     public static final Tag TAG_TO_SAVE = new Tag("saved name");
-    public static final Tag TAG_SAVED = new Tag(new Long("5"), "saved name");
-    public static final Long ID_TO_DELETE = new Long("1");
+    public static final Tag TAG_SAVED = new Tag(5L, "saved name");
+    public static final Long ID_TO_DELETE = 1L;
 
     private static final long COUNT_EXPECTED = 4;
 

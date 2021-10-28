@@ -31,14 +31,14 @@ INSERT INTO gift_certificate_tag(id_gift_certificate, id_tag)
 VALUES (4, 1);
 
 
-INSERT INTO USER(id, name) OVERRIDING SYSTEM VALUE
-VALUES (1, '1st name');
-INSERT INTO USER(id, name) OVERRIDING SYSTEM VALUE
-VALUES (2, '2nd name');
-INSERT INTO USER(id, name) OVERRIDING SYSTEM VALUE
-VALUES (3, '3rd name');
-INSERT INTO USER(id, name) OVERRIDING SYSTEM VALUE
-VALUES (4, '4th name');
+INSERT INTO USER(id, name, login, password, role) OVERRIDING SYSTEM VALUE
+VALUES (1, '1st name', '1st login', '1st password', 'ROLE_USER');
+INSERT INTO USER(id, name, login, password, role) OVERRIDING SYSTEM VALUE
+VALUES (2, '2nd name', '2nd login', '2nd password', 'ROLE_USER');
+INSERT INTO USER(id, name, login, password, role) OVERRIDING SYSTEM VALUE
+VALUES (3, '3rd name', '3rd login', '3rd password', 'ROLE_USER');
+INSERT INTO USER(id, name, login, password, role) OVERRIDING SYSTEM VALUE
+VALUES (4, '4th name', '4th login', '4th password', 'ROLE_ADMIN');
 
 INSERT INTO "ORDER"(id, cost, purchase_date, id_user) OVERRIDING SYSTEM VALUE
 VALUES (1, 33, '2020-12-12 21:34:10.769000', 1);
