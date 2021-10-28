@@ -16,8 +16,7 @@ public interface TagService {
     /**
      * Retrieves all Order of User with parameters.
      *
-     * @param idUser            id of Order's User. must not be {@literal null}.
-     * @param requestParameters parameters to search orders. must not be {@literal null}.
+     * @param parameters parameters to search orders. must not be {@literal null}.
      * @return list of OrderDto.
      * @throws OrderNotFoundException if Order with given id doesn't exists.
      */

@@ -30,6 +30,12 @@ public interface UserService {
      */
     List<UserDto> findAll(RequestParameters requestParameters);
 
+    /**
+     * Saves new User to db with 'ROLE_USER' role.
+     *
+     * @param user new user details. must not be {@literal null}.
+     * @return saved UserDto.
+     */
     UserDto registerUser(UserDto user);
 
     /**

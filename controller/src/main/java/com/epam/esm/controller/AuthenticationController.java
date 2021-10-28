@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Provides a signUp and login
+ * to GiftCertificatesService application
+ *
+ * @author Ilya Ramanouski
+ */
 @RestController
 public class AuthenticationController {
 
@@ -24,6 +30,12 @@ public class AuthenticationController {
     private PasswordEncoder passwordEncoder;
     private JwtTokenUtil jwtTokenUtil;
 
+    /**
+     * Provides signUp to GiftCertificatesService
+     *
+     * @param userDto user to signup details
+     * @return ResponseEntity with jwt token in 'AUTHORIZATION' header
+     */
     @PostMapping("/signUp")
     public ResponseEntity<UserRepresentation> signUp(@RequestBody UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -34,20 +46,19 @@ public class AuthenticationController {
                 .body(createdUser);
     }
 
+    /**
+     * Provides login to GiftCertificatesService
+     *
+     * @param userDto user to login details
+     * @return ResponseEntity with jwt token in 'AUTHORIZATION' header
+     */
     @PostMapping("login")
     public ResponseEntity<UserDto> login(@RequestBody UserDto userDto) {
         authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                userDto.getLogin(), userDto.getPassword()
-                        )
-                );
+                .authenticate(new UsernamePasswordAuthenticationToken(userDto.getLogin(), userDto.getPassword()));
 
         return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        jwtTokenUtil.generateAccessToken(userDto)
-                )
+                .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(userDto))
                 .body(userDto);
     }
 
