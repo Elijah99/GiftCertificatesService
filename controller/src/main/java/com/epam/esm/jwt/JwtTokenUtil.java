@@ -13,20 +13,26 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
+@PropertySource("classpath:jwt.properties")
 public class JwtTokenUtil {
 
-    private final static String JWT_SECRET = "zdtlD3JK56m6wTTgsNFhqzjqP";
-    private final static Date EXPIRATION_DATE = new Date(System.currentTimeMillis() + 60 * 60 * 1000);
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
+    @Value("${jwt.duration}")
+    private int duration;
 
     public String generateAccessToken(UserDto user) {
+        Date expirationDate = new Date(System.currentTimeMillis() + duration);
         return Jwts.builder()
                 .setSubject(user.getLogin())
-                .setExpiration(EXPIRATION_DATE)
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
