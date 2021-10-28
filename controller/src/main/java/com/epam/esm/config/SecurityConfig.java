@@ -1,5 +1,6 @@
 package com.epam.esm.config;
 
+import com.epam.esm.filter.JwtExceptionHandlerFilter;
 import com.epam.esm.filter.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -22,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private JwtTokenFilter jwtTokenFilter;
+    private JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder)
@@ -41,10 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers(HttpMethod.POST, "/signUp").anonymous();
 
         http.addFilterBefore(
-                jwtTokenFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
-
+                        jwtTokenFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterBefore(
+                        jwtExceptionHandlerFilter,
+                        LogoutFilter.class
+                );
     }
 
     @Override
@@ -66,5 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Autowired
+    public void setJwtExceptionHandlerFilter(JwtExceptionHandlerFilter jwtExceptionHandlerFilter) {
+        this.jwtExceptionHandlerFilter = jwtExceptionHandlerFilter;
     }
 }

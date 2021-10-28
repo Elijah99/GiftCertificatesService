@@ -1,6 +1,11 @@
 package com.epam.esm.jwt;
 
 import com.epam.esm.dto.UserDto;
+import com.epam.esm.exception.jwt.CustomExpiredJwtException;
+import com.epam.esm.exception.jwt.CustomMalformedJwtException;
+import com.epam.esm.exception.jwt.CustomSignatureException;
+import com.epam.esm.exception.jwt.CustomUnsupportedJwtException;
+import com.epam.esm.exception.jwt.IllegalJwtTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -40,11 +45,15 @@ public class JwtTokenUtil {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
+            throw new CustomSignatureException();
         } catch (MalformedJwtException ex) {
+            throw new CustomMalformedJwtException();
         } catch (ExpiredJwtException ex) {
+            throw new CustomExpiredJwtException();
         } catch (UnsupportedJwtException ex) {
+            throw new CustomUnsupportedJwtException();
         } catch (IllegalArgumentException ex) {
+            throw new IllegalJwtTokenException();
         }
-        return false;
     }
 }

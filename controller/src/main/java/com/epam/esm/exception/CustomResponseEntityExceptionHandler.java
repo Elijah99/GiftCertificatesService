@@ -1,5 +1,6 @@
 package com.epam.esm.exception;
 
+import com.epam.esm.exception.jwt.CustomExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<CustomExceptionResponse> handleServiceExceptions(AccessDeniedException ex) {
+    public ResponseEntity<CustomExceptionResponse> handleAccessDeniedExceptions(AccessDeniedException ex) {
         CustomAccessDeniedException customException = new CustomAccessDeniedException();
         CustomExceptionResponse response = new CustomExceptionResponse(customException.getStatus(),
                 customException.getMessage(),
@@ -21,7 +22,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @ExceptionHandler(ControllerException.class)
-    public ResponseEntity<CustomExceptionResponse> handleServiceExceptions(ControllerException ex) {
+    public ResponseEntity<CustomExceptionResponse> handleControllerExceptions(ControllerException ex) {
+        CustomExceptionResponse response = new CustomExceptionResponse(ex.getStatus(), ex.getMessage(), ex.getErrorCode());
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @ExceptionHandler(CustomExpiredJwtException.class)
+    public ResponseEntity<CustomExceptionResponse> handleControllerExceptions(CustomExpiredJwtException ex) {
         CustomExceptionResponse response = new CustomExceptionResponse(ex.getStatus(), ex.getMessage(), ex.getErrorCode());
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
