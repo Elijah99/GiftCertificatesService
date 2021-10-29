@@ -2,7 +2,9 @@ package com.epam.esm.hateoas.representation;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.OrderDto;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -111,19 +113,18 @@ public class OrderRepresentation extends RepresentationModel<OrderRepresentation
     }
 
     private void createLinks() {
+        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(idUser, id)).withSelfRel();
+        Link ordersLink =
+                WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(idUser,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null))
+                        .withRel("orders");
 
-//        Link dtoLink = WebMvcLinkBuilder.linkTo(controller.getOrderById(idUser, id)).withSelfRel();
-//        Link ordersLink =
-//                WebMvcLinkBuilder.linkTo(controller.getOrdersByUserId(idUser,
-//                        null,
-//                        null,
-//                        null,
-//                        null,
-//                        null,
-//                        null))
-//                        .withRel("orders");
-//
-//        Link addLink = WebMvcLinkBuilder.linkTo(controller.createOrder(idUser, new OrderDto())).withRel("create");
-//        add(dtoLink, addLink, ordersLink);
+        Link addLink = WebMvcLinkBuilder.linkTo(controller.createOrder(idUser, new OrderDto())).withRel("create");
+        add(dtoLink, addLink, ordersLink);
     }
 }

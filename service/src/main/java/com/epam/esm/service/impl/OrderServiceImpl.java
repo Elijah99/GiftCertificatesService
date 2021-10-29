@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order setOrder(Long userId, OrderDto orderDto) {
-        //orderDto.setIdUser(userId);
+        orderDto.setIdUser(userId);
         Order order = orderMapper.mapDtoToEntity(orderDto);
 
         List<GiftCertificate> giftCertificates = new ArrayList<>();
