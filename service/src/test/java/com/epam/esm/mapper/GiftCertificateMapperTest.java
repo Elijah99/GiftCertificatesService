@@ -13,9 +13,28 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.ServiceTestData.ALL_GIFT_CERTIFICATES;
+import static com.epam.esm.ServiceTestData.ALL_GIFT_CERTIFICATES_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE;
+import static com.epam.esm.ServiceTestData.FIRST_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_TAG;
+import static com.epam.esm.ServiceTestData.FIRST_TAG_DTO;
+import static com.epam.esm.ServiceTestData.FOURTH_GIFT_CERTIFICATE;
+import static com.epam.esm.ServiceTestData.FOURTH_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.FOURTH_TAG_DTO;
+import static com.epam.esm.ServiceTestData.SECOND_GIFT_CERTIFICATE;
+import static com.epam.esm.ServiceTestData.SECOND_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.SECOND_TAG;
+import static com.epam.esm.ServiceTestData.SECOND_TAG_DTO;
+import static com.epam.esm.ServiceTestData.THIRD_GIFT_CERTIFICATE;
+import static com.epam.esm.ServiceTestData.THIRD_GIFT_CERTIFICATE_DTO;
+import static com.epam.esm.ServiceTestData.THIRD_TAG_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)

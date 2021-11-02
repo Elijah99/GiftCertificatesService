@@ -10,17 +10,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation> {
 
     private static final int FIRST_PAGE = 1;
-    private final UserController controller = methodOn(UserController.class);
-    private GiftCertificatesLinkManager giftCertificatesLinkManager;
     private OrderService service;
 
     @Override
@@ -29,7 +24,7 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
         if (list.isEmpty()) {
             return model;
         }
-        BigInteger userId = list.get(0).getIdUser();
+        Long userId = new Long(list.get(0).getIdUser().toString());
         int page = requestParameters.getCurrentPage();
         int pageAmount = (int) service.countPages(userId, requestParameters);
         if (pageAmount != 0) {
@@ -95,10 +90,6 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
         return model;
     }
 
-    @Autowired
-    public void setGiftCertificatesLinkManager(GiftCertificatesLinkManager giftCertificatesLinkManager) {
-        this.giftCertificatesLinkManager = giftCertificatesLinkManager;
-    }
 
     @Autowired
     public void setService(OrderService service) {

@@ -5,7 +5,6 @@ import com.epam.esm.entity.Tag;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +12,7 @@ import java.util.Objects;
 public class TagAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
-    private BigInteger idRow;
+    private Long idRow;
     @Column(name = "name")
     private String name;
 
@@ -26,11 +25,11 @@ public class TagAudit extends AbstractEntityAudit {
         this.name = tag.getName();
     }
 
-    public BigInteger getIdRow() {
+    public Long getIdRow() {
         return idRow;
     }
 
-    public void setIdRow(BigInteger id) {
+    public void setIdRow(Long id) {
         this.idRow = id;
     }
 

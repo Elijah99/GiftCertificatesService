@@ -7,16 +7,19 @@ import com.epam.esm.specification.OrderSpecification;
 import com.epam.esm.specification.PaginationSpecification;
 import com.epam.esm.specification.impl.OrderSpecificationImpl;
 import com.epam.esm.specification.impl.PaginationSpecificationImpl;
+import com.epam.esm.specification.impl.SearchUserByLoginSpecification;
 import com.epam.esm.specification.impl.SearchUserByNameSpecification;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +38,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(BigInteger id) {
+    public User save(User user) {
+        try {
+            entityManager.persist(user);
+        } finally {
+            entityManager.close();
+        }
+        return user;
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
         User foundUser = entityManager.find(User.class, id);
         return Optional.ofNullable(foundUser);
     }
@@ -69,6 +82,22 @@ public class UserDaoImpl implements UserDao {
         typedQuery = paginationSpecification.createPaginationTypedQuery();
 
         return typedQuery.getResultList();
+    }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> userRoot = query.from(User.class);
+        CriteriaQuery<User> all = query.select(userRoot);
+
+        Predicate searchByLoginPredicate = new SearchUserByLoginSpecification(login).createPredicate(userRoot, builder);
+
+        all.where(searchByLoginPredicate);
+
+        TypedQuery<User> typedQuery = entityManager.createQuery(all);
+
+        return Optional.ofNullable(typedQuery.getSingleResult());
     }
 
     @Override

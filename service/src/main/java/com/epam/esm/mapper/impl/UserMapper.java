@@ -17,6 +17,9 @@ public class UserMapper implements DtoMapper<User, UserDto> {
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+        dto.setLogin(entity.getLogin());
+        dto.setPassword(entity.getPassword());
+        dto.setRole(entity.getRole());
         if (entity.getOrders() != null) {
             dto.setOrders(orderMapper.mapListEntityToListDto(entity.getOrders()));
         }
@@ -30,10 +33,12 @@ public class UserMapper implements DtoMapper<User, UserDto> {
 
         user.setId(dto.getId());
         user.setName(dto.getName());
+        user.setLogin(dto.getLogin());
+        user.setPassword(dto.getPassword());
+        user.setRole(dto.getRole());
         if (dto.getOrders() != null) {
             user.setOrders(orderMapper.mapListDtoToListEntity(dto.getOrders()));
         }
-
         return user;
     }
 

@@ -17,10 +17,25 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.ServiceTestData.ALL_TAGS;
+import static com.epam.esm.ServiceTestData.ALL_TAGS_DTO;
+import static com.epam.esm.ServiceTestData.DEFAULT_QUERY_PARAMETERS;
+import static com.epam.esm.ServiceTestData.DEFAULT_REQUEST_PARAMETERS;
+import static com.epam.esm.ServiceTestData.FIRST_TAG;
+import static com.epam.esm.ServiceTestData.FIRST_TAG_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_TAG_OPTIONAL;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_1;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_100;
+import static com.epam.esm.ServiceTestData.REQUEST_PARAMETERS_WITH_PAGE_SIZE_9;
+import static com.epam.esm.ServiceTestData.TAG_FOR_SAVE;
+import static com.epam.esm.ServiceTestData.TAG_FOR_SAVE_DTO;
+import static com.epam.esm.ServiceTestData.TAG_SAVED;
+import static com.epam.esm.ServiceTestData.TAG_SAVED_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)

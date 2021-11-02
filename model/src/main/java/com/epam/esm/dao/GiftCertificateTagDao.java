@@ -2,16 +2,15 @@ package com.epam.esm.dao;
 
 import com.epam.esm.entity.GiftCertificateTag;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 public interface GiftCertificateTagDao {
 
-    Optional<GiftCertificateTag> findById(BigInteger id);
+    Optional<GiftCertificateTag> findById(Long id);
 
     GiftCertificateTag update(GiftCertificateTag giftCertificate);
 
-    BigInteger deleteById(BigInteger id);
+    Long deleteById(Long id);
 
     GiftCertificateTag save(GiftCertificateTag giftCertificate);
 }

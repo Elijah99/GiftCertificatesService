@@ -13,12 +13,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.esm.DaoTestData.*;
+import static com.epam.esm.DaoTestData.ALL_ORDERS;
+import static com.epam.esm.DaoTestData.DEFAULT_QUERY_PARAMETERS;
+import static com.epam.esm.DaoTestData.FIRST_ORDER;
+import static com.epam.esm.DaoTestData.FIRST_ORDER_OPTIONAL;
+import static com.epam.esm.DaoTestData.FIRST_USER;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = TestApplication.class)
@@ -30,7 +32,7 @@ public class OrderDaoImplTest {
 
 
     private static final long FIRST_USER_ORDERS_COUNT_EXPECTED = 2;
-    private static final BigInteger ORDER_ID_INVALID = new BigInteger("999");
+    private static final Long ORDER_ID_INVALID = 999L;
 
     @Autowired
     private OrderDao orderDao;

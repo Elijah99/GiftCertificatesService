@@ -4,7 +4,6 @@ import com.epam.esm.entity.GiftCertificateTag;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,9 +19,9 @@ public class GiftCertificateTagRowMapper implements RowMapper<GiftCertificateTag
     @Deprecated
     @Override
     public GiftCertificateTag mapRow(ResultSet resultSet, int i) throws SQLException {
-        BigInteger id = new BigInteger(resultSet.getString("id"));
-        BigInteger idGiftCertificate = new BigInteger(resultSet.getString("id_gift_certificate"));
-        BigInteger idTag = new BigInteger(resultSet.getString("id_tag"));
+        Long id = resultSet.getLong("id");
+        Long idGiftCertificate = resultSet.getLong("id_gift_certificate");
+        Long idTag = resultSet.getLong("id_tag");
 
         return new GiftCertificateTag();
     }

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto findById(BigInteger id) {
+    public GiftCertificateDto findById(Long id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
             return giftCertificateMapper.mapEntityToDto(giftCertificateOptional.get());
@@ -48,7 +47,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto update(GiftCertificateDto updatedGiftCertificate, BigInteger id) {
+    public GiftCertificateDto update(GiftCertificateDto updatedGiftCertificate, Long id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
             GiftCertificate giftCertificate = giftCertificateOptional.get();
@@ -117,7 +116,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public BigInteger deleteById(BigInteger id) {
+    public Long deleteById(Long id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.findById(id);
         if (giftCertificateOptional.isPresent()) {
             return giftCertificateDao.deleteById(id);

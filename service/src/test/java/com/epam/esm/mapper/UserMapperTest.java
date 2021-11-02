@@ -13,9 +13,20 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.ServiceTestData.ALL_USERS;
+import static com.epam.esm.ServiceTestData.ALL_USERS_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_USER;
+import static com.epam.esm.ServiceTestData.FIRST_USER_DTO;
+import static com.epam.esm.ServiceTestData.FOURTH_USER;
+import static com.epam.esm.ServiceTestData.FOURTH_USER_DTO;
+import static com.epam.esm.ServiceTestData.SECOND_USER;
+import static com.epam.esm.ServiceTestData.SECOND_USER_DTO;
+import static com.epam.esm.ServiceTestData.THIRD_USER;
+import static com.epam.esm.ServiceTestData.THIRD_USER_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findById(BigInteger id) {
+    public TagDto findById(Long id) {
         Optional<Tag> tagOptional = dao.findById(id);
         if (tagOptional.isPresent()) {
             Tag tag = tagOptional.get();
@@ -45,7 +44,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public BigInteger deleteById(BigInteger id) {
+    public Long deleteById(Long id) {
         Optional<Tag> tagOptional = dao.findById(id);
         if (tagOptional.isPresent()) {
             return dao.deleteById(id);
@@ -63,7 +62,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(BigInteger idUser) {
+    public TagDto getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(Long idUser) {
         Tag tag = dao.findMostUsedTag(idUser);
         return tagMapper.mapEntityToDto(tag);
     }

@@ -10,14 +10,17 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static com.epam.esm.ServiceTestData.*;
+import static com.epam.esm.ServiceTestData.ALL_TAGS;
+import static com.epam.esm.ServiceTestData.ALL_TAGS_DTO;
+import static com.epam.esm.ServiceTestData.FIRST_TAG;
+import static com.epam.esm.ServiceTestData.FIRST_TAG_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class TagMapperTest {
 
-    private TagMapper tagMapper = new TagMapper();
+    private final TagMapper tagMapper = new TagMapper();
 
     @Test
     public void testMapEntityToDto() {

@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
 public class GiftCertificateAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
-    private BigInteger idRow;
+    private Long idRow;
     @Column(name = "name")
     private String name;
     @Column(name = "description")
@@ -46,11 +45,11 @@ public class GiftCertificateAudit extends AbstractEntityAudit {
         this.duration = giftCertificate.getDuration();
     }
 
-    public BigInteger getIdRow() {
+    public Long getIdRow() {
         return idRow;
     }
 
-    public void setIdRow(BigInteger id) {
+    public void setIdRow(Long id) {
         this.idRow = id;
     }
 

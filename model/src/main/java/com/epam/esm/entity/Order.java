@@ -4,10 +4,20 @@ import com.epam.esm.listener.OrderAuditListener;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.*;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +31,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
     @Column(name = "cost")
     private BigDecimal cost;
     @Column(name = "purchase_date")
@@ -31,8 +41,7 @@ public class Order {
     @JoinColumn(name = "id_user", nullable = false)
     @JsonBackReference
     private User user;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE,
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REFRESH,
             CascadeType.DETACH})
     @JoinTable(
@@ -44,7 +53,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(BigInteger id, BigDecimal cost, LocalDateTime purchaseDate, User user, List<GiftCertificate> giftCertificates) {
+    public Order(Long id, BigDecimal cost, LocalDateTime purchaseDate, User user, List<GiftCertificate> giftCertificates) {
         this.id = id;
         this.cost = cost;
         this.purchaseDate = purchaseDate;
@@ -52,11 +61,11 @@ public class Order {
         this.giftCertificates = giftCertificates;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

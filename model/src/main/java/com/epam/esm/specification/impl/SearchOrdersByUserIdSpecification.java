@@ -6,13 +6,12 @@ import com.epam.esm.specification.PredicateSpecification;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.math.BigInteger;
 
 public class SearchOrdersByUserIdSpecification implements PredicateSpecification<Order> {
 
-    private final BigInteger idUser;
+    private final Long idUser;
 
-    public SearchOrdersByUserIdSpecification(BigInteger idUser) {
+    public SearchOrdersByUserIdSpecification(Long idUser) {
         this.idUser = idUser;
     }
 

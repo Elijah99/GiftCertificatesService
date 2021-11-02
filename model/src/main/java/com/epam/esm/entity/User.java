@@ -3,9 +3,18 @@ package com.epam.esm.entity;
 import com.epam.esm.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.*;
-import java.math.BigInteger;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,10 +26,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
     @Column(name = "name")
     private String name;
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+    @Column(name = "login")
+    private String login;
+    @Column(name = "password")
+    private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE},
             fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Order> orders;
@@ -28,17 +44,20 @@ public class User {
     public User() {
     }
 
-    public User(BigInteger id, String name, List<Order> orders) {
+    public User(Long id, String name, String login, String password, Role role, List<Order> orders) {
         this.id = id;
         this.name = name;
+        this.login = login;
+        this.password = password;
+        this.role = role;
         this.orders = orders;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -58,18 +77,45 @@ public class User {
         this.orders = orders;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(name, user.name);
+                Objects.equals(name, user.name) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, login, password, role);
     }
 
     @Override
@@ -77,6 +123,8 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

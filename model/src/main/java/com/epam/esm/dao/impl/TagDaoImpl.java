@@ -12,12 +12,17 @@ import com.epam.esm.specification.impl.SearchTagByNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,13 +83,13 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Optional<Tag> findById(BigInteger id) {
+    public Optional<Tag> findById(Long id) {
         Tag foundTag = entityManager.find(Tag.class, id);
         return Optional.ofNullable(foundTag);
     }
 
     @Override
-    public BigInteger deleteById(BigInteger id) {
+    public Long deleteById(Long id) {
         Tag tag = entityManager.find(Tag.class, id);
         if (tag != null) {
             if (tag.getGiftCertificateTags() != null) {
@@ -122,7 +127,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag findMostUsedTag(BigInteger idUser) {
+    public Tag findMostUsedTag(Long idUser) {
         try {
             return (Tag) entityManager.createNativeQuery(QUERY_MOST_USED_TAG, Tag.class)
                     .setParameter(ID_USER_PARAMETER, idUser)

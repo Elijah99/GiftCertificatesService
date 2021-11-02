@@ -1,11 +1,9 @@
 package com.epam.esm.service;
 
-
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.exception.GiftCertificateNotFoundException;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -30,7 +28,7 @@ public interface GiftCertificateService {
      * @throws GiftCertificateNotFoundException if GiftCertificate
      *                                          with given id doesn't exists.
      */
-    GiftCertificateDto findById(BigInteger id);
+    GiftCertificateDto findById(Long id);
 
     /**
      * Changes instance of GiftCertificate with given id.
@@ -39,7 +37,7 @@ public interface GiftCertificateService {
      * @param id              index of GiftCertificate to update.
      * @return the updated GiftCertificate.
      */
-    GiftCertificateDto update(GiftCertificateDto giftCertificate, BigInteger id);
+    GiftCertificateDto update(GiftCertificateDto giftCertificate, Long id);
 
     /**
      * Deletes the GiftCertificate with given id.
@@ -47,7 +45,7 @@ public interface GiftCertificateService {
      * @param id must not be {@literal null}.
      * @return id of the deleted GiftCertificate.
      */
-    BigInteger deleteById(BigInteger id);
+    Long deleteById(Long id);
 
     /**
      * Saves a given GiftCertificate.

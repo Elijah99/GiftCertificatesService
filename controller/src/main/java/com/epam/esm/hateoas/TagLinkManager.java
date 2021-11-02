@@ -16,8 +16,6 @@ import java.util.List;
 public class TagLinkManager implements HateoasLinkManager<TagRepresentation> {
 
     private static final int FIRST_PAGE = 1;
-
-    private final TagsController controller = WebMvcLinkBuilder.methodOn(TagsController.class);
     private TagService service;
 
     @Override

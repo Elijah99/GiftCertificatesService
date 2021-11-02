@@ -9,9 +9,19 @@ import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +80,7 @@ public class GiftCertificatesController {
      */
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateRepresentation getGiftCertificate(@PathVariable("id") BigInteger id) {
+    public GiftCertificateRepresentation getGiftCertificate(@PathVariable("id") Long id) {
         GiftCertificateDto giftCertificateDto = service.findById(id);
         return new GiftCertificateRepresentation(giftCertificateDto);
     }
@@ -84,6 +94,7 @@ public class GiftCertificatesController {
      * @return created GiftCertificateRepresentation
      */
     @PostMapping
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateRepresentation createGiftCertificate(@RequestBody GiftCertificateDto giftCertificate) {
         GiftCertificateDto dto = service.save(giftCertificate);
@@ -100,8 +111,9 @@ public class GiftCertificatesController {
      * @return updated GiftCertificateRepresentation
      */
     @PutMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateRepresentation updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificate, @PathVariable BigInteger id) {
+    public GiftCertificateRepresentation updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificate, @PathVariable Long id) {
         GiftCertificateDto giftCertificateDto = service.update(giftCertificate, id);
         return new GiftCertificateRepresentation(giftCertificateDto);
     }
@@ -115,9 +127,10 @@ public class GiftCertificatesController {
      * @return id of deleted GiftCertificate
      */
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public BigInteger deleteGiftCertificate(@PathVariable("id") BigInteger id) {
-        return service.deleteById(id);
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<GiftCertificateDto> deleteGiftCertificate(@PathVariable("id") Long id) {
+        service.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Autowired

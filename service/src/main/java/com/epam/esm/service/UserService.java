@@ -4,7 +4,6 @@ import com.epam.esm.dto.RequestParameters;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.exception.UserNotFoundException;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public interface UserService {
      * @return UserDto.
      * @throws UserNotFoundException if User with given id doesn't exists.
      */
-    UserDto findById(BigInteger id);
+    UserDto findById(Long id);
 
     /**
      * Retrieves all Users with parameters.
@@ -30,6 +29,14 @@ public interface UserService {
      * @return list of UserDto.
      */
     List<UserDto> findAll(RequestParameters requestParameters);
+
+    /**
+     * Saves new User to db with 'ROLE_USER' role.
+     *
+     * @param user new user details. must not be {@literal null}.
+     * @return saved UserDto.
+     */
+    UserDto registerUser(UserDto user);
 
     /**
      * Counts number of all User records at database.

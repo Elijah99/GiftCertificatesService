@@ -1,7 +1,12 @@
 package com.epam.esm.entity.audit;
 
-import javax.persistence.*;
-import java.math.BigInteger;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,7 +16,7 @@ public abstract class AbstractEntityAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "operation")
     private AuditOperationEnum operation;
@@ -26,11 +31,11 @@ public abstract class AbstractEntityAudit {
     public AbstractEntityAudit() {
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

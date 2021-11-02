@@ -4,8 +4,11 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.entity.GiftCertificateTag;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
-import java.math.BigInteger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import java.util.Optional;
 
 @Repository
@@ -22,7 +25,7 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     }
 
     @Override
-    public Optional<GiftCertificateTag> findById(BigInteger id) {
+    public Optional<GiftCertificateTag> findById(Long id) {
         GiftCertificateTag foundGiftCertificateTag = entityManager.find(GiftCertificateTag.class, id);
         return Optional.ofNullable(foundGiftCertificateTag);
     }
@@ -38,7 +41,7 @@ public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
     }
 
     @Override
-    public BigInteger deleteById(BigInteger id) {
+    public Long deleteById(Long id) {
         try {
             GiftCertificateTag giftCertificateTag = entityManager.find(GiftCertificateTag.class, id);
             if (giftCertificateTag != null) {

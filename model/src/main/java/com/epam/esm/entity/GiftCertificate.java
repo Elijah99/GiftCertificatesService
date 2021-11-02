@@ -4,10 +4,20 @@ package com.epam.esm.entity;
 import com.epam.esm.listener.GiftCertificateAuditListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.*;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +32,7 @@ public class GiftCertificate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "description")
@@ -54,7 +64,7 @@ public class GiftCertificate {
     )
     private List<Order> orders;
 
-    public GiftCertificate(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
+    public GiftCertificate(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,7 +86,7 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
-    public GiftCertificate(BigInteger id, String name, String description, LocalDateTime lastUpdateDate) {
+    public GiftCertificate(Long id, String name, String description, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -86,11 +96,11 @@ public class GiftCertificate {
     public GiftCertificate() {
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

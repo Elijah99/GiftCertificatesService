@@ -12,15 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @Service
 public class GiftCertificatesLinkManager implements HateoasLinkManager<GiftCertificateRepresentation> {
 
     private static final int FIRST_PAGE = 1;
 
-    private final GiftCertificatesController controller = methodOn(GiftCertificatesController.class);
-    private TagLinkManager tagLinkModifier;
     private GiftCertificateService giftCertificateService;
 
     @Override
@@ -88,11 +84,6 @@ public class GiftCertificatesLinkManager implements HateoasLinkManager<GiftCerti
 
         }
         return model;
-    }
-
-    @Autowired
-    public void setTagLinkModifier(TagLinkManager tagLinkModifier) {
-        this.tagLinkModifier = tagLinkModifier;
     }
 
     @Autowired

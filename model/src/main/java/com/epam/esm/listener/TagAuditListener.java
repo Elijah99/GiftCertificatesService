@@ -7,7 +7,9 @@ import com.epam.esm.entity.audit.TagAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import javax.persistence.PostPersist;
+import javax.persistence.PostRemove;
+import javax.persistence.PostUpdate;
 
 @Component
 public class TagAuditListener {

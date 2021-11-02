@@ -3,7 +3,6 @@ package com.epam.esm.entity.audit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -11,33 +10,33 @@ import java.util.Objects;
 public class OrderGiftCertificateAudit extends AbstractEntityAudit {
 
     @Column(name = "id_row")
-    private BigInteger idRow;
+    private Long idRow;
     @Column(name = "id_order")
-    private BigInteger idOrder;
+    private Long idOrder;
     @Column(name = "id_gift_certificate")
-    private BigInteger idGiftCertificate;
+    private Long idGiftCertificate;
 
-    public BigInteger getIdRow() {
+    public Long getIdRow() {
         return idRow;
     }
 
-    public void setIdRow(BigInteger idRow) {
+    public void setIdRow(Long idRow) {
         this.idRow = idRow;
     }
 
-    public BigInteger getIdOrder() {
+    public Long getIdOrder() {
         return idOrder;
     }
 
-    public void setIdOrder(BigInteger idOrder) {
+    public void setIdOrder(Long idOrder) {
         this.idOrder = idOrder;
     }
 
-    public BigInteger getIdGiftCertificate() {
+    public Long getIdGiftCertificate() {
         return idGiftCertificate;
     }
 
-    public void setIdGiftCertificate(BigInteger idGiftCertificate) {
+    public void setIdGiftCertificate(Long idGiftCertificate) {
         this.idGiftCertificate = idGiftCertificate;
     }
 

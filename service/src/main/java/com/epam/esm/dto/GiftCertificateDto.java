@@ -3,14 +3,13 @@ package com.epam.esm.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 public class GiftCertificateDto implements Serializable {
 
-    private BigInteger id;
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
@@ -22,13 +21,13 @@ public class GiftCertificateDto implements Serializable {
     public GiftCertificateDto() {
     }
 
-    public GiftCertificateDto(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<TagDto> tags) {
+    public GiftCertificateDto(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration, List<TagDto> tags) {
         this(name, description, price, createDate, lastUpdateDate, duration);
         this.id = id;
         this.tags = tags;
     }
 
-    public GiftCertificateDto(BigInteger id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
+    public GiftCertificateDto(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, int duration) {
         this(name, description, price, createDate, lastUpdateDate, duration);
         this.id = id;
     }
@@ -42,11 +41,11 @@ public class GiftCertificateDto implements Serializable {
         this.duration = duration;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

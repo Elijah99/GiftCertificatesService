@@ -10,13 +10,15 @@ import com.epam.esm.specification.impl.PaginationSpecificationImpl;
 import com.epam.esm.specification.impl.SearchOrdersByUserIdSpecification;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +47,7 @@ public class OrderDaoImpl implements OrderDao {
         List<Predicate> predicates = new ArrayList<>();
         if (parameters.getSearchValue() != null) {
             parameters.getSearchValue().forEach(searchValue -> {
-                predicates.add(new SearchOrdersByUserIdSpecification(new BigInteger(searchValue)).createPredicate(orderRoot, builder));
+                predicates.add(new SearchOrdersByUserIdSpecification(Long.valueOf(searchValue)).createPredicate(orderRoot, builder));
             });
         }
         Predicate search = builder.and(predicates.toArray(new Predicate[0]));
@@ -67,13 +69,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Optional<Order> findById(BigInteger id) {
+    public Optional<Order> findById(Long id) {
         Order foundOrder = entityManager.find(Order.class, id);
         return Optional.ofNullable(foundOrder);
     }
 
     @Override
-    public List<Order> findByUserId(BigInteger idUser, QueryParameters parameters) {
+    public List<Order> findByUserId(Long idUser, QueryParameters parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
         Root<Order> orderRoot = criteriaQuery.from(Order.class);
@@ -105,7 +107,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public long countByUserId(BigInteger userId) {
+    public long countByUserId(Long userId) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
         Root<Order> orderRoot = criteriaQuery.from(Order.class);

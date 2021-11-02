@@ -15,9 +15,16 @@ import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +61,7 @@ public class UserController {
      * @return CollectionModel of UserRepresentation.
      */
     @GetMapping(produces = "application/hal+json")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<UserRepresentation> getAllUsers(@RequestParam(required = false, defaultValue = "1") int page,
                                                            @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -78,8 +86,9 @@ public class UserController {
      * @return UserRepresentation if its presents
      */
     @GetMapping(value = "/{id}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    public UserRepresentation getUserById(@PathVariable("id") BigInteger id) {
+    public UserRepresentation getUserById(@PathVariable("id") Long id) {
         UserDto userDto = userService.findById(id);
 
 
@@ -95,8 +104,9 @@ public class UserController {
      * @return created OrderRepresentation
      */
     @PostMapping(value = "/{id}/orders")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    public OrderRepresentation createOrder(@PathVariable("id") BigInteger id, @RequestBody OrderDto order) {
+    public OrderRepresentation createOrder(@PathVariable("id") Long id, @RequestBody OrderDto order) {
         OrderDto orderDto = orderService.createOrder(id, order);
         return new OrderRepresentation(orderDto);
     }
@@ -111,9 +121,10 @@ public class UserController {
      * @return OrderRepresentation if its presents
      */
     @GetMapping(value = "/{id_user}/orders/{id_order}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public OrderRepresentation getOrderById(
-            @PathVariable("id_user") BigInteger userId, @PathVariable("id_order") BigInteger orderId) {
+            @PathVariable("id_user") Long userId, @PathVariable("id_order") Long orderId) {
         OrderDto orderDto = orderService.findOrderById(userId, orderId);
         return new OrderRepresentation(orderDto);
     }
@@ -138,8 +149,9 @@ public class UserController {
      * @return OrderRepresentation if its presents
      */
     @GetMapping(value = "/{id}/orders")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<OrderRepresentation> getOrdersByUserId(@PathVariable("id") BigInteger id,
+    public CollectionModel<OrderRepresentation> getOrdersByUserId(@PathVariable("id") Long id,
                                                                   @RequestParam(required = false, defaultValue = "1") Integer page,
                                                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                                                   @RequestParam(required = false) String sortType,
@@ -160,8 +172,9 @@ public class UserController {
      * @return TagRepresentation if its present
      */
     @GetMapping(value = "/{id}/mostUsedTag")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(@PathVariable("id") BigInteger idUser) {
+    public TagRepresentation getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(@PathVariable("id") Long idUser) {
         TagDto tagDto = tagService.getMostWidelyUsedTagOfAUserWithTheHighestCostOfAllOrders(idUser);
         return new TagRepresentation(tagDto);
     }

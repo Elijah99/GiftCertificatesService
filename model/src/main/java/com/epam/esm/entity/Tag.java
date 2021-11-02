@@ -2,9 +2,15 @@ package com.epam.esm.entity;
 
 import com.epam.esm.listener.TagAuditListener;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.*;
-import java.math.BigInteger;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +23,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private BigInteger id;
+    private Long id;
     @Column(name = "name")
     private String name;
 
@@ -29,12 +35,12 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(BigInteger id, String name) {
+    public Tag(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Tag(BigInteger id, String name, List<GiftCertificateTag> giftCertificateTags) {
+    public Tag(Long id, String name, List<GiftCertificateTag> giftCertificateTags) {
         this.id = id;
         this.name = name;
         this.giftCertificateTags = giftCertificateTags;
@@ -44,11 +50,11 @@ public class Tag {
         this.name = name;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
