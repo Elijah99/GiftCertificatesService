@@ -43,7 +43,7 @@ public class AuthenticationController {
         UserRepresentation createdUser = new UserRepresentation(user);
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(user))
-                .body(createdUser);
+                .build();
     }
 
     /**
@@ -59,7 +59,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(userDto))
-                .body(userDto);
+                .build();
     }
 
     @Autowired
