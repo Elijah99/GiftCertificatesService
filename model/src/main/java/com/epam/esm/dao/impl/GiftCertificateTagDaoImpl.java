@@ -4,19 +4,15 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.entity.GiftCertificateTag;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import java.util.Optional;
 
 @Repository
 public class GiftCertificateTagDaoImpl implements GiftCertificateTagDao {
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     public GiftCertificateTagDaoImpl(EntityManagerFactory entityManagerFactory) {

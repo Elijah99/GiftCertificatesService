@@ -12,9 +12,9 @@ import javax.persistence.PersistenceUnit;
 @Repository
 public class OrderAuditDaoImpl implements OrderAuditDao {
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     public OrderAuditDaoImpl(EntityManagerFactory entityManagerFactory) {

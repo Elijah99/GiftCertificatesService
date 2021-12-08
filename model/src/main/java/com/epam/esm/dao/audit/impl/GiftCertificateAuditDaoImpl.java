@@ -12,9 +12,9 @@ import javax.persistence.PersistenceUnit;
 @Repository
 public class GiftCertificateAuditDaoImpl implements GiftCertificateAuditDao {
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     public GiftCertificateAuditDaoImpl(EntityManagerFactory entityManagerFactory) {

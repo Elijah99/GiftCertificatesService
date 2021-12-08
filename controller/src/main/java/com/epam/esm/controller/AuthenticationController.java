@@ -4,13 +4,14 @@ import com.epam.esm.dto.UserDto;
 import com.epam.esm.hateoas.representation.UserRepresentation;
 import com.epam.esm.jwt.JwtTokenUtil;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
     private UserService userService;
     private AuthenticationManager authenticationManager;
     private PasswordEncoder passwordEncoder;
     private JwtTokenUtil jwtTokenUtil;
+
+    @GetMapping("/")
+    public String test(){
+        return "TEST return";
+    }
 
     /**
      * Provides signUp to GiftCertificatesService
@@ -63,7 +69,7 @@ public class AuthenticationController {
     }
 
     @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
+    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

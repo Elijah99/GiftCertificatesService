@@ -12,13 +12,7 @@ import com.epam.esm.specification.impl.SearchTagByNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -40,9 +34,9 @@ public class TagDaoImpl implements TagDao {
             "            gift_certificate.id=gift_certificate_tag.id_gift_certificate inner join tag on gift_certificate_tag.id_tag=tag.id " +
             "            where public.order.id_user=(:idUser) group by tag.id,tag.name order by sum(cost) desc limit 1;";
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     @Autowired
