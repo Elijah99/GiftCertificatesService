@@ -8,14 +8,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
-import javax.transaction.Transactional;
 
 @Repository
 public class TagAuditDaoImpl implements TagAuditDao {
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     public TagAuditDaoImpl(EntityManagerFactory entityManagerFactory) {
@@ -23,7 +22,6 @@ public class TagAuditDaoImpl implements TagAuditDao {
         this.entityManager = entityManagerFactory.createEntityManager();
     }
 
-    @Transactional
     @Override
     public void save(TagAudit tagAudit) {
         try {

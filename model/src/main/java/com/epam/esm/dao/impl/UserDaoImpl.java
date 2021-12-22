@@ -11,11 +11,7 @@ import com.epam.esm.specification.impl.SearchUserByLoginSpecification;
 import com.epam.esm.specification.impl.SearchUserByNameSpecification;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -27,9 +23,9 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private final EntityManagerFactory entityManagerFactory;
-    @PersistenceContext
+    @PersistenceContext(unitName = "my_persistence_unit")
     private final EntityManager entityManager;
 
     public UserDaoImpl(EntityManagerFactory entityManagerFactory) {
