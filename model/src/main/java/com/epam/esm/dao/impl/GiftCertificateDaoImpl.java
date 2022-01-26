@@ -106,12 +106,20 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public long count() {
+    public long count(QueryParameters parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
         Root<GiftCertificate> giftCertificateRoot = criteriaQuery.from(GiftCertificate.class);
 
+        List<PredicateSpecification<GiftCertificate>> specifications = specificationBuilder.createPredicateSpecifications(parameters);
+        List<Predicate> predicates = new ArrayList<>();
+        specifications.forEach(s -> {
+            predicates.add(s.createPredicate(giftCertificateRoot, builder));
+        });
+        criteriaQuery.where(predicates.toArray(new Predicate[]{}));
+
         criteriaQuery.select(builder.count(giftCertificateRoot));
+
         TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
 
         return query.getSingleResult();

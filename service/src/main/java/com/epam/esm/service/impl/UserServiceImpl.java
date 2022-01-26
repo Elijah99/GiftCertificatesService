@@ -50,11 +50,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long countPages(RequestParameters requestParameters) {
-        int pageSize = requestParameters.getPageSize();
+        long pageSize = requestParameters.getPageSize();
         long elementsAmount = userDao.count();
         return elementsAmount % pageSize == 0
                 ? elementsAmount / pageSize
                 : elementsAmount / pageSize + 1;
+    }
+
+    @Override
+    public long count() {
+        return userDao.count();
     }
 
     @Autowired

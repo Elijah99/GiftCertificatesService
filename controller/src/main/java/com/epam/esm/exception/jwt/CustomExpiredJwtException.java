@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomExpiredJwtException extends JwtTokenException {
 
-    private final HttpStatus status = HttpStatus.FORBIDDEN;
+    private final HttpStatus status = HttpStatus.UNAUTHORIZED;
     private final String message = "Jwt token expired";
     private final int errorCode = 40303;
 

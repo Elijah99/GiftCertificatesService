@@ -49,11 +49,19 @@ public interface OrderService {
     OrderDto findOrderById(Long userId, Long orderId);
 
     /**
-     * Counts number of all Order records at database.
+     * Counts number of pages of all Order records at database.
      *
      * @param userId            id of Order's User. must not be {@literal null}.
      * @param requestParameters parameters of request. must not be {@literal null}.
-     * @return counted number of Order records.
+     * @return counted number of pages of Order records.
      */
     long countPages(Long userId, RequestParameters requestParameters);
+
+    /**
+     * Counts number of all Order records at database.
+     *
+     * @param userId id of Order's User. must not be {@literal null}.
+     * @return counted number of Order records.
+     */
+    long count(Long userId);
 }

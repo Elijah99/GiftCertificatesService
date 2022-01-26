@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomMalformedJwtException extends JwtTokenException{
 
-    private final HttpStatus status = HttpStatus.FORBIDDEN;
+    private final HttpStatus status = HttpStatus.UNAUTHORIZED;
     private final String message = "Jwt token was not correctly constructed";
     private final int errorCode = 40302;
 

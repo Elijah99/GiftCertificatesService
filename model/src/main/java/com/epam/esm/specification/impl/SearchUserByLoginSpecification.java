@@ -17,6 +17,6 @@ public class SearchUserByLoginSpecification implements PredicateSpecification<Us
 
     @Override
     public Predicate createPredicate(Root<User> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get("login"), "%" + login + "%");
+        return criteriaBuilder.like(root.get("login"), login);
     }
 }

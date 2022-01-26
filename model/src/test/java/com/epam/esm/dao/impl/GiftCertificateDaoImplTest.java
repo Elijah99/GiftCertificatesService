@@ -24,8 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.esm.DaoTestData.FIRST_GIFT_CERTIFICATE;
-import static com.epam.esm.DaoTestData.FIRST_TAG;
+import static com.epam.esm.DaoTestData.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -112,7 +111,7 @@ public class GiftCertificateDaoImplTest {
     @Test
     @Sql(scripts = {"/db_drop_script.sql", "/schema.sql", "/db_init_data.sql"})
     public void testCountShouldReturnNumberOfRows() {
-        long actual = dao.count();
+        long actual = dao.count(DEFAULT_QUERY_PARAMETERS);
         assertEquals(COUNT_EXPECTED, actual);
     }
 

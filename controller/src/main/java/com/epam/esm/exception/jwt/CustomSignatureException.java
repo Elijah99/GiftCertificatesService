@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomSignatureException extends JwtTokenException {
 
-    private final HttpStatus status = HttpStatus.FORBIDDEN;
+    private final HttpStatus status = HttpStatus.UNAUTHORIZED;
     private final String message = "Wrong jwt token signature";
     private final int errorCode = 40301;
 
