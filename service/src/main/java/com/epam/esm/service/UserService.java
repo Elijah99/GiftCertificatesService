@@ -39,10 +39,17 @@ public interface UserService {
     UserDto registerUser(UserDto user);
 
     /**
-     * Counts number of all User records at database.
+     * Counts number of all User records pages at database.
      *
      * @param requestParameters parameters of request. must not be {@literal null}.
-     * @return counted number of User records.
+     * @return counted number of User records pages.
      */
     long countPages(RequestParameters requestParameters);
+
+    /**
+     * Counts number of all User records at database.
+     *
+     * @return counted number of User records.
+     */
+    long count();
 }

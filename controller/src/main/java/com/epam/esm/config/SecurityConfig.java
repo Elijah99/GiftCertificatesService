@@ -39,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 and().csrf().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                 and().authorizeRequests().
-                antMatchers(HttpMethod.POST, "/giftCertificates").anonymous().
                 antMatchers(HttpMethod.POST, "/login").anonymous().
                 antMatchers(HttpMethod.POST, "/signUp").anonymous();
 

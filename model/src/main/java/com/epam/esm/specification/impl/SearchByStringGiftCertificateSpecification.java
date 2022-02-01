@@ -19,6 +19,21 @@ public class SearchByStringGiftCertificateSpecification implements PredicateSpec
 
     @Override
     public Predicate createPredicate(Root<GiftCertificate> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get(column), "%" + value + "%");
+        if (column == null || column.isEmpty()) {
+            if (isTagValue(value)) {
+                return new SearchByTagGiftCertificateSpecification(value.substring(2, value.length()-1)).createPredicate(root, criteriaBuilder);
+            } else {
+                return criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("name"), "%" + value + "%"),
+                        criteriaBuilder.like(root.get("description"), "%" + value + "%")
+                );
+            }
+        } else {
+            return criteriaBuilder.like(root.get(column), "%" + value + "%");
+        }
+    }
+
+    public boolean isTagValue(String value) {
+        return value.startsWith("*(") && value.endsWith(")");
     }
 }

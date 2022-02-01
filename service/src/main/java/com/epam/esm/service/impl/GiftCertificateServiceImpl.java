@@ -139,10 +139,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public long countPages(RequestParameters requestParameters) {
         int pageSize = requestParameters.getPageSize();
-        long elementsAmount = giftCertificateDao.count();
+        long elementsAmount = giftCertificateDao.count(
+                requestParametersMapper.mapDtoToEntity(requestParameters));
         return elementsAmount % pageSize == 0
                 ? elementsAmount / pageSize
                 : elementsAmount / pageSize + 1;
+    }
+
+    @Override
+    public long count(RequestParameters requestParameters){
+        return giftCertificateDao.count(
+                requestParametersMapper.mapDtoToEntity(requestParameters));
     }
 
     @Autowired

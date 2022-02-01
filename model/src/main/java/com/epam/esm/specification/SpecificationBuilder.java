@@ -25,6 +25,10 @@ public class SpecificationBuilder {
                         specifications.add(new SearchByTagGiftCertificateSpecification(searchValue))
                 );
             }
+        } else if(parameters.getSearchValue() != null){
+            parameters.getSearchValue().forEach(searchValue ->
+                    specifications.add(new SearchByStringGiftCertificateSpecification(parameters.getSearchParameter(), searchValue))
+            );
         }
 
         return specifications;

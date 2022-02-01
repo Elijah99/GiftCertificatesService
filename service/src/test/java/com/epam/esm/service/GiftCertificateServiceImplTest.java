@@ -144,7 +144,7 @@ public class GiftCertificateServiceImplTest {
 
     @Test
     public void testCountPagesWhenPageSizeIsMultipleOfNumberRecords() {
-        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        when(giftCertificateDaoMock.count(DEFAULT_QUERY_PARAMETERS)).thenReturn(10L);
         long expected = 10;
 
         assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_1));
@@ -152,7 +152,7 @@ public class GiftCertificateServiceImplTest {
 
     @Test
     public void testCountPagesWhenPageSizeNotMultipleOfNumberRecords() {
-        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        when(giftCertificateDaoMock.count(DEFAULT_QUERY_PARAMETERS)).thenReturn(10L);
         long expected = 2;
 
         assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_9));
@@ -160,7 +160,7 @@ public class GiftCertificateServiceImplTest {
 
     @Test
     public void testCountPagesWhenPageSizeMoreThanNumberRecords() {
-        when(giftCertificateDaoMock.count()).thenReturn(10L);
+        when(giftCertificateDaoMock.count(DEFAULT_QUERY_PARAMETERS)).thenReturn(10L);
         long expected = 1;
 
         assertEquals(expected, giftCertificateService.countPages(REQUEST_PARAMETERS_WITH_PAGE_SIZE_100));

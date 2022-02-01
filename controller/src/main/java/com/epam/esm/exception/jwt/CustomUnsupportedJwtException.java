@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomUnsupportedJwtException extends JwtTokenException{
 
-    private final HttpStatus status = HttpStatus.FORBIDDEN;
+    private final HttpStatus status = HttpStatus.UNAUTHORIZED;
     private final String message = "Unsupported jwt token";
     private final int errorCode = 40304;
 

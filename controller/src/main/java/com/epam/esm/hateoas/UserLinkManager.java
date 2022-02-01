@@ -7,9 +7,11 @@ import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,14 +21,16 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
     private UserService userService;
 
     @Override
-    public CollectionModel<UserRepresentation> createLinks(List<UserRepresentation> list, RequestParameters requestParameters) {
-        CollectionModel<UserRepresentation> model = CollectionModel.of(list);
+    public PagedModel<UserRepresentation> createLinks(List<UserRepresentation> list, RequestParameters requestParameters) {
         if (list.isEmpty()) {
-            return model;
+            return PagedModel.empty();
         }
-        int page = requestParameters.getCurrentPage();
-        int pageAmount = (int) userService.countPages(requestParameters);
-        if (pageAmount != 0) {
+        List<Link> links = new ArrayList<>();
+        long page = requestParameters.getCurrentPage();
+        long totalElements = list.size();
+        long totalPages = countPages(totalElements, requestParameters.getPageSize());
+        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(requestParameters.getPageSize(), page, totalElements, totalPages);
+        if (totalPages != 0) {
             Link firstPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                     getAllUsers(FIRST_PAGE,
                             requestParameters.getPageSize(),
@@ -34,18 +38,18 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withRel("first");
-            model.add(firstPageLink.expand());
+            links.add(firstPageLink.expand());
 
             if (requestParameters.getCurrentPage() != 1) {
-                int prevPage = requestParameters.getCurrentPage() - 1;
+                long prevPage = requestParameters.getCurrentPage() - 1;
                 Link prevPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                        getAllUsers(prevPage,
+                        getAllUsers((int) prevPage,
                                 requestParameters.getPageSize(),
                                 requestParameters.getSortType(),
                                 requestParameters.getSortValue(),
                                 requestParameters.getSearchParameter(),
                                 requestParameters.getSearchValue())).withRel("prev");
-                model.add(prevPageLink.expand());
+                links.add(prevPageLink.expand());
             }
 
             Link selfRelLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
@@ -55,32 +59,32 @@ public class UserLinkManager implements HateoasLinkManager<UserRepresentation> {
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withSelfRel();
-            model.add(selfRelLink.expand());
+            links.add(selfRelLink.expand());
 
-            if (page != pageAmount) {
-                int nextPage = requestParameters.getCurrentPage() + 1;
+            if (page != totalPages) {
+                long nextPage = requestParameters.getCurrentPage() + 1;
                 Link nextPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                        getAllUsers(nextPage,
+                        getAllUsers((int) nextPage,
                                 requestParameters.getPageSize(),
                                 requestParameters.getSortType(),
                                 requestParameters.getSortValue(),
                                 requestParameters.getSearchParameter(),
                                 requestParameters.getSearchValue())).withRel("next");
-                model.add(nextPageLink.expand());
+                links.add(nextPageLink.expand());
             }
 
             Link lastPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
-                    getAllUsers(pageAmount,
+                    getAllUsers((int) totalPages,
                             requestParameters.getPageSize(),
                             requestParameters.getSortType(),
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withRel("last");
-            model.add(lastPageLink.expand());
+            links.add(lastPageLink.expand());
 
         }
 
-        return model;
+        return PagedModel.of(list, metadata, links);
     }
 
     @Autowired

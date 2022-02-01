@@ -95,11 +95,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public long countPages(Long userId, RequestParameters requestParameters) {
-        int pageSize = requestParameters.getPageSize();
+        long pageSize = requestParameters.getPageSize();
         long elementsAmount = orderDao.countByUserId(userId);
         return elementsAmount % pageSize == 0
                 ? elementsAmount / pageSize
                 : elementsAmount / pageSize + 1;
+    }
+
+    @Override
+    public long count(Long userId){
+        return orderDao.countByUserId(userId);
     }
 
     @Autowired

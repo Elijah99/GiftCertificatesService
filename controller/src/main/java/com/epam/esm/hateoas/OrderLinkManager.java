@@ -7,9 +7,11 @@ import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,15 +21,17 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
     private OrderService service;
 
     @Override
-    public CollectionModel<OrderRepresentation> createLinks(List<OrderRepresentation> list, RequestParameters requestParameters) {
-        CollectionModel<OrderRepresentation> model = CollectionModel.of(list);
+    public PagedModel<OrderRepresentation> createLinks(List<OrderRepresentation> list, RequestParameters requestParameters) {
         if (list.isEmpty()) {
-            return model;
+            return PagedModel.empty();
         }
         Long userId = new Long(list.get(0).getIdUser().toString());
-        int page = requestParameters.getCurrentPage();
-        int pageAmount = (int) service.countPages(userId, requestParameters);
-        if (pageAmount != 0) {
+        List<Link> links = new ArrayList<>();
+        long page = requestParameters.getCurrentPage();
+        long totalPages = service.countPages(userId, requestParameters);
+        long totalElements = service.count(userId);
+        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(requestParameters.getPageSize(), page, totalElements, totalPages);
+        if (totalPages != 0) {
             Link firstPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                     getOrdersByUserId(userId,
                             FIRST_PAGE,
@@ -36,7 +40,7 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withRel("first");
-            model.add(firstPageLink.expand());
+            links.add(firstPageLink.expand());
 
             if (requestParameters.getCurrentPage() != 1) {
                 int prevPage = requestParameters.getCurrentPage() - 1;
@@ -48,7 +52,7 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
                                 requestParameters.getSortValue(),
                                 requestParameters.getSearchParameter(),
                                 requestParameters.getSearchValue())).withRel("prev");
-                model.add(prevPageLink.expand());
+                links.add(prevPageLink.expand());
             }
 
             Link selfRelLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
@@ -59,10 +63,10 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withSelfRel();
-            model.add(selfRelLink.expand());
+            links.add(selfRelLink.expand());
 
 
-            if (page != pageAmount) {
+            if (page != totalPages) {
                 int nextPage = requestParameters.getCurrentPage() + 1;
                 Link nextPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                         getOrdersByUserId(userId,
@@ -72,22 +76,22 @@ public class OrderLinkManager implements HateoasLinkManager<OrderRepresentation>
                                 requestParameters.getSortValue(),
                                 requestParameters.getSearchParameter(),
                                 requestParameters.getSearchValue())).withRel("next");
-                model.add(nextPageLink.expand());
+                links.add(nextPageLink.expand());
             }
 
             Link lastPageLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).
                     getOrdersByUserId(userId,
-                            pageAmount,
+                            (int) totalPages,
                             requestParameters.getPageSize(),
                             requestParameters.getSortType(),
                             requestParameters.getSortValue(),
                             requestParameters.getSearchParameter(),
                             requestParameters.getSearchValue())).withRel("last");
-            model.add(lastPageLink.expand());
+            links.add(lastPageLink.expand());
 
 
         }
-        return model;
+        return PagedModel.of(list, metadata, links);
     }
 
 

@@ -56,4 +56,11 @@ public interface TagService {
      * @return counted number of Tag records pages.
      */
     long countPages(RequestParameters requestParameters);
+
+    /**
+     * Counts number of all Tag records.
+     *
+     * @return counted number of Tag records.
+     */
+    long count();
 }

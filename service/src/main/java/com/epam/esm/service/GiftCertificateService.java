@@ -62,4 +62,11 @@ public interface GiftCertificateService {
      * @return counted number of GiftCertificate records pages.
      */
     long countPages(RequestParameters requestParameters);
+
+    /**
+     * Counts number of all GiftCertificate records.
+     *
+     * @return counted number of GiftCertificate records.
+     */
+    long count(RequestParameters requestParameters);
 }

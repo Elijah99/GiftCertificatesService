@@ -18,5 +18,5 @@ public interface GiftCertificateDao {
 
     GiftCertificate save(GiftCertificate giftCertificate);
 
-    long count();
+    long count(QueryParameters parameters);
 }

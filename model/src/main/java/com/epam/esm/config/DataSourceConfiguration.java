@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 @ComponentScan("com.epam.esm")
 public class DataSourceConfiguration {
 
-    @Bean
+    @Bean(name = "my_persistence_unit")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
                 new LocalContainerEntityManagerFactoryBean();
